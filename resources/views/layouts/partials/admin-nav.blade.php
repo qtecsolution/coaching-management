@@ -6,17 +6,18 @@
         </a>
     </li>
 
-    <li class="sidebar-item has-sub">
+
+    <li class="sidebar-item has-sub {{ Route::is('admin.users.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
             <i class="bi bi-people"></i>
             <span>Users</span>
         </a>
-        <ul class="submenu submenu-close">
-            <li class="submenu-item">
-                <a href="#">User List</a>
+        <ul class="submenu {{ Route::is('admin.users.*') ? 'submenu-open' : 'submenu-close' }}">
+            <li class="submenu-item {{ Route::is('admin.users.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.users.index') }}">User List</a>
             </li>
-            <li class="submenu-item">
-                <a href="#">Add User</a>
+            <li class="submenu-item {{ Route::is('admin.users.create') ? 'active' : '' }}">
+                <a href="{{ route('admin.users.create') }}">Add User</a>
             </li>
             <li class="submenu-item">
                 <a href="#">Role & Permission</a>
