@@ -1,0 +1,67 @@
+.table td, .table thead th {
+    vertical-align: middle !important;
+}
+
+.table:not(.table-borderless) thead th {
+    border-bottom: 1px solid #dedede !important;
+}
+
+.table {
+    &.table-sm {
+        tr td, tr th {
+            padding: 1rem;
+        }
+    }
+    &.table-md {
+        tr td, tr th {
+            padding: 1rem;
+        }
+    }
+    &.table-lg {
+        tr td, tr th {
+            padding: 1.3rem;
+        }
+    }
+}
+
+.dataTable-table {
+    @extend .table;
+
+    thead {
+        tr {
+            th {
+                padding: 0.5rem !important;
+            }
+            td {
+                padding: 0.5rem !important;
+            }
+        }
+    }
+    tbody {
+        tr {
+            th {
+                padding: 0.5rem !important;
+            }
+            td {
+                padding: 0.5rem !important;
+            }
+        }
+    }
+    tfoot {
+        tr {
+            th {
+                padding: 0.5rem !important;
+            }
+            td {
+                padding: 0.5rem !important;
+            }
+        }
+    }
+}
+
+.dataTable-container {
+    overflow-x:auto
+}
+.dataTables_length {
+    margin-bottom: .5rem;
+}
