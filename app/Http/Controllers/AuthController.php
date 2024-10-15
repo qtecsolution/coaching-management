@@ -24,7 +24,9 @@ class AuthController extends Controller
         $remember = $request->has('remember_me') ? true : false;
 
         if (auth()->attempt(['phone' => $request->phone, 'password' => $request->password], $remember)) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route(
+                auth()->user()->is_admin ? 'admin.dashboard' : 'user.dashboard'
+            );
         }
 
         return back()->withErrors(['login' => 'Invalid credentials']);
@@ -60,6 +62,8 @@ class AuthController extends Controller
 
         auth()->login($user);
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route(
+            auth()->user()->is_admin ? 'admin.dashboard' : 'user.dashboard'
+        );
     }
 }

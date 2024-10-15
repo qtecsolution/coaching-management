@@ -25,13 +25,13 @@ Route::prefix('auth')->as('auth.')->group(function () {
 });
 
 // admin routes
-Route::prefix('admin')->as('admin.')->group(function () {
+Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     // dashboard
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 });
 
 // user routes
-Route::prefix('user')->as('user.')->group(function () {
+Route::prefix('user')->as('user.')->middleware('isStudent')->group(function () {
     // dashboard
     Route::get('/', [UserDashboardController::class, 'index'])->name('dashboard');
 });

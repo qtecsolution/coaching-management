@@ -17,6 +17,10 @@
                 <h1 class="auth-title">Sign up</h1>
                 <p class="auth-subtitle mb-5">Input your data to sign up to our panel.</p>
 
+                @foreach ($errors->all() as $error)
+                    <div class="alert alert-danger mb-2">{{ $error }}</div>
+                @endforeach
+
                 <form action="{{ route('auth.signup') }}" method="post">
                     @csrf
 
