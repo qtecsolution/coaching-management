@@ -25,23 +25,19 @@
         </ul>
     </li>
 
-    <li class="sidebar-item has-sub">
+    <li class="sidebar-item has-sub {{ Route::is('admin.settings.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
             <i class="bi bi-gear"></i>
             <span>Settings</span>
         </a>
-        <ul class="submenu submenu-close">
-            <li class="submenu-item">
-                <a href="#">General Settings</a>
+        <ul class="submenu {{ Route::is('admin.settings.*') ? 'submenu-open' : 'submenu-close' }}">
+            <li
+                class="submenu-item {{ Route::currentRouteName() === 'admin.settings.edit' && request()->segment(3) === 'general' ? 'active' : '' }}">
+                <a href="{{ route('admin.settings.edit', 'general') }}">General Settings</a>
             </li>
-            <li class="submenu-item">
-                <a href="#">SMTP Settings</a>
-            </li>
-            <li class="submenu-item">
-                <a href="#">DB Backup</a>
-            </li>
-            <li class="submenu-item">
-                <a href="#">Clear Cache</a>
+            <li
+                class="submenu-item {{ Route::currentRouteName() === 'admin.settings.edit' && request()->segment(3) === 'smtp' ? 'active' : '' }}">
+                <a href="{{ route('admin.settings.edit', 'smtp') }}">SMTP Settings</a>
             </li>
         </ul>
     </li>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\PermissionController;
@@ -44,6 +45,10 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
         // Permission resource routes
         Route::resource('permissions', PermissionController::class);
     });
+
+    // setting routes
+    Route::get('/settings/{type}/edit', [SettingController::class, 'edit'])->name('settings.edit');
+    Route::post('/settings/update', [SettingController::class, 'update'])->name('settings.update');
 });
 
 // user routes
