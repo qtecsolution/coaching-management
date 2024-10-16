@@ -4,15 +4,15 @@
 
 ```shell
 git clone https://github.com/qtecsolution/coaching-management.git
+cd coaching-management
 ```
 
 2. Install the dependencies
 
 ```shell
-cd coaching-management
-
 composer install
-
+```
+```shell
 npm install
 ```
 
@@ -40,6 +40,7 @@ php artisan migrate --seed
 
 ```shell
 php artisan serve
-
+```
+```shell
 npm run dev (build)
 ```
