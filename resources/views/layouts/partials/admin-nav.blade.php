@@ -19,8 +19,8 @@
             <li class="submenu-item {{ Route::is('admin.users.create') ? 'active' : '' }}">
                 <a href="{{ route('admin.users.create') }}">Add User</a>
             </li>
-            <li class="submenu-item">
-                <a href="#">Role & Permission</a>
+            <li class="submenu-item {{ Route::is('admin.users.roles.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.users.roles.index') }}">Role & Permission</a>
             </li>
         </ul>
     </li>

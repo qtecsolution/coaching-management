@@ -24,3 +24,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+// delete resource
+function deleteResource(url) {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This resource will be deleted permanently.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, keep it",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                method: "delete",
+                url: url,
+                data: {
+                    _token: $("meta[name='csrf-token']").attr("content"),
+                },
+                success: function (response) {
+                    Swal.fire({
+                        title: "Yay!",
+                        text: "The resource deleted successfully.",
+                        icon: "success",
+                    }).then((result) => {
+                        window.location.href = window.location.href;
+                    });
+                },
+                error: function (error) {
+                    Swal.fire({
+                        title: "Oops!",
+                        text: "Something is wrong, try again.",
+                        icon: "error",
+                    });
+                },
+            });
+        }
+    });
+}
