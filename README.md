@@ -28,7 +28,35 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-5. Create & setup database
+5. Create & Setup Database
+
+```shell
+mysql -u {username} -p
+```
+
+```sql
+CREATE DATABASE coaching_management;
+```
+
+```sql
+GRANT ALL ON coaching_management.* TO '{your_username}'@'localhost' IDENTIFIED BY '{your_password}';
+```
+
+```sql
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+Now update the `.env` file:
+
+```shell
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=coaching_management
+DB_USERNAME={your_username}
+DB_PASSWORD={your_password}
+``` 
 
 6. Migrate database (with seeder)
 
