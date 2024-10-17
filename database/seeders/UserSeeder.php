@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,12 +22,12 @@ class UserSeeder extends Seeder
             'is_admin' => true
         ]);
 
-        User::create([
-            'name' => 'User',
-            'phone' => '1234567891',
-            'email' => 'user@localhost',
-            'password' => bcrypt('password'),
-            'is_admin' => false
-        ]);
+        // Create fake users
+        $users = User::factory(50)->create();
+
+        // Create a student for each user
+        $users->each(function ($user) {
+            Student::factory()->create(['user_id' => $user->id]);
+        });
     }
 }

@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\PermissionController;
 use App\Http\Controllers\User\RoleController;
@@ -49,10 +50,13 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     // setting routes
     Route::get('/settings/{type}/edit', [SettingController::class, 'edit'])->name('settings.edit');
     Route::post('/settings/update', [SettingController::class, 'update'])->name('settings.update');
+
+    // student routes
+    Route::resource('students', StudentController::class);
 });
 
 // user routes
 Route::prefix('user')->as('user.')->middleware('isStudent')->group(function () {
     // dashboard
-    Route::get('/', [UserDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [StudentDashboardController::class, 'index'])->name('dashboard');
 });
