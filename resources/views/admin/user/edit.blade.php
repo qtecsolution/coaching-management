@@ -74,6 +74,20 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="status" class="form-label">Status<sup
+                                            class="text-danger">*</sup></label>
+                                    <select name="status" id="status" class="form-control" required>
+                                        <option value="1" {{ old('status', $user->status) == 1 ? 'selected' : '' }}>Active</option>
+                                        <option value="0" {{ old('status', $user->status) == 0 ? 'selected' : '' }}>Inactive</option>
+                                    </select>
+
+                                    @error('status')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 text-end mt-2">
                             <button type="submit" class="btn btn-primary">Save</button>

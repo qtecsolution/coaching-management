@@ -90,6 +90,7 @@ class UserController extends Controller
             'email' => 'nullable|unique:users,email,' . $user->id,
             'password' => 'nullable',
             'role' => 'required',
+            'status' => 'required|boolean',
         ]);
 
         $user->update([
@@ -98,6 +99,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => $request->password ? bcrypt($request->password) : $user->password,
             'is_admin' => $request->is_admin,
+            'status' => $request->status,
         ]);
 
         if ($request->has('role')) {
