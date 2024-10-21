@@ -40,6 +40,21 @@
         </ul>
     </li>
 
+    <li class="sidebar-item has-sub {{ Route::is('admin.batches.*') ? 'active' : '' }}">
+        <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
+            <i class="bi bi-easel"></i>
+            <span>Batches</span>
+        </a>
+        <ul class="submenu {{ Route::is('admin.batches.*') ? 'submenu-open' : 'submenu-close' }}">
+            <li class="submenu-item {{ Route::is('admin.batches.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.batches.index') }}">Batch List</a>
+            </li>
+            <li class="submenu-item {{ Route::is('admin.students.create') ? 'active' : '' }}">
+                <a href="{{ route('admin.batches.create') }}">Add Batch</a>
+            </li>
+        </ul>
+    </li>
+
     <li class="sidebar-item has-sub {{ Route::is('admin.settings.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
             <i class="bi bi-gear"></i>

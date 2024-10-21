@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentController;
@@ -53,6 +54,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // student routes
     Route::resource('students', StudentController::class);
+
+    // batch routes
+    Route::resource('batches', BatchController::class);
 });
 
 // user routes

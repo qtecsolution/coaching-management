@@ -10,4 +10,9 @@ class Batch extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function batch_days()
+    {
+        return $this->hasMany(BatchDay::class);
+    }
 }

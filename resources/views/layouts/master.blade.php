@@ -15,11 +15,12 @@
 
     @vite('public/assets/scss/pages/datatables.scss')
     @vite('public/assets/scss/app.scss')
+    @vite('resources/js/app.js')
     @stack('css')
 </head>
 
 <body>
-    <div id="app">
+    <div>
         <div id="sidebar">
             @include('layouts.sidebar')
         </div>

@@ -9,7 +9,6 @@
     <link rel="shortcut icon" href="{{ asset('assets/static/images/logo/favicon.png') }}" type="image/png">
 
     <link rel="stylesheet" href="{{ asset('assets/scss/app.scss') }}">
-    <link rel="stylesheet" href="{{ asset('assets/scss/themes/dark/app-dark.scss') }}">
     <link rel="stylesheet" href="{{ asset('assets/scss/pages/auth.scss') }}">
 
     @vite('public/assets/scss/app.scss')

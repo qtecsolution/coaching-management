@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->string('subject');
             $table->string('class')->nullable();
             $table->tinyInteger('status')->default(1);
+            $table->integer('total_students')->default(0);
             $table->timestamps();
         });
     }
