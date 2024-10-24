@@ -1,0 +1,10 @@
+/* change vue-toast padding */
+.v-toast__item .v-toast__text,
+.v-toast__text {
+    padding: .2em 1em !important;
+}
+
+.v-toast__item {
+    min-height: auto !important;
+    padding: .4em !important;
+}

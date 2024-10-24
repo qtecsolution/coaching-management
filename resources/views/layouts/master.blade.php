@@ -15,6 +15,7 @@
 
     @vite('public/assets/scss/pages/datatables.scss')
     @vite('public/assets/scss/app.scss')
+    @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     @stack('css')
 </head>
