@@ -10,7 +10,7 @@
             <div class="card">
                 {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body" id="app">
-                    <create-batch />
+                    <create-batch :route="{{ json_encode(route('admin.batches.store')) }}" />
                 </div>
             </div>
         </section>

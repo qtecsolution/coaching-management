@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('email')->unique()->nullable();
             $table->string('password');
-            $table->boolean('is_admin')->default(0);
+            $table->enum('user_type', ['admin', 'teacher', 'student'])->default('student');
             $table->tinyInteger('status')->default(1);
             $table->rememberToken();
             $table->timestamps();

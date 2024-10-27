@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->restrictOnDelete();
             $table->foreignIdFor(Batch::class)->constrained()->restrictOnDelete();
+            $table->foreignIdFor(BatchDay::class)->constrained()->restrictOnDelete();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

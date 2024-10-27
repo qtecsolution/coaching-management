@@ -18,13 +18,15 @@ Route::get('/', function () {
 
 // auth routes
 Route::prefix('auth')->as('auth.')->group(function () {
-    // login
-    Route::get('/login', [AuthController::class, 'loginView'])->name('login.show');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::middleware('auth')->group(function () {
+        // login
+        Route::get('/login', [AuthController::class, 'loginView'])->name('login.show');
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-    // registration
-    Route::get('/sign-up', [AuthController::class, 'signupView'])->name('signup.show');
-    Route::post('/sign-up', [AuthController::class, 'signup'])->name('signup');
+        // registration
+        Route::get('/sign-up', [AuthController::class, 'signupView'])->name('signup.show');
+        Route::post('/sign-up', [AuthController::class, 'signup'])->name('signup');
+    });
 
     // logout
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');

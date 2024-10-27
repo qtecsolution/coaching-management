@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'phone' => '1234567890',
             'email' => 'admin@localhost',
             'password' => bcrypt('password'),
-            'is_admin' => true
+            'user_type' => 'admin'
         ]);
 
         // Create fake users

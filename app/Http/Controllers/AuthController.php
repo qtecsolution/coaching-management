@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         if (auth()->attempt(['phone' => $request->phone, 'password' => $request->password], $remember)) {
             return redirect()->route(
-                auth()->user()->is_admin ? 'admin.dashboard' : 'user.dashboard'
+                auth()->user()->user_type ? 'admin.dashboard' : 'user.dashboard'
             );
         }
 
@@ -62,8 +62,8 @@ class AuthController extends Controller
 
         auth()->login($user);
 
-        return redirect()->route(
-            auth()->user()->is_admin ? 'admin.dashboard' : 'user.dashboard'
+        return redirect(
+            auth()->user()->getRedirectUrl()
         );
     }
 }

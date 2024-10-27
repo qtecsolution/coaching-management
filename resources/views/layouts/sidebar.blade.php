@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="sidebar-menu">
-        @if (auth()->user()->is_admin)
+        @if (in_array(auth()->user()->user_type, ['admin', 'teacher']))
             @include('layouts.partials.admin-nav')
         @else
             @include('layouts.partials.user-nav')

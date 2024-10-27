@@ -8,15 +8,16 @@
                     >
                     <input
                         type="text"
-                        name="name"
                         id="name"
                         placeholder="Name"
                         class="form-control"
                         v-model="name"
                         required
                     />
+                    <small class="text-danger" v-if="errors && errors.name">{{
+                        errors.name[0]
+                    }}</small>
                 </div>
-                <small class="text-danger"></small>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -25,35 +26,38 @@
                     >
                     <input
                         type="text"
-                        name="subject"
                         id="subject"
                         placeholder="Subject"
                         class="form-control"
                         v-model="subject"
                         required
                     />
+                    <small
+                        class="text-danger"
+                        v-if="errors && errors.subject"
+                        >{{ errors.subject[0] }}</small
+                    >
                 </div>
-                <small class="text-danger"></small>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="class" class="form-label">Class</label>
                     <input
                         type="class"
-                        name="class"
                         id="class"
                         placeholder="Class"
                         class="form-control"
                         v-model="classNo"
                     />
+                    <small class="text-danger" v-if="errors && errors.class">{{
+                        errors.class[0]
+                    }}</small>
                 </div>
-                <small class="text-danger"></small>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="teacher" class="form-label">Teacher</label>
                     <select
-                        name="teacher"
                         id="teacher"
                         class="form-control form-select"
                         v-model="teacher"
@@ -63,8 +67,12 @@
                         <option value="2">Teacher 2</option>
                         <option value="3">Teacher 3</option>
                     </select>
+                    <small
+                        class="text-danger"
+                        v-if="errors && errors.teacher"
+                        >{{ errors.teacher[0] }}</small
+                    >
                 </div>
-                <small class="text-danger"></small>
             </div>
         </div>
 
@@ -91,7 +99,6 @@
                         >Day<sup class="text-danger">*</sup></label
                     >
                     <select
-                        name="day"
                         id="day"
                         class="form-control form-select"
                         v-model="day.day"
@@ -104,7 +111,9 @@
                         <option value="6">Thursday</option>
                         <option value="7">Friday</option>
                     </select>
-                    <small class="text-danger"></small>
+                    <small class="text-danger" v-if="errors && errors.days">{{
+                        errors.days[0]
+                    }}</small>
                 </div>
             </div>
             <div class="col-md-3">
@@ -114,7 +123,6 @@
                     >
                     <input
                         type="time"
-                        name="start_time"
                         class="form-control"
                         id="start_time"
                         v-model="day.start_time"
@@ -129,7 +137,6 @@
                     >
                     <input
                         type="time"
-                        name="end_time"
                         class="form-control"
                         id="end_time"
                         v-model="day.end_time"
@@ -173,14 +180,17 @@ const toaster = (type = "info", message = "Test notification.") => {
         position: "top-right",
         duration: 4000,
         dismissible: true,
-        pauseOnHover: true
+        pauseOnHover: true,
     });
 };
+
+const props = defineProps(["route"]);
 
 const name = ref("");
 const subject = ref("");
 const classNo = ref("");
 const teacher = ref("");
+const errors = ref("");
 
 const days = ref([
     {
@@ -251,28 +261,53 @@ watch(
 );
 
 const save = async () => {
-    console.table({
-        name: name.value,
-        subject: subject.value,
-        class_no: classNo.value,
-        teacher: teacher.value,
-    });
+    // console.table({
+    //     name: name.value,
+    //     subject: subject.value,
+    //     class: classNo.value,
+    //     teacher: teacher.value,
+    // });
 
-    console.table(days.value);
+    // console.table(days.value);
+
+    if (
+        !name.value ||
+        !subject.value ||
+        !teacher.value ||
+        days.value.length < 1
+    ) {
+        toaster("warning", "Please fill in all the required fields.");
+        return false;
+    }
+
+    const form = new FormData();
+    form.append("name", name.value);
+    form.append("subject", subject.value);
+    form.append("class", classNo.value);
+    form.append("teacher", teacher.value);
+    form.append("days", JSON.stringify(days.value));
 
     await axios
-        .post(route("batches.store"), {
-            name: name.value,
-            subject: subject.value,
-            class_no: classNo.value,
-            teacher: teacher.value,
-            days: days.value,
-        })
-        .then(() => {
-            window.location.href = '/admin/batches?success=true';
+        .post(props.route, form)
+        .then((response) => {
+            console.log(response.data);
+            toaster("success", response.data.message);
+
+            name.value = "";
+            subject.value = "";
+            classNo.value = "";
+            teacher.value = "";
+            days.value = [{
+                day: "",
+                start_time: "",
+                end_time: "",
+            }];
         })
         .catch((error) => {
-            console.error(error);
+            errors.value = error.response.data.errors;
+            console.table(errors.value);
+
+            toaster("error", "Something went wrong. Please try again.");
         });
 };
 </script>

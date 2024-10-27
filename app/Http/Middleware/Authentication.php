@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class isStudent
+class Authentication
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,12 @@ class isStudent
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->is_admin == false) {
-            return $next($request);
+        if (auth()->check()) {
+            return redirect(
+                auth()->user()->getRedirectUrl()
+            );
         }
 
-        return redirect()->route('auth.login');
+        return $next($request);
     }
 }

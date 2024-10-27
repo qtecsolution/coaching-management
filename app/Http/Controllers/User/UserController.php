@@ -14,7 +14,7 @@ class UserController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $users = User::where('is_admin', true);
+            $users = User::where('user_type', 'admin');
             return DataTables::of($users)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {

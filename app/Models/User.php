@@ -41,4 +41,25 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getRedirectUrl()
+    {
+        switch ($this->attributes['user_type']) {
+            case 'admin':
+                return route('admin.dashboard');
+                break;
+
+            case 'teacher':
+                return route('admin.dashboard');
+                break;
+
+            case 'student':
+                return route('user.dashboard');
+                break;
+            
+            default:
+                return route('auth.login.show');
+                break;
+        }
+    }
 }

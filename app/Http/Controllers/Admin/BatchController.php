@@ -49,27 +49,40 @@ class BatchController extends Controller
         $request->validate([
             'name' => 'required',
             'subject' => 'required',
-            'days' => 'required|array',
-            'times' => 'required|array',
+            'days' => 'required',
+            'teacher' => 'required|exists:users,id'
         ]);
 
-        $batch = Batch::create([
-            'name' => $request->name,
-            'subject' => $request->subject,
-            'class' => $request->class
-        ]);
-
-        foreach ($request->days as $day) {
-            BatchDay::create([
-                'batch_id' => $batch->id,
-                'day' => $day,
-                'start_time' => $request->start_time,
-                'end_time' => $request->end_time
+        try {
+            $batch = Batch::create([
+                'name' => $request->name,
+                'subject' => $request->subject,
+                'class' => $request->class
             ]);
+
+            $days = json_decode($request->days);
+            foreach ($days as $day) {
+                BatchDay::create([
+                    'batch_id' => $batch->id,
+                    'day' => $day->day,
+                    'start_time' => $day->start_time,
+                    'end_time' => $day->end_time
+                ]);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Batch added successfully.',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage() . ' on line ' . $th->getLine());
+
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 500);
         }
 
-        toast('Batch added successfully.', 'success');
-        return to_route('admin.batches.index');
     }
 
     /**
