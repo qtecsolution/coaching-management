@@ -6,7 +6,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/js/app.css', 
+                'resources/css/app.css', 
                 'resources/js/app.js', 
                 'public/assets/scss/app.scss', 
                 'public/assets/scss/pages/auth.scss',
