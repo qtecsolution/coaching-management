@@ -19,6 +19,9 @@ services:
         environment:
             SERVICE_NAME: app
             SERVICE_TAGS: dev
+        ports:
+            - "8000:8000"
+            - "5173:5173"
 
     db:
         image: mysql:8.0
