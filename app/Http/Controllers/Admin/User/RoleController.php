@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -34,10 +35,10 @@ class RoleController extends Controller
         ]);
 
         if (Role::create($request->only('name'))) {
-            toast('Role created successfully.', 'success');
+            alert('Yahoo!', 'Role created successfully.', 'success');
             return back();
         } else {
-            toast('Something went wrong.', 'error');
+            alert('Oops!', 'Something went wrong.', 'error');
             return back();
         }
     }
@@ -55,7 +56,7 @@ class RoleController extends Controller
         $role = Role::findOrFail($id);
 
         if ($role->id == 1) {
-            toast('Cannot update admin role.', 'error');
+            alert('Oops!', 'Cannot update admin role.', 'error');
             return back();
         }
 
@@ -63,7 +64,7 @@ class RoleController extends Controller
             'name' => $request->name
         ]);
 
-        toast('Role updated successfully.', 'success');
+        alert('Yahoo!', 'Role updated successfully.', 'success');
         return back();
     }
 
@@ -92,7 +93,7 @@ class RoleController extends Controller
 
             return true;
         } else {
-            throw new Exception('Cannot delete default role.');
+            throw new Exception('You can not delete admin role.');
         }
     }
 
@@ -102,21 +103,28 @@ class RoleController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        try {
+            app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $role = Role::findOrFail($id);
-        if ($role->id == 1) {
-            $role->syncPermissions(Permission::all());
+            $role = Role::findOrFail($id);
+            if ($role->id == 1) {
+                $role->syncPermissions(Permission::all());
 
-            toast($role->name . ' permissions are not editable.', 'info');
+                alert('Hey!', $role->name . ' permissions are not editable.', 'info');
+                return back();
+            }
+
+            $permissions = $request->get('permissions', []);
+            $role->syncPermissions($permissions);
+
+            alert('Yahoo!', 'Permissions has been updated.', 'success');
+            return back();
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+
+            alert('Oops!', 'Something went wrong.', 'error');
             return back();
         }
-        
-        $permissions = $request->get('permissions', []);
-        $role->syncPermissions($permissions);
-
-        toast('Permissions has been updated.', 'success');
-        return back();
     }
 
     protected function rolePermissions($id)

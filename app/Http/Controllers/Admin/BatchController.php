@@ -18,7 +18,7 @@ class BatchController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            return DataTables::of(Batch::orderBy('id', 'desc'))
+            return DataTables::of(Batch::latest())
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('action', function ($row) {
@@ -49,7 +49,7 @@ class BatchController extends Controller
      */
     public function create()
     {
-        $teachers = User::where('user_type', 'teacher')->orderBy('id', 'desc')->get();
+        $teachers = User::where('user_type', 'teacher')->latest()->get();
         return view('admin.batch.create', compact('teachers'));
     }
 
@@ -111,7 +111,7 @@ class BatchController extends Controller
     public function edit(string $id)
     {
         $batch = Batch::with('batch_days')->find($id);
-        $teachers = User::where('user_type', 'teacher')->orderBy('id', 'desc')->get();
+        $teachers = User::where('user_type', 'teacher')->latest()->get();
 
         return view('admin.batch.edit', compact('batch', 'teachers'));
     }

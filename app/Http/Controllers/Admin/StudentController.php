@@ -17,7 +17,7 @@ class StudentController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            return DataTables::of(Student::orderBy('id', 'desc'))
+            return DataTables::of(Student::latest())
                 ->addIndexColumn()
                 ->addColumn('name', function ($row) {
                     return $row->user->name;
@@ -75,30 +75,37 @@ class StudentController extends Controller
             'contact_phone' => 'required',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
 
-        $student = Student::create([
-            'user_id' => $user->id,
-            'student_id' => rand(1000, 9999) . $user->id,
-            'school_name' => $request->school_name,
-            'class' => $request->class,
-            'date_of_birth' => $request->date_of_birth,
-            'father_name' => $request->father_name,
-            'mother_name' => $request->mother_name,
-            'address' => $request->address,
-            'emergency_contact' => json_encode([
-                'name' => $request->contact_name,
-                'phone' => $request->contact_phone
-            ])
-        ]);
+            $student = Student::create([
+                'user_id' => $user->id,
+                'student_id' => rand(1000, 9999) . $user->id,
+                'school_name' => $request->school_name,
+                'class' => $request->class,
+                'date_of_birth' => $request->date_of_birth,
+                'father_name' => $request->father_name,
+                'mother_name' => $request->mother_name,
+                'address' => $request->address,
+                'emergency_contact' => json_encode([
+                    'name' => $request->contact_name,
+                    'phone' => $request->contact_phone
+                ])
+            ]);
 
-        toast('Student added successfully.', 'success');
-        return to_route('admin.students.index');
+            alert('Yahoo!', 'Student added successfully.', 'success');
+            return to_route('admin.students.index');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+
+            alert('Oops!', 'Something went wrong.', 'error');
+            return back();
+        }
     }
 
     /**
@@ -140,29 +147,36 @@ class StudentController extends Controller
             'status' => 'required|boolean',
         ]);
 
-        $student->user->update([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'password' => $request->password ? bcrypt($request->password) : $student->user->password,
-        ]);
+        try {
+            $student->user->update([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => $request->password ? bcrypt($request->password) : $student->user->password,
+            ]);
 
-        $student->update([
-            'school_name' => $request->school_name,
-            'class' => $request->class,
-            'date_of_birth' => $request->date_of_birth,
-            'father_name' => $request->father_name,
-            'mother_name' => $request->mother_name,
-            'address' => $request->address,
-            'emergency_contact' => json_encode([
-                'name' => $request->contact_name,
-                'phone' => $request->contact_phone
-            ]),
-            'status' => $request->status
-        ]);
+            $student->update([
+                'school_name' => $request->school_name,
+                'class' => $request->class,
+                'date_of_birth' => $request->date_of_birth,
+                'father_name' => $request->father_name,
+                'mother_name' => $request->mother_name,
+                'address' => $request->address,
+                'emergency_contact' => json_encode([
+                    'name' => $request->contact_name,
+                    'phone' => $request->contact_phone
+                ]),
+                'status' => $request->status
+            ]);
 
-        toast('Student updated successfully.', 'success');
-        return to_route('admin.students.index');
+            alert('Yahoo!', 'Student updated successfully.', 'success');
+            return to_route('admin.students.index');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+
+            alert('Oops!', 'Something went wrong.', 'error');
+            return back();
+        }
     }
 
     /**
@@ -176,7 +190,7 @@ class StudentController extends Controller
 
             return true;
         } catch (\Throwable $th) {
-            Log::error($th->getMessage());
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
             return false;
         }
     }
@@ -193,12 +207,19 @@ class StudentController extends Controller
      */
     public function updateStatus(Request $request)
     {
-        $student = Student::find($request->id);
-        $student->update([
-            'status' => $request->status
-        ]);
+        try {
+            $student = Student::find($request->id);
+            $student->update([
+                'status' => $request->status
+            ]);
 
-        toast('Status updated successfully.', 'success');
-        return back();
+            alert('Yahoo!', 'Status updated successfully.', 'success');
+            return back();
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+
+            alert('Oops!', 'Something went wrong.', 'error');
+            return back();
+        }
     }
 }

@@ -17,7 +17,9 @@ class UserController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $users = User::where('user_type', request()->user_type);
+            $users = User::where('user_type', request()->user_type)
+                ->latest();
+
             return DataTables::of($users)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
@@ -33,7 +35,7 @@ class UserController extends Controller
                 ->addColumn('role', function ($row) {
                     $roles = $row->getRoleNames();
                     return isset($roles[0]) ? '<span class="badge bg-secondary">' . $roles[0] . '</span>' : '--';
-                })                
+                })
                 ->addColumn('action', function ($row) {
                     return view('admin.user.action', compact('row'));
                 })
@@ -69,33 +71,40 @@ class UserController extends Controller
             'contact_phone' => 'required_if:user_type,teacher',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'user_type' => $request->user_type
-        ]);
-
-        if ($request->user_type == 'teacher') {
-            Teacher::create([
-                'user_id' => $user->id,
-                'school_name' => $request->school_name,
-                'nid_number' => $request->nid_number,
-                'address' => $request->address,
-                'emergency_contact' => json_encode([
-                    'name' => $request->contact_name,
-                    'phone' => $request->contact_phone
-                ])
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'user_type' => $request->user_type
             ]);
-        }
 
-        if ($request->has('role')) {
-            $user->assignRole($request->role);
-        }
+            if ($request->user_type == 'teacher') {
+                Teacher::create([
+                    'user_id' => $user->id,
+                    'school_name' => $request->school_name,
+                    'nid_number' => $request->nid_number,
+                    'address' => $request->address,
+                    'emergency_contact' => json_encode([
+                        'name' => $request->contact_name,
+                        'phone' => $request->contact_phone
+                    ])
+                ]);
+            }
 
-        toast('User added successfully.', 'success');
-        return to_route('admin.users.index');
+            if ($request->has('role')) {
+                $user->assignRole($request->role);
+            }
+
+            alert('Yahoo!', 'User added successfully.', 'success');
+            return to_route('admin.users.index');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+
+            alert('Oops!', 'Something went wrong.', 'error');
+            return back();
+        }
     }
 
     // function to show edit user form
@@ -168,12 +177,12 @@ class UserController extends Controller
                 $user->syncRoles($request->role);
             }
 
-            toast('User updated successfully.', 'success');
+            alert('Yahoo!', 'User updated successfully.', 'success');
             return to_route('admin.users.index');
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
 
-            toast('Something went wrong.', 'error');
+            alert('Oops!', 'Something went wrong.', 'error');
             return back();
         }
     }
@@ -181,11 +190,11 @@ class UserController extends Controller
     // function to delete user
     public function destroy(User $user)
     {
-        try {
-            if ($user->id == 1) {
-                return false;
-            }
+        if ($user->id == 1) {
+            return false;
+        }
 
+        try {
             $user->delete();
             return true;
         } catch (\Throwable $th) {
