@@ -78,3 +78,19 @@ for (let i = 0; i < choices.length; i++) {
         initChoice = new Choices(choices[i])
     }
 }
+
+// photo preview
+function photoPreview(event, id) {
+    var input = event.target;
+    if (input.files && input.files[0]) {
+        var image = document.getElementById(id);
+        var file = input.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            image.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
