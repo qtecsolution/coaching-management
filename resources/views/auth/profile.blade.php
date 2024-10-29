@@ -1,76 +1,112 @@
-{% set title = 'Account Profile' %}
-{% set filename = 'account-profile.html' %}
+@extends('layouts.master')
 
-{% extends 'src/layouts/master.html' %}
-{% block content %}
-<div class="page-heading">
-    <div class="page-title">
-        <div class="row">
-            <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Account Profile</h3>
-                <p class="text-subtitle text-muted">A page where users can change profile information</p>
-            </div>
-            <div class="col-12 col-md-6 order-md-2 order-first">
-                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Profile</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-    <section class="section">
-        <div class="row">
-            <div class="col-12 col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-center align-items-center flex-column">
-                            <div class="avatar avatar-2xl">
-                                <img src="assets/static/images/faces/2.jpg" alt="Avatar">
+@section('title', 'Student List')
+
+@section('content')
+    <div class="page-heading">
+        <x-page-title title="Profile" subtitle="" pageTitle="Profile" />
+
+        <section class="section">
+            <div class="row">
+                <div class="col-12 col-lg-8 order-2 order-lg-1">
+                    <form action="{{ route('auth.profile.update') }}" method="post">
+                        @csrf
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="cart-title">Change Details</h4>
                             </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" name="name" id="name" class="form-control"
+                                        placeholder="Your Name" value="{{ old('name', auth()->user()->name) }}">
 
-                            <h3 class="mt-3">John Doe</h3>
-                            <p class="text-small">Junior Software Engineer</p>
+                                    @error('name')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="text" name="phone" id="phone" class="form-control"
+                                        placeholder="Your Phone" value="{{ old('phone', auth()->user()->phone) }}">
+
+                                    @error('phone')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="text" name="email" id="email" class="form-control"
+                                        placeholder="Your Email" value="{{ old('email', auth()->user()->email) }}">
+
+                                    @error('email')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="cart-title">Change Password</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="text" name="password" id="password" class="form-control"
+                                        placeholder="Your Password" value="{{ old('password') }}">
+
+                                    @error('password')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="password_confirmation" class="form-label">Confirm Password</label>
+                                    <input type="text" name="password_confirmation" id="password_confirmation"
+                                        class="form-control" placeholder="Your Confirm Password"
+                                        value="{{ old('password_confirmation') }}">
+
+                                    @error('password_confirmation')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12 col-lg-4 order-1 order-lg-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center align-items-center flex-column">
+                                <div class="avatar avatar-2xl">
+                                    <img src="{{ asset('assets/static/images/faces/2.jpg') }}"
+                                        alt="{{ auth()->user()->name }}">
+                                </div>
+
+                                <h3 class="mt-3">{{ auth()->user()->name }}</h3>
+                                <p class="badge bg-primary">
+                                    @if (auth()->user()->user_type == 'admin')
+                                        Admin User
+                                    @elseif (auth()->user()->user_type == 'teacher')
+                                        #{{ auth()->user()->teacher->teacher_id }}
+                                    @elseif (auth()->user()->user_type == 'student')
+                                        #{{ auth()->user()->student->student_id }}
+                                    @else
+                                        {{ auth()->user()->phone }}
+                                    @endif
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-8">
-                <div class="card">
-                    <div class="card-body">
-                        <form action="#" method="get">
-                            <div class="form-group">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Your Name" value="John Doe">
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="text" name="email" id="email" class="form-control" placeholder="Your Email" value="john.doe@example.net">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone" class="form-label">Phone</label>
-                                <input type="text" name="phone" id="phone" class="form-control" placeholder="Your Phone" value="083xxxxxxxxx">
-                            </div>
-                            <div class="form-group">
-                                <label for="birthday" class="form-label">Birthday</label>
-                                <input type="date" name="birthday" id="birthday" class="form-control" placeholder="Your Birthday">
-                            </div>
-                            <div class="form-group">
-                                <label for="gender" class="form-label">Gender</label>
-                                <select name="gender" id="gender" class="form-control">
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-{% endblock %}
+        </section>
+    </div>
+@endsection

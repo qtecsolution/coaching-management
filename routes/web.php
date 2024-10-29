@@ -28,6 +28,10 @@ Route::prefix('auth')->as('auth.')->group(function () {
         Route::post('/sign-up', [AuthController::class, 'signup'])->name('signup');
     });
 
+    // profile
+    Route::get('/profile', [AuthController::class, 'profileView'])->name('profile');
+    Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
+
     // logout
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

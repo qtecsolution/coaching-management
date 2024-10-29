@@ -24,6 +24,12 @@
         </ul>
     </li> --}}
 
+    <li class="sidebar-item mt-4">
+        <a href="{{ route('auth.profile') }}" class="sidebar-link">
+            <i class="bi bi-person-badge"></i>
+            <span>Profile</span>
+        </a>
+    </li>
     <li class="sidebar-item">
         <a href="{{ route('auth.logout') }}" class="sidebar-link">
             <i class="bi bi-box-arrow-left"></i>
