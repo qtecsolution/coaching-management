@@ -41,7 +41,6 @@
             responsive: true,
             serverSide: true,
             processing: true,
-            autoWidth: false,
             ajax: "{{ route('admin.batches.index') }}",
             columns: [{
                     data: 'DT_RowIndex',

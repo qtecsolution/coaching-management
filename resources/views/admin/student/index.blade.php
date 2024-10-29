@@ -44,7 +44,6 @@
             responsive: true,
             serverSide: true,
             processing: true,
-            autoWidth: false,
             ajax: "{{ route('admin.students.index') }}",
             columns: [{
                     data: 'student_id',
