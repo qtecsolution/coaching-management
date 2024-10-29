@@ -44,7 +44,7 @@ function deleteResource(url) {
                 },
                 success: function (response) {
                     Swal.fire({
-                        title: "Yay!",
+                        title: "Yahoo!",
                         text: "The resource deleted successfully.",
                         icon: "success",
                     }).then((result) => {
