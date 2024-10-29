@@ -2,14 +2,6 @@
 
 @section('title', 'Batch List')
 
-@push('css')
-    <style>
-        table.dataTable {
-            table-layout: auto !important;
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <x-page-title title="Student List" subtitle="" pageTitle="Student List" />
@@ -23,10 +15,11 @@
                         <table class="table" id="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>#</th>
                                     <th>Name</th>
                                     <th>Subject</th>
-                                    <th>Teacher</th>
+                                    <th>Class</th>
+                                    <th>Weekly Classes</th>
                                     <th>Total Students</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -55,12 +48,20 @@
                     name: 'DT_RowIndex'
                 },
                 {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
                     data: 'subject',
                     name: 'subject'
                 },
                 {
-                    data: 'teacher',
-                    name: 'teacher'
+                    data: 'class',
+                    name: 'class'
+                },
+                {
+                    data: 'weekly_classes',
+                    name: 'weekly_classes'
                 },
                 {
                     data: 'total_students',

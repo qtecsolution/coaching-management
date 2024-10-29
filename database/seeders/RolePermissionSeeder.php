@@ -39,7 +39,11 @@ class RolePermissionSeeder extends Seeder
             'view_students',
             'create_student',
             'update_student',
-            'delete_student'
+            'delete_student',
+            'view_batches',
+            'create_batch',
+            'update_batch',
+            'delete_batch',
         ];
 
         $permissions = collect($permissions)->map(function ($permission) {

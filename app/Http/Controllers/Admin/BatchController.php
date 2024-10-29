@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\BatchDay;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
@@ -23,10 +24,20 @@ class BatchController extends Controller
                 ->addColumn('action', function ($row) {
                     return view('admin.batch.action', compact('row'));
                 })
-                ->addColumn('teacher', function ($row) {
-                    return auth()->user()->name;
+                ->addColumn('weekly_classes', function ($row) {
+                    return $row->batch_days->count() . ' days';
                 })
-                ->rawColumns(['action', 'teacher'])
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 1) {
+                        return '<span class="badge bg-success">Active</span>';
+                    } else {
+                        return '<span class="badge bg-danger">Inactive</span>';
+                    }
+                })
+                ->editColumn('class', function ($row) {
+                    return $row->class ?? 'N/A';
+                })
+                ->rawColumns(['action', 'weekly_classes', 'status'])
                 ->make(true);
         }
 
@@ -38,7 +49,8 @@ class BatchController extends Controller
      */
     public function create()
     {
-        return view('admin.batch.create');
+        $teachers = User::where('user_type', 'teacher')->orderBy('id', 'desc')->get();
+        return view('admin.batch.create', compact('teachers'));
     }
 
     /**
@@ -49,8 +61,7 @@ class BatchController extends Controller
         $request->validate([
             'name' => 'required',
             'subject' => 'required',
-            'days' => 'required',
-            'teacher' => 'required|exists:users,id'
+            'days' => 'required'
         ]);
 
         try {
@@ -66,7 +77,8 @@ class BatchController extends Controller
                     'batch_id' => $batch->id,
                     'day' => $day->day,
                     'start_time' => $day->start_time,
-                    'end_time' => $day->end_time
+                    'end_time' => $day->end_time,
+                    'user_id' => $day->teacher
                 ]);
             }
 
@@ -82,7 +94,6 @@ class BatchController extends Controller
                 'message' => $th->getMessage(),
             ], 500);
         }
-
     }
 
     /**
@@ -90,7 +101,8 @@ class BatchController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $batch = Batch::with('batch_days')->findOrFail($id);
+        return view('admin.batch.show', compact('batch'));
     }
 
     /**
@@ -99,53 +111,56 @@ class BatchController extends Controller
     public function edit(string $id)
     {
         $batch = Batch::with('batch_days')->find($id);
-        return view('admin.batch.edit', compact('batch'));
+        $teachers = User::where('user_type', 'teacher')->orderBy('id', 'desc')->get();
+
+        return view('admin.batch.edit', compact('batch', 'teachers'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required',
             'subject' => 'required',
-            'days' => 'required|array',
-            'times' => 'required|array',
+            'days' => 'required'
         ]);
 
-        $batch = Batch::with('batch_days')->find($id);
+        try {
+            $batch = Batch::findOrFail($id);
 
-        $batch->update([
-            'name' => $request->name,
-            'subject' => $request->subject,
-            'class' => $request->class
-        ]);
+            $batch->update([
+                'name' => $request->name,
+                'subject' => $request->subject,
+                'class' => $request->class
+            ]);
 
-        foreach ($request->days as $key => $day) {
-            $checkExist = BatchDay::where('batch_id', $batch->id)->where('day', $day)
-                ->where('start_time', $request->times[$key]['start_time'])
-                ->where('end_time', $request->times[$key]['end_time'])
-                ->first();
+            BatchDay::where('batch_id', $batch->id)->delete();
 
-            if (!$checkExist) {
+            $days = json_decode($request->days);
+            foreach ($days as $day) {
                 BatchDay::create([
                     'batch_id' => $batch->id,
-                    'day' => $day,
-                    'start_time' => $request->times[$key]['start_time'],
-                    'end_time' => $request->times[$key]['end_time']
-                ]);
-            } else {
-                $checkExist->update([
-                    'day' => $day,
-                    'start_time' => $request->times[$key]['start_time'],
-                    'end_time' => $request->times[$key]['end_time']
+                    'day' => $day->day,
+                    'start_time' => $day->start_time,
+                    'end_time' => $day->end_time,
+                    'user_id' => $day->teacher
                 ]);
             }
-        }
 
-        toast('Batch updated successfully.', 'success');
-        return to_route('admin.batches.index');
+            return response()->json([
+                'status' => true,
+                'message' => 'Batch updated successfully.',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage() . ' on line ' . $th->getLine());
+
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**

@@ -11,8 +11,7 @@ docker-stop:
 	docker compose stop
 
 docker-up-build:
-	docker compose build --no-cache
-	docker compose up -d
+	docker compose up -d --build
 
 composer-install:
 	docker exec coaching-app bash -c "composer install"
@@ -30,6 +29,9 @@ setup-env:
 npm-install-build:
 	docker exec coaching-app bash -c "npm install"
 	docker exec coaching-app bash -c "npm run build"
+
+npm-run-dev:
+	docker exec coaching-app bash -c "npm run dev"
 
 generate-key:
 	docker exec coaching-app bash -c "php artisan key:generate"

@@ -2,14 +2,6 @@
 
 @section('title', 'Student List')
 
-@push('css')
-    <style>
-        table.dataTable {
-            table-layout: auto !important;
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <x-page-title title="Student List" subtitle="" pageTitle="Student List" />

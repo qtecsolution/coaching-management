@@ -1,4 +1,8 @@
 <div class="btn-group">
+    <a href="{{ route('admin.batches.show', $row->id) }}" class="btn btn-sm btn-info">
+        <i class="bi bi-eye"></i>
+    </a>
+
     @can('update_batch')
         <a href="{{ route('admin.batches.edit', $row->id) }}" class="btn btn-sm btn-primary">
             <i class="bi bi-pencil"></i>

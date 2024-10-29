@@ -8,7 +8,7 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\PermissionController;
 use App\Http\Controllers\User\RoleController;
-use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

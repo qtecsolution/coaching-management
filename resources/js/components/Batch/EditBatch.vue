@@ -191,21 +191,33 @@ const toaster = (type = "info", message = "Test notification.") => {
     });
 };
 
-const props = defineProps(["route", "teachers"]);
+const props = defineProps(["route", "teachers", "batch"]);
 
-const name = ref("");
-const subject = ref("");
-const classNo = ref("");
+const name = ref(props?.batch?.name);
+const subject = ref(props?.batch?.subject);
+const classNo = ref(props?.batch?.class);
+const days = ref([]);
 const errors = ref("");
 
-const days = ref([
-    {
-        day: "",
-        start_time: "",
-        end_time: "",
-        teacher: "",
-    },
-]);
+if (props?.batch?.batch_days?.length > 0) {
+    props.batch.batch_days.forEach((day) => {
+        days.value.push({
+            day: day.day,
+            start_time: day.start_time,
+            end_time: day.end_time,
+            teacher: day.user_id,
+        });
+    });
+} else {
+    days.value = [
+        {
+            day: "",
+            start_time: "",
+            end_time: "",
+            teacher: "",
+        },
+    ];
+}
 
 const addDay = () => {
     days.value.push({
@@ -278,16 +290,13 @@ const save = async () => {
 
     // console.table(days.value);
 
-    if (
-        !name.value ||
-        !subject.value ||
-        days.value.length < 1
-    ) {
+    if (!name.value || !subject.value || days.value.length < 1) {
         toaster("warning", "Please fill in all the required fields.");
         return false;
     }
 
     const form = new FormData();
+    form.append("_method", "PUT");
     form.append("name", name.value);
     form.append("subject", subject.value);
     form.append("class", classNo.value);
@@ -298,18 +307,6 @@ const save = async () => {
         .then((response) => {
             console.log(response.data);
             toaster("success", response.data.message);
-
-            name.value = "";
-            subject.value = "";
-            classNo.value = "";
-            teacher.value = "";
-            days.value = [
-                {
-                    day: "",
-                    start_time: "",
-                    end_time: "",
-                },
-            ];
         })
         .catch((error) => {
             errors.value = error.response.data.errors;
