@@ -6,9 +6,9 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/css/app.css', 
-                'resources/js/app.js', 
-                'public/assets/scss/app.scss', 
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'public/assets/scss/app.scss',
                 'public/assets/scss/pages/auth.scss',
                 'public/assets/scss/pages/datatables.scss',
             ],
@@ -16,8 +16,11 @@ export default defineConfig({
         }),
         vue(),
     ],
-    server: { 
-        host: '0.0.0.0',
-        port: 5173
+    server: {
+        host: true,
+        port: 5173,
+        watch: {
+            usePolling: true
+        }
     }
 });
