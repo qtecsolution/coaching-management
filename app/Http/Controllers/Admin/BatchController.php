@@ -87,7 +87,7 @@ class BatchController extends Controller
                 'message' => 'Batch added successfully.',
             ]);
         } catch (\Throwable $th) {
-            Log::info($th->getMessage() . ' on line ' . $th->getLine());
+            Log::info($th->getMessage() . ' on line ' . $th->getLine() . ' in ' . $th->getFile());
 
             return response()->json([
                 'status' => false,
@@ -154,7 +154,7 @@ class BatchController extends Controller
                 'message' => 'Batch updated successfully.',
             ]);
         } catch (\Throwable $th) {
-            Log::info($th->getMessage() . ' on line ' . $th->getLine());
+            Log::info($th->getMessage() . ' on line ' . $th->getLine() . ' in ' . $th->getFile());
 
             return response()->json([
                 'status' => false,
@@ -174,7 +174,7 @@ class BatchController extends Controller
 
             return true;
         } catch (\Throwable $th) {
-            Log::error($th->getMessage());
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in ' . $th->getFile());
             return false;
         }
     }

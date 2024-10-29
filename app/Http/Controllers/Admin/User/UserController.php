@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Teacher;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -15,7 +17,7 @@ class UserController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $users = User::where('user_type', 'admin');
+            $users = User::where('user_type', request()->user_type);
             return DataTables::of($users)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
@@ -25,10 +27,13 @@ class UserController extends Controller
                         return '<span class="badge bg-danger">Inactive</span>';
                     }
                 })
+                ->editColumn('email', function ($row) {
+                    return $row->email ? $row->email : '--';
+                })
                 ->addColumn('role', function ($row) {
                     $roles = $row->getRoleNames();
-                    return '<span class="badge bg-secondary">' . $roles[0] . '</span>';
-                })
+                    return isset($roles[0]) ? '<span class="badge bg-secondary">' . $roles[0] . '</span>' : '--';
+                })                
                 ->addColumn('action', function ($row) {
                     return view('admin.user.action', compact('row'));
                 })
@@ -56,6 +61,12 @@ class UserController extends Controller
             'email' => 'nullable|unique:users,email',
             'password' => 'required',
             'role' => 'required',
+            'user_type' => 'required|in:admin,teacher',
+            'school_name' => 'required_if:user_type,teacher',
+            'nid_number' => 'required_if:user_type,teacher',
+            'address' => 'required_if:user_type,teacher',
+            'contact_name' => 'required_if:user_type,teacher',
+            'contact_phone' => 'required_if:user_type,teacher',
         ]);
 
         $user = User::create([
@@ -63,8 +74,21 @@ class UserController extends Controller
             'phone' => $request->phone,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'is_admin' => $request->is_admin,
+            'user_type' => $request->user_type
         ]);
+
+        if ($request->user_type == 'teacher') {
+            Teacher::create([
+                'user_id' => $user->id,
+                'school_name' => $request->school_name,
+                'nid_number' => $request->nid_number,
+                'address' => $request->address,
+                'emergency_contact' => json_encode([
+                    'name' => $request->contact_name,
+                    'phone' => $request->contact_phone
+                ])
+            ]);
+        }
 
         if ($request->has('role')) {
             $user->assignRole($request->role);
@@ -82,7 +106,7 @@ class UserController extends Controller
         return view('admin.user.edit', compact('user', 'roles'));
     }
 
-    // function to update user
+    // Function to update user
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -92,33 +116,81 @@ class UserController extends Controller
             'password' => 'nullable',
             'role' => 'required',
             'status' => 'required|boolean',
+            'user_type' => 'required|in:admin,teacher',
+            'school_name' => 'required_if:user_type,teacher',
+            'nid_number' => 'required_if:user_type,teacher',
+            'address' => 'required_if:user_type,teacher',
+            'contact_name' => 'required_if:user_type,teacher',
+            'contact_phone' => 'required_if:user_type,teacher',
         ]);
 
-        $user->update([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'password' => $request->password ? bcrypt($request->password) : $user->password,
-            'is_admin' => $request->is_admin,
-            'status' => $request->status,
-        ]);
+        try {
+            $user->update([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => $request->password ? bcrypt($request->password) : $user->password,
+                'user_type' => $request->user_type,
+                'status' => $request->status,
+            ]);
 
-        if ($request->has('role')) {
-            $user->syncRoles($request->role);
+            if ($request->user_type == 'teacher') {
+                if ($user->teacher) {
+                    $user->teacher->update([
+                        'school_name' => $request->school_name,
+                        'nid_number' => $request->nid_number,
+                        'address' => $request->address,
+                        'emergency_contact' => json_encode([
+                            'name' => $request->contact_name,
+                            'phone' => $request->contact_phone
+                        ])
+                    ]);
+                } else {
+                    Teacher::create([
+                        'user_id' => $user->id,
+                        'teacher_id' => rand(1000, 9999) . $user->id,
+                        'school_name' => $request->school_name,
+                        'nid_number' => $request->nid_number,
+                        'address' => $request->address,
+                        'emergency_contact' => json_encode([
+                            'name' => $request->contact_name,
+                            'phone' => $request->contact_phone
+                        ])
+                    ]);
+                }
+            } else {
+                if ($user->teacher) {
+                    $user->teacher->delete();
+                }
+            }
+
+            if ($request->filled('role')) {
+                $user->syncRoles($request->role);
+            }
+
+            toast('User updated successfully.', 'success');
+            return to_route('admin.users.index');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+
+            toast('Something went wrong.', 'error');
+            return back();
         }
-
-        toast('User updated successfully.', 'success');
-        return to_route('admin.users.index');
     }
 
     // function to delete user
     public function destroy(User $user)
     {
-        if ($user->id == 1) {
-            throw new Exception('You can not delete this user.');
-        }
+        try {
+            if ($user->id == 1) {
+                return false;
+            }
 
-        $user->delete();
-        return true;
+            $user->delete();
+            return true;
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            return false;
+        }
     }
 }
