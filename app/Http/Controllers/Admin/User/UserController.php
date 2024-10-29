@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
@@ -113,6 +114,10 @@ class UserController extends Controller
     // function to delete user
     public function destroy(User $user)
     {
+        if ($user->id == 1) {
+            throw new Exception('You can not delete this user.');
+        }
+
         $user->delete();
         return true;
     }

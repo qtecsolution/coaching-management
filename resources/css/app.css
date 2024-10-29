@@ -14,7 +14,7 @@ table th {
     background-color: #435EBE !important;
     color: white !important;
     line-height: 1;
-    width: 1000px !important;
+    padding: 15px !important;
 }
 
 table th:first-child {
