@@ -2,6 +2,40 @@
 
 @section('title', 'Student List')
 
+@push('css')
+    <style>
+        .avatar {
+            position: relative;
+        }
+
+        .avatar-upload-icon {
+            width: 30px;
+            height: 30px;
+            overflow: hidden;
+            background: #dee2e6;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: #000000;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            cursor: pointer !important;
+        }
+
+        .avatar-upload-icon input {
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer !important;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="page-heading">
         <x-page-title title="Profile" subtitle="" pageTitle="Profile" />
@@ -86,8 +120,13 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center flex-column">
                                 <div class="avatar avatar-2xl">
-                                    <img src="{{ asset('assets/static/images/faces/2.jpg') }}"
-                                        alt="{{ auth()->user()->name }}">
+                                    <img src="{{ asset('assets/static/images/faces/2.jpg') }}" width="100%"
+                                        alt="{{ auth()->user()->name }}" id="profile-photo">
+
+                                    <div class="avatar-upload-icon">
+                                        <i class="bi bi-image"></i>
+                                        <input type="file" name="profile_photo" onchange="photoPreview(event, 'profile-photo')" id="profile-photo-input">
+                                    </div>
                                 </div>
 
                                 <h3 class="mt-3">{{ auth()->user()->name }}</h3>
