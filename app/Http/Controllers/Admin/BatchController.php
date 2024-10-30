@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\BatchDay;
+use App\Models\Level;
+use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -35,7 +37,7 @@ class BatchController extends Controller
                     }
                 })
                 ->editColumn('class', function ($row) {
-                    return $row->class ?? 'N/A';
+                    return $row->level->name ?? '--';
                 })
                 ->rawColumns(['action', 'weekly_classes', 'status'])
                 ->make(true);
@@ -49,8 +51,11 @@ class BatchController extends Controller
      */
     public function create()
     {
-        $teachers = User::where('user_type', 'teacher')->latest()->get();
-        return view('admin.batch.create', compact('teachers'));
+        $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
+        $subjects = Subject::active()->latest()->get();
+        $levels = Level::active()->latest()->get();
+
+        return view('admin.batch.create', compact('teachers', 'subjects', 'levels'));
     }
 
     /**
@@ -60,15 +65,14 @@ class BatchController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'subject' => 'required',
-            'days' => 'required'
+            'days' => 'required',
+            'level' => 'nullable|exists:levels,id'
         ]);
 
         try {
             $batch = Batch::create([
                 'name' => $request->name,
-                'subject' => $request->subject,
-                'class' => $request->class
+                'level_id' => $request->level
             ]);
 
             $days = json_decode($request->days);
@@ -78,7 +82,8 @@ class BatchController extends Controller
                     'day' => $day->day,
                     'start_time' => $day->start_time,
                     'end_time' => $day->end_time,
-                    'user_id' => $day->teacher
+                    'user_id' => $day->teacher,
+                    'subject_id' => $day->subject
                 ]);
             }
 
@@ -101,7 +106,7 @@ class BatchController extends Controller
      */
     public function show(string $id)
     {
-        $batch = Batch::with('batch_days')->findOrFail($id);
+        $batch = Batch::with(['level', 'batch_days'])->findOrFail($id);
         return view('admin.batch.show', compact('batch'));
     }
 
@@ -111,9 +116,11 @@ class BatchController extends Controller
     public function edit(string $id)
     {
         $batch = Batch::with('batch_days')->find($id);
-        $teachers = User::where('user_type', 'teacher')->latest()->get();
+        $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
+        $subjects = Subject::active()->latest()->get();
+        $levels = Level::active()->latest()->get();
 
-        return view('admin.batch.edit', compact('batch', 'teachers'));
+        return view('admin.batch.edit', compact('batch', 'teachers', 'subjects', 'levels'));
     }
 
     /**
@@ -123,8 +130,8 @@ class BatchController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'subject' => 'required',
-            'days' => 'required'
+            'days' => 'required',
+            'level' => 'nullable|exists:levels,id'
         ]);
 
         try {
@@ -132,8 +139,7 @@ class BatchController extends Controller
 
             $batch->update([
                 'name' => $request->name,
-                'subject' => $request->subject,
-                'class' => $request->class
+                'level_id' => $request->level
             ]);
 
             BatchDay::where('batch_id', $batch->id)->delete();
@@ -145,7 +151,8 @@ class BatchController extends Controller
                     'day' => $day->day,
                     'start_time' => $day->start_time,
                     'end_time' => $day->end_time,
-                    'user_id' => $day->teacher
+                    'user_id' => $day->teacher,
+                    'subject_id' => $day->subject
                 ]);
             }
 
@@ -170,6 +177,8 @@ class BatchController extends Controller
     {
         try {
             $batch = Batch::find($id);
+
+            BatchDay::where('batch_id', $batch->id)->delete();
             $batch->delete();
 
             return true;

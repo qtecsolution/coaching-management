@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Teacher::class, 'user_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 }

@@ -17,7 +17,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Subject</th>
                                     <th>Class</th>
                                     <th>Weekly Classes</th>
                                     <th>Total Students</th>
@@ -49,10 +48,6 @@
                 {
                     data: 'name',
                     name: 'name'
-                },
-                {
-                    data: 'subject',
-                    name: 'subject'
                 },
                 {
                     data: 'class',

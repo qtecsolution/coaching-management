@@ -14,29 +14,6 @@
                         v-model="name"
                         readonly
                     />
-                    <small class="text-danger" v-if="errors && errors.name">{{
-                        errors.name[0]
-                    }}</small>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="subject" class="form-label"
-                        >Subject<sup class="text-danger">*</sup></label
-                    >
-                    <input
-                        type="text"
-                        id="subject"
-                        placeholder="Subject"
-                        class="form-control"
-                        v-model="subject"
-                        readonly
-                    />
-                    <small
-                        class="text-danger"
-                        v-if="errors && errors.subject"
-                        >{{ errors.subject[0] }}</small
-                    >
                 </div>
             </div>
             <div class="col-md-6">
@@ -47,12 +24,9 @@
                         id="class"
                         placeholder="Class"
                         class="form-control"
-                        v-model="classNo"
+                        v-model="level"
                         readonly
                     />
-                    <small class="text-danger" v-if="errors && errors.class">{{
-                        errors.class[0]
-                    }}</small>
                 </div>
             </div>
         </div>
@@ -64,8 +38,9 @@
                 class="row align-items-end my-4"
                 v-for="(day, index) in days"
                 :key="index"
+                v-if="days.length > 0"
             >
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="day" class="form-label"
                             >Day<sup class="text-danger">*</sup></label
@@ -78,14 +53,22 @@
                             v-model="day.day"
                             readonly
                         />
-                        <small
-                            class="text-danger"
-                            v-if="errors && errors.days"
-                            >{{ errors.days[0] }}</small
-                        >
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input
+                            type="text"
+                            id="subject"
+                            placeholder="Subject"
+                            class="form-control"
+                            v-model="day.subject"
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="teacher" class="form-label">Teacher</label>
                         <input
@@ -96,14 +79,9 @@
                             v-model="day.teacher"
                             readonly
                         />
-                        <small
-                            class="text-danger"
-                            v-if="errors && errors.teacher"
-                            >{{ errors.teacher[0] }}</small
-                        >
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="start_time" class="form-label"
                             >Start Time<sup class="text-danger">*</sup></label
@@ -116,9 +94,8 @@
                             readonly
                         />
                     </div>
-                    <small class="text-danger"></small>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="end_time" class="form-label"
                             >End Time<sup class="text-danger">*</sup></label
@@ -131,8 +108,11 @@
                             readonly
                         />
                     </div>
-                    <small class="text-danger"></small>
                 </div>
+            </div>
+
+            <div class="alert alert-primary text-center" v-else>
+                No days added. Click <a :href="props.edit_route">here</a> to add.
             </div>
         </div>
     </form>
@@ -142,11 +122,10 @@
 import axios from "axios";
 import { ref, watch } from "vue";
 
-const props = defineProps(["batch"]);
+const props = defineProps(["batch", "edit_route"]);
 
 const name = ref(props?.batch?.name);
-const subject = ref(props?.batch?.subject);
-const classNo = ref(props?.batch?.class);
+const level = ref(props?.batch?.level?.name);
 const days = ref([]);
 
 if (props?.batch?.batch_days?.length > 0) {
@@ -156,16 +135,8 @@ if (props?.batch?.batch_days?.length > 0) {
             start_time: day.start_time,
             end_time: day.end_time,
             teacher: day.teacher_name,
+            subject: day.subject_name,
         });
     });
-} else {
-    days.value = [
-        {
-            day: "",
-            start_time: "",
-            end_time: "",
-            teacher: "",
-        },
-    ];
 }
 </script>

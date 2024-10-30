@@ -21,36 +21,23 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="subject" class="form-label"
-                        >Subject<sup class="text-danger">*</sup></label
-                    >
-                    <input
-                        type="text"
-                        id="subject"
-                        placeholder="Subject"
-                        class="form-control"
-                        v-model="subject"
-                        required
-                    />
-                    <small
-                        class="text-danger"
-                        v-if="errors && errors.subject"
-                        >{{ errors.subject[0] }}</small
-                    >
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
                     <label for="class" class="form-label">Class</label>
-                    <input
-                        type="class"
+                    <select
                         id="class"
-                        placeholder="Class"
-                        class="form-control"
-                        v-model="classNo"
-                    />
-                    <small class="text-danger" v-if="errors && errors.class">{{
-                        errors.class[0]
+                        class="form-control form-select"
+                        v-model="level"
+                    >
+                        <option value="" selected disabled>Select Class</option>
+                        <option
+                            v-for="level in levels"
+                            :key="level.id"
+                            :value="level.id"
+                        >
+                            {{ level.name }}
+                        </option>
+                    </select>
+                    <small class="text-danger" v-if="errors && errors.level">{{
+                        errors.level[0]
                     }}</small>
                 </div>
             </div>
@@ -74,7 +61,7 @@
                 v-for="(day, index) in days"
                 :key="index"
             >
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="day" class="form-label"
                             >Day<sup class="text-danger">*</sup></label
@@ -84,6 +71,9 @@
                             class="form-control form-select"
                             v-model="day.day"
                         >
+                            <option value="" selected disabled>
+                                Select Day
+                            </option>
                             <option value="1">Saturday</option>
                             <option value="2">Sunday</option>
                             <option value="3">Monday</option>
@@ -99,7 +89,35 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="day" class="form-label"
+                            >Subject<sup class="text-danger">*</sup></label
+                        >
+                        <select
+                            id="day"
+                            class="form-control form-select"
+                            v-model="day.subject"
+                        >
+                            <option value="" selected disabled>
+                                Select Subject
+                            </option>
+                            <option
+                                v-for="subject in subjects"
+                                :key="subject.id"
+                                :value="subject.id"
+                            >
+                                {{ subject.name }}
+                            </option>
+                        </select>
+                        <small
+                            class="text-danger"
+                            v-if="errors && errors.subject"
+                            >{{ errors.days[0] }}</small
+                        >
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="teacher" class="form-label">Teacher</label>
                         <select
@@ -107,6 +125,9 @@
                             class="form-control form-select choices"
                             v-model="day.teacher"
                         >
+                            <option value="" selected disabled>
+                                Select Teacher
+                            </option>
                             <option
                                 v-for="teacher in teachers"
                                 :key="teacher.id"
@@ -122,7 +143,7 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="start_time" class="form-label"
                             >Start Time<sup class="text-danger">*</sup></label
@@ -136,7 +157,7 @@
                     </div>
                     <small class="text-danger"></small>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="end_time" class="form-label"
                             >End Time<sup class="text-danger">*</sup></label
@@ -191,11 +212,10 @@ const toaster = (type = "info", message = "Test notification.") => {
     });
 };
 
-const props = defineProps(["route", "teachers"]);
+const props = defineProps(["route", "teachers", "subjects", "levels"]);
 
 const name = ref("");
-const subject = ref("");
-const classNo = ref("");
+const level = ref("");
 const errors = ref("");
 
 const days = ref([
@@ -204,6 +224,7 @@ const days = ref([
         start_time: "",
         end_time: "",
         teacher: "",
+        subject: "",
     },
 ]);
 
@@ -213,6 +234,7 @@ const addDay = () => {
         start_time: "",
         end_time: "",
         teacher: "",
+        subject: "",
     });
 };
 
@@ -272,26 +294,33 @@ const save = async () => {
     // console.table({
     //     name: name.value,
     //     subject: subject.value,
-    //     class: classNo.value,
+    //     class: level.value,
     //     teacher: teacher.value,
     // });
 
     // console.table(days.value);
 
-    if (
-        !name.value ||
-        !subject.value ||
-        days.value.length < 1
-    ) {
+    if (!name.value || days.value.length < 1) {
         toaster("warning", "Please fill in all the required fields.");
         return false;
     }
 
     const form = new FormData();
     form.append("name", name.value);
-    form.append("subject", subject.value);
-    form.append("class", classNo.value);
-    form.append("days", JSON.stringify(days.value));
+    form.append("level", level.value);
+
+    if (
+        days.value.length > 1 ||
+        (days.value[0]?.day &&
+            days.value[0]?.start_time &&
+            days.value[0]?.end_time &&
+            days.value[0]?.teacher &&
+            days.value[0]?.subject)
+    ) {
+        form.append("days", JSON.stringify(days.value));
+    } else {
+        form.append("days", JSON.stringify([]));
+    }
 
     await axios
         .post(props.route, form)
@@ -300,14 +329,14 @@ const save = async () => {
             toaster("success", response.data.message);
 
             name.value = "";
-            subject.value = "";
-            classNo.value = "";
-            teacher.value = "";
+            level.value = "";
             days.value = [
                 {
                     day: "",
                     start_time: "",
                     end_time: "",
+                    teacher: "",
+                    subject: "",
                 },
             ];
         })

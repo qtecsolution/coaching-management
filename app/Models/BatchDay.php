@@ -11,7 +11,7 @@ class BatchDay extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['day_name', 'teacher_name'];
+    protected $appends = ['day_name', 'teacher_name', 'subject_name'];
 
     public function getDayNameAttribute()
     {
@@ -43,5 +43,15 @@ class BatchDay extends Model
     public function getTeacherNameAttribute()
     {
         return $this->user ? $this->user->name : '';
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function getSubjectNameAttribute()
+    {
+        return $this->subject ? $this->subject->name : '';
     }
 }

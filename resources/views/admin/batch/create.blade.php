@@ -11,7 +11,8 @@
                 {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body" id="app">
                     <create-batch :route="{{ json_encode(route('admin.batches.store')) }}"
-                        :teachers="{{ json_encode($teachers) }}" />
+                        :teachers="{{ json_encode($teachers) }}" :levels="{{ json_encode($levels) }}"
+                        :subjects="{{ json_encode($subjects) }}" />
                 </div>
             </div>
         </section>

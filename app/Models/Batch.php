@@ -15,4 +15,9 @@ class Batch extends Model
     {
         return $this->hasMany(BatchDay::class);
     }
+
+    public function level()
+    {
+        return $this->belongsTo(Level::class);
+    }
 }
