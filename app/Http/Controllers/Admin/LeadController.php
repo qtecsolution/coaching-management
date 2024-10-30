@@ -116,7 +116,8 @@ class LeadController extends Controller
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:leads,phone,' . $id,
-            'email' => 'nullable|email|unique:leads,email,' . $id
+            'email' => 'nullable|email|unique:leads,email,' . $id,
+            'status' => 'required|integer'
         ]);
 
         try {
@@ -128,7 +129,8 @@ class LeadController extends Controller
                 'email' => $request->email,
                 'class' => $request->class,
                 'school_name' => $request->school_name,
-                'note' => $request->note
+                'note' => $request->note,
+                'status' => $request->status
             ]);
     
             alert('Yahoo!', 'Lead updated successfully.', 'success');
