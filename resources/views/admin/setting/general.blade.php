@@ -17,7 +17,7 @@
                                 <div class="form-group">
                                     <label for="app_name" class="form-label">App Name</label>
                                     <input type="text" name="APP_NAME" id="app_name" placeholder="App Name"
-                                        class="form-control" value="{{ old('APP_NAME', config('app.name')) }}">
+                                        class="form-control" value="{{ old('APP_NAME', @$settings->where('key', 'APP_NAME')->first()->value ?? '') }}">
 
                                     @error('APP_NAME')
                                         <small class="text-danger">{{ $message }}</small>
@@ -28,7 +28,7 @@
                                 <div class="form-group">
                                     <label for="time_zone" class="form-label">Time Zone</label>
                                     <input type="text" name="APP_TIMEZONE" id="time_zone" placeholder="Time Zone"
-                                        class="form-control" value="{{ old('APP_TIMEZONE', config('app.timezone')) }}">
+                                        class="form-control" value="{{ old('APP_TIMEZONE', @$settings->where('key', 'APP_TIMEZONE')->first()->value ?? '') }}">
 
                                     @error('APP_TIMEZONE')
                                         <small class="text-danger">{{ $message }}</small>
@@ -39,7 +39,7 @@
                                 <div class="form-group">
                                     <label for="app_url" class="form-label">App URL</label>
                                     <input type="text" name="APP_URL" id="app_url" placeholder="App URL"
-                                        class="form-control" value="{{ old('APP_URL', config('app.url')) }}">
+                                        class="form-control" value="{{ old('APP_URL', @$settings->where('key', 'APP_URL')->first()->value ?? '') }}">
 
                                     @error('APP_URL')
                                         <small class="text-danger">{{ $message }}</small>

@@ -3,51 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 
 class SettingController extends Controller
 {
-    protected function setEnvValue($key, $value)
-    {
-        $path = base_path('.env');
-
-        // Check if the .env file exists
-        if (File::exists($path)) {
-            // Get the contents of the .env file
-            $envContent = File::get($path);
-
-            // Use a regular expression to replace the existing value or add the key-value pair
-            $pattern = "/^{$key}=(.*)$/m";
-            if (preg_match($pattern, $envContent)) {
-                // Update existing key-value pair
-                $envContent = preg_replace($pattern, "{$key}={$value}", $envContent);
-            } else {
-                // If the key doesn't exist, add it to the file
-                $envContent .= "\n{$key}={$value}\n";
-            }
-
-            // Write the updated content back to the .env file
-            File::put($path, $envContent);
-
-            // Optionally clear the cached config values (since env values are cached)
-            if (function_exists('config')) {
-                // Refreshing the config cache
-                Artisan::call('optimize:clear');
-            }
-        }
-    }
-
     public function edit($type)
     {
+        $settings = Setting::all();
+
         switch ($type) {
             case 'general':
-                return view('admin.setting.general', compact('type'));
+                return view('admin.setting.general', compact('type', 'settings'));
                 break;
 
             case 'smtp':
-                return view('admin.setting.smtp', compact('type'));
+                return view('admin.setting.smtp', compact('type', 'settings'));
                 break;
 
             default:
@@ -60,10 +33,10 @@ class SettingController extends Controller
     {
         $requests = $request->except('_token');
         foreach ($requests as $key => $value) {
-            $this->setEnvValue($key, '"' . $value . '"');
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
-        toast('Settings updated successfully.', 'success');
+        alert('Yahoo!', 'Settings updated successfully.', 'success');
         return back();
     }
 }
