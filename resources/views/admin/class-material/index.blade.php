@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Batch List')
+@section('title', 'Class Materials')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Batch List" subtitle="" pageTitle="Batch List" />
+        <x-page-title title="Class Materials" subtitle="" pageTitle="Class Materials" />
 
         <!-- Basic Tables start -->
         <section class="section">
@@ -16,11 +16,10 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Name</th>
-                                    <th>Class</th>
-                                    <th>Weekly Classes</th>
-                                    <th>Total Students</th>
-                                    <th>Status</th>
+                                    <th>Batch</th>
+                                    <th>Subject</th>
+                                    <th>Title</th>
+                                    <th>URL</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -40,36 +39,32 @@
             responsive: true,
             serverSide: true,
             processing: true,
-            ajax: "{{ route('admin.batches.index') }}",
+            ajax: "{{ route('admin.class-materials.index') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
                 {
-                    data: 'name',
-                    name: 'name'
+                    data: 'batch',
+                    name: 'batch'
                 },
                 {
-                    data: 'class',
-                    name: 'class'
+                    data: 'subject',
+                    name: 'subject'
                 },
                 {
-                    data: 'weekly_classes',
-                    name: 'weekly_classes'
+                    data: 'title',
+                    name: 'title'
                 },
                 {
-                    data: 'total_students',
-                    name: 'total_students'
-                },
-                {
-                    data: 'status',
-                    name: 'status'
+                    data: 'url',
+                    name: 'url'
                 },
                 {
                     data: 'action',
                     name: 'action'
                 },
             ],
-        })
+        });
     </script>
 @endpush

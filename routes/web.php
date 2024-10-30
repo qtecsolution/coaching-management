@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BatchController;
+use App\Http\Controllers\Admin\ClassMaterialController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\SettingController;
@@ -67,6 +68,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // lead routes
     Route::resource('leads', LeadController::class);
+
+    // class material routes
+    Route::resource('class-materials', ClassMaterialController::class);
 });
 
 // user routes

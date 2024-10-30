@@ -20,4 +20,9 @@ class Batch extends Model
     {
         return $this->belongsTo(Level::class);
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 }

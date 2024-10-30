@@ -49,8 +49,23 @@
             <li class="submenu-item {{ Route::is('admin.batches.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.batches.index') }}">Batch List</a>
             </li>
-            <li class="submenu-item {{ Route::is('admin.students.create') ? 'active' : '' }}">
+            <li class="submenu-item {{ Route::is('admin.batches.create') ? 'active' : '' }}">
                 <a href="{{ route('admin.batches.create') }}">Add Batch</a>
+            </li>
+        </ul>
+    </li>
+    
+    <li class="sidebar-item has-sub {{ Route::is('admin.class-materials.*') ? 'active' : '' }}">
+        <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
+            <i class="bi bi-collection"></i>
+            <span>Class Materials</span>
+        </a>
+        <ul class="submenu {{ Route::is('admin.class-materials.*') ? 'submenu-open' : 'submenu-close' }}">
+            <li class="submenu-item {{ Route::is('admin.class-materials.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.class-materials.index') }}">Material List</a>
+            </li>
+            <li class="submenu-item {{ Route::is('admin.class-materials.create') ? 'active' : '' }}">
+                <a href="{{ route('admin.class-materials.create') }}">Add Material</a>
             </li>
         </ul>
     </li>
