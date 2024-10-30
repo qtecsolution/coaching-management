@@ -19,9 +19,6 @@ services:
         environment:
             SERVICE_NAME: app
             SERVICE_TAGS: dev
-        ports:
-            - "8000:8000"
-            - "5173:5173"
 
     db:
         image: mysql:8.0
@@ -44,13 +41,32 @@ services:
         container_name: coaching-nginx
         restart: unless-stopped
         ports:
-            - "80:80"   # HTTP port
-            # - "443:443" # HTTPS port (SSL)
+            - "80:80" # HTTP port
+            # - "443:443" # Uncomment this for HTTPS (SSL) support
         volumes:
             - .:/var/www:cached
             - ./docker-compose/nginx:/etc/nginx/conf.d
         depends_on:
             - app
+        networks:
+            - coaching-network
+
+    node:
+        # Optional platform flag for Mac Silicon (M1/M2/M3)
+        platform: linux/amd64
+        build:
+            context: .
+            dockerfile: Dockerfile.node
+        image: coaching-node
+        container_name: coaching-node
+        ports:
+            - "3000:3000"
+            - "3001:3001"
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - /var/www/node_modules
         networks:
             - coaching-network
 

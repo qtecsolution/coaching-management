@@ -3,6 +3,13 @@ import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
+    server: {
+        hmr: {
+            host: "0.0.0.0",
+        },
+        port: 3000,
+        host: true,
+    },
     plugins: [
         laravel({
             input: [
@@ -16,11 +23,4 @@ export default defineConfig({
         }),
         vue(),
     ],
-    server: {
-        host: true,
-        port: 5173,
-        watch: {
-            usePolling: true
-        }
-    }
 });

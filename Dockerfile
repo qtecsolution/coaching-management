@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     unzip \
     git \
-    npm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd zip pdo pdo_mysql
 
@@ -22,11 +21,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy the application code into the container
 COPY . .
 
-# Install application dependencies
-RUN composer install
-RUN npm install
+# Install application dependencies without interaction and optimize autoload files
+RUN composer install --no-interaction --optimize-autoloader
 
-# Expose port 9000
+# Expose port 9000 for PHP-FPM
 EXPOSE 9000
 
 # Start PHP-FPM server
