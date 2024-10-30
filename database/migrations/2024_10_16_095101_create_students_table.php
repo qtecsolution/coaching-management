@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Batch;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,6 +16,7 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Batch::class)->nullable()->constrained()->restrictOnDelete();
             $table->string('student_id')->unique();
             $table->string('school_name')->nullable();
             $table->string('class')->nullable();
