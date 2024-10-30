@@ -38,14 +38,14 @@ class PermissionController extends Controller
                 'name' => $name
             ]);
 
-            toast('Permission created successfully.', 'success');
+            toast('Permission added successfully.', 'success');
         } else {
             Permission::create(['name' => 'view_' . $name]);
             Permission::create(['name' => 'add_' . $name]);
             Permission::create(['name' => 'update_' . $name]);
             Permission::create(['name' => 'delete_' . $name]);
             
-            toast('Permissions created successfully.', 'success');
+            toast('Permissions added successfully.', 'success');
         }
 
         return back();

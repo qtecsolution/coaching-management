@@ -23,27 +23,12 @@ class RolePermissionSeeder extends Seeder
 
         // create permissions
         $permissions = [
-            'view_users',
-            'create_user',
-            'update_user',
-            'delete_user',
-            'view_roles',
-            'create_role',
-            'update_role',
-            'delete_role',
-            'role_permissions',
-            'view_permissions',
-            'create_permission',
-            'update_permission',
-            'delete_permission',
-            'view_students',
-            'create_student',
-            'update_student',
-            'delete_student',
-            'view_batches',
-            'create_batch',
-            'update_batch',
-            'delete_batch',
+            'view_users', 'create_user', 'update_user', 'delete_user',
+            'view_roles', 'create_role', 'update_role', 'delete_role', 'role_permissions',
+            'view_permissions', 'create_permission', 'update_permission', 'delete_permission',
+            'view_students', 'create_student', 'update_student', 'delete_student',
+            'view_batches', 'create_batch', 'update_batch', 'delete_batch',
+            'view_leads', 'create_lead', 'update_lead', 'delete_lead',
         ];
 
         $permissions = collect($permissions)->map(function ($permission) {

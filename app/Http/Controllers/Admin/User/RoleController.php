@@ -35,7 +35,7 @@ class RoleController extends Controller
         ]);
 
         if (Role::create($request->only('name'))) {
-            alert('Yahoo!', 'Role created successfully.', 'success');
+            alert('Yahoo!', 'Role added successfully.', 'success');
             return back();
         } else {
             alert('Oops!', 'Something went wrong.', 'error');

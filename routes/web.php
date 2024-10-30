@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\User\PermissionController;
@@ -63,6 +64,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // batch routes
     Route::resource('batches', BatchController::class);
+
+    // lead routes
+    Route::resource('leads', LeadController::class);
 });
 
 // user routes

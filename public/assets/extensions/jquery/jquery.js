@@ -7167,7 +7167,7 @@ function schedule() {
 	}
 }
 
-// Animations created synchronously will run synchronously
+// Animations added synchronously will run synchronously
 function createFxNow() {
 	window.setTimeout( function() {
 		fxNow = undefined;

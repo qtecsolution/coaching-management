@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('school_name')->nullable();
             $table->string('class')->nullable();
+            $table->text('note')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });

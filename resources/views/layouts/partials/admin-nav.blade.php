@@ -55,6 +55,21 @@
         </ul>
     </li>
 
+    <li class="sidebar-item has-sub {{ Route::is('admin.leads.*') ? 'active' : '' }}">
+        <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
+            <i class="bi bi-clipboard2-data"></i>
+            <span>Leads</span>
+        </a>
+        <ul class="submenu {{ Route::is('admin.leads.*') ? 'submenu-open' : 'submenu-close' }}">
+            <li class="submenu-item {{ Route::is('admin.leads.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.leads.index') }}">Lead List</a>
+            </li>
+            <li class="submenu-item {{ Route::is('admin.leads.create') ? 'active' : '' }}">
+                <a href="{{ route('admin.leads.create') }}">Add Lead</a>
+            </li>
+        </ul>
+    </li>
+
     <li class="sidebar-item has-sub {{ Route::is('admin.settings.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
             <i class="bi bi-gear"></i>
