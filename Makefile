@@ -28,10 +28,13 @@ setup-env:
 
 npm-install-build:
 	docker exec coaching-node bash -c "npm install"
-	docker exec coaching-node bash -c "npm run build"
+	docker exec coaching-node bash -c "npm run build:docker"
 
 npm-run-dev:
-	docker exec coaching-node bash -c "npm run dev"
+	docker exec coaching-node bash -c "npm run dev:docker"
+
+npm-run-build:
+	docker exec coaching-node bash -c "npm run build:docker"
 
 generate-key:
 	docker exec coaching-app bash -c "php artisan key:generate"
