@@ -10,14 +10,30 @@ FilePond.registerPlugin(
 )
 
 // Filepond: Basic
-FilePond.create(document.querySelector(".basic-filepond"), {
+const fileInput = document.querySelector(".basic-filepond");
+const initialFileUrl = fileInput.getAttribute("data-source");
+console.log(initialFileUrl); // http://127.0.0.1:8000/storage/media/class_materials/173035196867231360e1d162.00457269.pdf
+
+
+FilePond.create(fileInput, {
   credits: null,
-  allowImagePreview: false,
+  allowImagePreview: true,
   allowMultiple: false,
   allowFileEncode: false,
   required: false,
   storeAsFile: true,
-})
+  files: initialFileUrl
+    ? [
+      {
+        source: initialFileUrl,
+        options: {
+          type: 'local',
+          fetch: null,
+        },
+      },
+    ]
+    : [],
+});
 
 // Filepond: Multiple Files
 FilePond.create(document.querySelector(".multiple-files-filepond"), {

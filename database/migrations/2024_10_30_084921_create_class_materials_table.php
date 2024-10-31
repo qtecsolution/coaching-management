@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(Subject::class)->constrained()->restrictOnDelete();
             $table->string('title');
             $table->string('url');
+            $table->boolean('is_file')->default(1);
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

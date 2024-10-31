@@ -10,18 +10,18 @@
             <div class="card">
                 {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
-                    <form action="{{ route('admin.class-materials.store') }}" method="POST">
+                    <form action="{{ route('admin.class-materials.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="class" class="form-label">Batch<sup class="text-danger">*</sup></label>
-                                    <select name="class" id="class" class="form-control form-select choice" required>
+                                    <select name="batch" id="class" class="form-control form-select choice" required>
                                         <option value="" selected disabled>Select Batch</option>
                                         @foreach ($batches as $batch)
-                                            <option value="{{ $batch->name }}"
-                                                {{ old('batch') == $batch->name ? 'selected' : '' }}>{{ $batch->name }}
+                                            <option value="{{ $batch->id }}"
+                                                {{ old('batch') == $batch->id ? 'selected' : '' }}>{{ $batch->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -33,12 +33,12 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="class" class="form-label">Subject<sup class="text-danger">*</sup></label>
-                                    <select name="class" id="class" class="form-control form-select choice" required>
+                                    <label for="subject" class="form-label">Subject<sup class="text-danger">*</sup></label>
+                                    <select name="subject" id="subject" class="form-control form-select choice" required>
                                         <option value="" selected disabled>Select Subject</option>
                                         @foreach ($subjects as $subject)
-                                            <option value="{{ $subject->name }}"
-                                                {{ old('subject') == $subject->name ? 'selected' : '' }}>
+                                            <option value="{{ $subject->id }}"
+                                                {{ old('subject') == $subject->id ? 'selected' : '' }}>
                                                 {{ $subject->name }}</option>
                                         @endforeach
                                     </select>
@@ -69,7 +69,7 @@
                                         <option value="URL">URL</option>
                                     </select>
 
-                                    @error('subject')
+                                    @error('resource_type')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -78,7 +78,7 @@
                                 <div class="form-group d-none" id="url">
                                     <label for="url" class="form-label">URL<sup class="text-danger">*</sup></label>
                                     <input type="text" name="url" id="url" placeholder="URL"
-                                        class="form-control" value="{{ old('url') }}" required>
+                                        class="form-control" value="{{ old('url') }}">
 
                                     @error('url')
                                         <small class="text-danger">{{ $message }}</small>
@@ -88,7 +88,7 @@
                                 <div class="form-group d-none" id="file">
                                     <label for="file" class="form-label">File<sup class="text-danger">*</sup></label>
                                     <!-- File uploader with image preview -->
-                                    <input type="file" name="file" accept="image/*" class="image-preview-filepond">
+                                    <input type="file" name="file" class="basic-filepond">
 
                                     @error('file')
                                         <small class="text-danger">{{ $message }}</small>

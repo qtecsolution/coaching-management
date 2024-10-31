@@ -3,6 +3,7 @@
 namespace App\Http\Helpers;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 if (!function_exists('fileUpload')) {
     function fileUpload($file, $directory, $disk = 'public', $fileName = null)
@@ -42,12 +43,17 @@ if (!function_exists('absolutePath')) {
         if ($path == null || $path == '') {
             return asset('assets/img/default.jpg');
         }
-        
-        $absolutePath = storage_path() . '/app/public/' . $path;
-        if (file_exists($absolutePath)) {
-            return asset('storage/' . $path);
+
+        if (Str::startsWith($path, 'media/')) {
+            $absolutePath = storage_path() . '/app/public/' . $path;
+            if (file_exists($absolutePath)) {
+                return asset('storage/' . $path);
+            } else {
+                return asset('assets/img/default.jpg');
+            }
         } else {
-            return asset('assets/img/default.jpg');
+            return $path;
         }
+        
     }
 }

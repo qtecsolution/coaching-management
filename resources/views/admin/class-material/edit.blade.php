@@ -1,99 +1,121 @@
 @extends('layouts.master')
 
-@section('title', 'Edit Lead')
+@section('title', 'Edit Material')
+
+@php
+    use function App\Http\Helpers\absolutePath;
+@endphp
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit Lead" subtitle="" pageTitle="Edit Lead" />
+        <x-page-title title="Edit Material" subtitle="" pageTitle="Edit Material" />
 
         <section class="section">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+
             <div class="card">
                 {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
-                    <form action="{{ route('admin.leads.update', $lead->id) }}" method="POST">
+                    <form action="{{ route('admin.class-materials.update', $classMaterial->id) }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name" class="form-label">Name<sup class="text-danger">*</sup></label>
-                                    <input type="text" name="name" id="name" placeholder="Name"
-                                        class="form-control" value="{{ old('name', $lead->name) }}" required>
-
-                                    @error('name')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="phone" class="form-label">Phone<sup class="text-danger">*</sup></label>
-                                    <input type="tel" name="phone" id="phone" placeholder="Phone"
-                                        class="form-control" value="{{ old('phone', $lead->phone) }}" required>
-
-                                    @error('phone')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" name="email" id="email" placeholder="Email"
-                                        value="{{ old('email', $lead->email) }}" class="form-control">
-
-                                    @error('email')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="school_name" class="form-label">School Name</label>
-                                    <input type="text" name="school_name" id="school_name" placeholder="School Name"
-                                        value="{{ old('school_name', $lead->school_name) }}" class="form-control">
-
-                                    @error('school_name')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="class" class="form-label">Class</label>
-                                    <select name="class" id="class" class="form-control form-select choice">
-                                        <option value="" selected disabled>Select Class</option>
-                                        @foreach ($levels as $level)
-                                            <option value="{{ $level->name }}" {{ $lead->class == $level->name ? 'selected' : '' }}>{{ $level->name }}</option>
+                                    <label for="class" class="form-label">Batch<sup class="text-danger">*</sup></label>
+                                    <select name="batch" id="class" class="form-control form-select choice" required>
+                                        <option value="" selected disabled>Select Batch</option>
+                                        @foreach ($batches as $batch)
+                                            <option value="{{ $batch->id }}"
+                                                {{ old('batch', $classMaterial->batch_id) == $batch->id ? 'selected' : '' }}>
+                                                {{ $batch->name }}
+                                            </option>
                                         @endforeach
                                     </select>
 
-                                    @error('class')
+                                    @error('batch')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select name="status" id="status" class="form-control form-select choice">
-                                        <option value="" selected disabled>Select Status</option>
-                                        <option value="0" {{ $lead->status == 0 ? 'selected' : '' }}>Pending</option>
-                                        <option value="1" {{ $lead->status == 1 ? 'selected' : '' }}>Done</option>
+                                    <label for="subject" class="form-label">Subject<sup class="text-danger">*</sup></label>
+                                    <select name="subject" id="subject" class="form-control form-select choice" required>
+                                        <option value="" selected disabled>Select Subject</option>
+                                        @foreach ($subjects as $subject)
+                                            <option value="{{ $subject->id }}"
+                                                {{ old('subject', $classMaterial->subject_id) == $subject->id ? 'selected' : '' }}>
+                                                {{ $subject->name }}</option>
+                                        @endforeach
                                     </select>
 
-                                    @error('status')
+                                    @error('subject')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="note" class="form-label">Note</label>
-                                    <textarea name="note" id="note" rows="5" class="form-control" placeholder="note">{{ old('note', $lead->note) }}</textarea>
+                                    <label for="title" class="form-label">Title<sup class="text-danger">*</sup></label>
+                                    <input type="text" name="title" id="title" placeholder="Title"
+                                        class="form-control" value="{{ old('title', $classMaterial->title) }}" required>
 
-                                    @error('note')
+                                    @error('title')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="resource_type" class="form-label">Resource Type<sup
+                                            class="text-danger">*</sup></label>
+                                    <select name="resource_type" id="resource_type" class="form-control form-select choice"
+                                        required>
+                                        <option value="File Upload"
+                                            {{ old('resource_type', $classMaterial->is_file) == 1 ? 'selected' : '' }}>File
+                                            Upload</option>
+                                        <option value="URL"
+                                            {{ old('resource_type', $classMaterial->is_file) == 0 ? 'selected' : '' }}>URL
+                                        </option>
+                                    </select>
+
+                                    @error('subject')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group d-none" id="url">
+                                    <label for="url" class="form-label">URL<sup class="text-danger">*</sup></label>
+                                    <input type="text" name="url" id="url" placeholder="URL"
+                                        class="form-control"
+                                        value="{{ old('url', !$classMaterial->is_file ? $classMaterial->url : '') }}">
+
+                                    @error('url')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group d-none" id="file">
+                                    <label for="file" class="form-label">File<sup class="text-danger">*</sup></label>
+                                    <!-- File uploader with image preview -->
+                                    @if ($classMaterial->is_file)
+                                        <div>
+                                            <a href="{{ absolutePath($classMaterial->url) }}" target="_blank" class="btn btn-primary mb-3">
+                                                <i class="bi bi-eye"></i> View Existing File
+                                            </a>
+                                        </div>
+                                    @endif
+                                    <input type="file" name="file" class="basic-filepond" value="{{ $classMaterial->url }}">
+
+                                    @error('file')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -108,3 +130,23 @@
         </section>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        $('#resource_type').on('change', function() {
+            if ($(this).val() == 'URL') {
+                $('#url').removeClass('d-none');
+                $('#file').addClass('d-none');
+
+                // $('#url input').val('');
+            } else {
+                $('#url').addClass('d-none');
+                $('#file').removeClass('d-none');
+
+                // $('#file input').val('');
+            }
+        });
+
+        $('#resource_type').trigger('change');
+    </script>
+@endpush
