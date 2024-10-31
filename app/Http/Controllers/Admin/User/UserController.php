@@ -16,6 +16,10 @@ class UserController extends Controller
     // function to show users
     public function index()
     {
+        if (!auth()->user()->can('view_users')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         if (request()->ajax()) {
             $users = User::where('user_type', request()->user_type)
                 ->latest();
@@ -49,14 +53,21 @@ class UserController extends Controller
     // function to show create user form
     public function create()
     {
-        $roles = Role::all();
+        if (!auth()->user()->can('create_user')) {
+            abort(403, 'Unauthorized action.');
+        }
 
+        $roles = Role::all();
         return view('admin.user.create', compact('roles'));
     }
 
     // function to store user
     public function store(Request $request)
     {
+        if (!auth()->user()->can('create_user')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:users,phone',
@@ -83,6 +94,7 @@ class UserController extends Controller
             if ($request->user_type == 'teacher') {
                 Teacher::create([
                     'user_id' => $user->id,
+                    'teacher_id' => rand(1000, 9999) . $user->id,
                     'school_name' => $request->school_name,
                     'nid_number' => $request->nid_number,
                     'address' => $request->address,
@@ -110,14 +122,21 @@ class UserController extends Controller
     // function to show edit user form
     public function edit(User $user)
     {
-        $roles = Role::all();
+        if (!auth()->user()->can('update_user')) {
+            abort(403, 'Unauthorized action.');
+        }
 
+        $roles = Role::all();
         return view('admin.user.edit', compact('user', 'roles'));
     }
 
     // Function to update user
     public function update(Request $request, User $user)
     {
+        if (!auth()->user()->can('update_user')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:users,phone,' . $user->id,
@@ -190,6 +209,10 @@ class UserController extends Controller
     // function to delete user
     public function destroy(User $user)
     {
+        if (!auth()->user()->can('delete_user')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         if ($user->id == 1) {
             return false;
         }

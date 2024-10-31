@@ -16,6 +16,10 @@ class StudentController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->can('view_students')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         if (request()->ajax()) {
             return DataTables::of(Student::latest())
                 ->addIndexColumn()
@@ -54,6 +58,10 @@ class StudentController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('create_student')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         return view('admin.student.create');
     }
 
@@ -62,6 +70,10 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->can('create_student')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:users,phone',
@@ -113,6 +125,10 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
+        if (!auth()->user()->can('view_students')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $student = Student::with('user')->find($id);
         return $student;
     }
@@ -122,6 +138,10 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
+        if (!auth()->user()->can('update_student')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $student = Student::with('user')->find($id);
         return view('admin.student.edit', compact('student'));
     }
@@ -131,6 +151,10 @@ class StudentController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!auth()->user()->can('update_student')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $student = Student::with('user')->findOrFail($id);
 
         $request->validate([
@@ -185,12 +209,17 @@ class StudentController extends Controller
     public function destroy(string $id)
     {
         try {
+            if (!auth()->user()->can('delete_student')) {
+                abort(403, 'Unauthorized action.');
+            }
+
             $student = Student::find($id);
             $student->user->delete();
 
             return true;
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            
             return false;
         }
     }
@@ -207,6 +236,10 @@ class StudentController extends Controller
      */
     public function updateStatus(Request $request)
     {
+        if (!auth()->user()->can('update_student')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         try {
             $student = Student::find($request->id);
             $student->update([

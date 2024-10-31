@@ -22,6 +22,10 @@ class ClassMaterialController extends Controller
      */
     public function index(Request $request)
     {
+        if (!auth()->user()->can('view_class_materials')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         if ($request->ajax()) {
             return DataTables::of(ClassMaterial::latest())
                 ->addIndexColumn()
@@ -50,6 +54,10 @@ class ClassMaterialController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('create_class_material')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $batches = Batch::active()->latest()->get();
         $subjects = Subject::active()->latest()->get();
 
@@ -61,7 +69,9 @@ class ClassMaterialController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
+        if (!auth()->user()->can('create_class_material')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $request->validate([
             'title' => 'required',
@@ -104,6 +114,10 @@ class ClassMaterialController extends Controller
      */
     public function edit(string $id)
     {
+        if (!auth()->user()->can('update_class_material')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $classMaterial = ClassMaterial::findOrFail($id);
         $batches = Batch::active()->latest()->get();
         $subjects = Subject::active()->latest()->get();
@@ -116,6 +130,10 @@ class ClassMaterialController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!auth()->user()->can('update_class_material')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'title' => 'required',
             'file' => 'nullable|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png|max:2048|file|required_if:url,null',
@@ -153,6 +171,10 @@ class ClassMaterialController extends Controller
     public function destroy(string $id)
     {
         try {
+            if (!auth()->user()->can('delete_class_material')) {
+                abort(403, 'Unauthorized action.');
+            }
+
             $classMaterial = ClassMaterial::findOrFail($id);
 
             if ($classMaterial->is_file) {

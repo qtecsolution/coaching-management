@@ -19,6 +19,10 @@ class BatchController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->can('view_batches')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         if (request()->ajax()) {
             return DataTables::of(Batch::latest())
                 ->addIndexColumn()
@@ -51,6 +55,10 @@ class BatchController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('create_batch')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
         $subjects = Subject::active()->latest()->get();
         $levels = Level::active()->latest()->get();
@@ -63,6 +71,10 @@ class BatchController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->can('create_batch')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'name' => 'required',
             'days' => 'required',
@@ -106,6 +118,10 @@ class BatchController extends Controller
      */
     public function show(string $id)
     {
+        if (!auth()->user()->can('view_batches')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $batch = Batch::with(['level', 'batch_days'])->findOrFail($id);
         return view('admin.batch.show', compact('batch'));
     }
@@ -115,6 +131,10 @@ class BatchController extends Controller
      */
     public function edit(string $id)
     {
+        if (!auth()->user()->can('update_batch')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $batch = Batch::with('batch_days')->find($id);
         $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
         $subjects = Subject::active()->latest()->get();
@@ -128,6 +148,10 @@ class BatchController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!auth()->user()->can('update_batch')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'name' => 'required',
             'days' => 'required',
@@ -176,6 +200,10 @@ class BatchController extends Controller
     public function destroy(string $id)
     {
         try {
+            if (!auth()->user()->can('delete_batch')) {
+                abort(403, 'Unauthorized action.');
+            }
+
             $batch = Batch::find($id);
 
             BatchDay::where('batch_id', $batch->id)->delete();

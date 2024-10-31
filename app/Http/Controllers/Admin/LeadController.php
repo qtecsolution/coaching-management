@@ -16,6 +16,10 @@ class LeadController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->can('view_leads')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         if (request()->ajax()) {
             return DataTables::of(Lead::latest())
                 ->addIndexColumn()
@@ -54,6 +58,10 @@ class LeadController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('create_lead')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $levels = Level::active()->latest()->get();
         return view('admin.lead.create', compact('levels'));
     }
@@ -63,6 +71,10 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->can('create_lead')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:leads,phone',
@@ -102,6 +114,10 @@ class LeadController extends Controller
      */
     public function edit(string $id)
     {
+        if (!auth()->user()->can('update_lead')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $lead = Lead::findOrFail($id);
         $levels = Level::active()->latest()->get();
 
@@ -113,6 +129,10 @@ class LeadController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!auth()->user()->can('update_lead')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:leads,phone,' . $id,
@@ -149,11 +169,17 @@ class LeadController extends Controller
     public function destroy(string $id)
     {
         try {
+            if (!auth()->user()->can('delete_lead')) {
+                abort(403, 'Unauthorized action.');
+            }
+
             $lead = Lead::findOrFail($id);
             $lead->delete();
+
             return true;
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            
             return false;
         }
     }

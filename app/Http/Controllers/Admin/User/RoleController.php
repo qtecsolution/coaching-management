@@ -20,7 +20,6 @@ class RoleController extends Controller
         }
 
         $roles = Role::paginate(20);
-
         return view('admin.user.roles', compact('roles'));
     }
 
