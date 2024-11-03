@@ -135,7 +135,7 @@
         </li>
     @endcan
 
-    <li class="sidebar-item mt-4">
+    <li class="sidebar-item mt-4 {{ Route::is('auth.profile') ? 'active' : '' }}">
         <a href="{{ route('auth.profile') }}" class="sidebar-link">
             <i class="bi bi-person-badge"></i>
             <span>Profile</span>

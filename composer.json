@@ -11,6 +11,7 @@
         "php": "^8.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "muhaiminshihab/ctaroutes": "^1.0",
         "realrashid/sweet-alert": "^7.2",
         "spatie/laravel-permission": "^6.9",
         "xenon/laravelbdsms": "^1.0",
