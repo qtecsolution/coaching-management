@@ -40,6 +40,9 @@ class StudentController extends Controller
                         return '<span class="badge bg-danger">Inactive</span>';
                     }
                 })
+                ->addColumn('batch', function ($row) {
+                    return $row?->batch?->name ?? '--';
+                })
                 ->editColumn('emergency_contact', function ($row) {
                     $emergencyContact = json_decode($row->emergency_contact, true);
                     return $emergencyContact['name'] . ' (' . $emergencyContact['phone'] . ')';
@@ -88,6 +91,7 @@ class StudentController extends Controller
             'address' => 'required',
             'contact_name' => 'required',
             'contact_phone' => 'required',
+            'batch' => 'nullable|exists:batches,id'
         ]);
 
         try {
@@ -110,7 +114,8 @@ class StudentController extends Controller
                 'emergency_contact' => json_encode([
                     'name' => $request->contact_name,
                     'phone' => $request->contact_phone
-                ])
+                ]),
+                'batch_id' => $request->batch
             ]);
 
             alert('Yahoo!', 'Student added successfully.', 'success');
@@ -145,8 +150,10 @@ class StudentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $batches = Batch::active()->latest()->get();
         $student = Student::with('user')->find($id);
-        return view('admin.student.edit', compact('student'));
+
+        return view('admin.student.edit', compact('student', 'batches'));
     }
 
     /**
@@ -172,6 +179,7 @@ class StudentController extends Controller
             'contact_name' => 'required',
             'contact_phone' => 'required',
             'status' => 'required|boolean',
+            'batch' => 'nullable|exists:batches,id'
         ]);
 
         try {
@@ -193,7 +201,8 @@ class StudentController extends Controller
                     'name' => $request->contact_name,
                     'phone' => $request->contact_phone
                 ]),
-                'status' => $request->status
+                'status' => $request->status,
+                'batch_id' => $request->batch
             ]);
 
             alert('Yahoo!', 'Student updated successfully.', 'success');

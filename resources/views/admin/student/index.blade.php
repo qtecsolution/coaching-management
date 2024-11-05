@@ -16,12 +16,11 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Batch</th>
                                     <th>Name</th>
                                     <th>Phone</th>
                                     <th>Email</th>
                                     <th>School</th>
-                                    <th>Father Name</th>
-                                    <th>Mother Name</th>
                                     <th>Emergency Contact</th>
                                     <th>Address</th>
                                     <th>Status</th>
@@ -50,6 +49,10 @@
                     name: 'student_id'
                 },
                 {
+                    data: 'batch',
+                    name: 'batch'
+                },
+                {
                     data: 'name',
                     name: 'name'
                 },
@@ -64,14 +67,6 @@
                 {
                     data: 'school_name',
                     name: 'school_name'
-                },
-                {
-                    data: 'father_name',
-                    name: 'father_name'
-                },
-                {
-                    data: 'mother_name',
-                    name: 'mother_name'
                 },
                 {
                     data: 'emergency_contact',

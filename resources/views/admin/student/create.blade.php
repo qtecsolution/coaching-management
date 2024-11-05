@@ -17,11 +17,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="batch" class="form-label">Batch</label>
-                                    <select name="batch" class="form-control form-select choise" id="batch">
+                                    <select name="batch" class="form-control select2" id="batch">
                                         <option value="" selected disabled>Select a Batch</option>
 
                                         @foreach ($batches as $batch)
-                                            <option value="{{ $batch->id }}" {{ old('batch') == $batch->id ? 'selected' : '' }}>{{ $batch->name }}</option>
+                                            <option value="{{ $batch->id }}"
+                                                {{ old('batch') == $batch->id ? 'selected' : '' }}>{{ $batch->name }}
+                                            </option>
                                         @endforeach
                                     </select>
 
@@ -185,3 +187,11 @@
         </section>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+@endpush

@@ -17,6 +17,24 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="batch" class="form-label">Batch</label>
+                                    <select name="batch" class="form-control select2" id="batch">
+                                        <option value="" selected disabled>Select a Batch</option>
+
+                                        @foreach ($batches as $batch)
+                                            <option value="{{ $batch->id }}"
+                                                {{ old('batch', $student->batch_id) == $batch->id ? 'selected' : '' }}>{{ $batch->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('batch')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="name" class="form-label">Name<sup class="text-danger">*</sup></label>
                                     <input type="text" name="name" id="name" placeholder="Name"
                                         class="form-control" value="{{ old('name', $student->user->name) }}" required>
@@ -192,3 +210,11 @@
         </section>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+@endpush
