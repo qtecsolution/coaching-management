@@ -118,6 +118,8 @@ class StudentController extends Controller
                 'batch_id' => $request->batch
             ]);
 
+            if ($request->has('batch')) $this->countBatchStudents($request->batch);
+
             alert('Yahoo!', 'Student added successfully.', 'success');
             return to_route('admin.students.index');
         } catch (\Throwable $th) {
@@ -205,6 +207,8 @@ class StudentController extends Controller
                 'batch_id' => $request->batch
             ]);
 
+            if ($request->has('batch')) $this->countBatchStudents($request->batch);
+
             alert('Yahoo!', 'Student updated successfully.', 'success');
             return to_route('admin.students.index');
         } catch (\Throwable $th) {
@@ -226,6 +230,9 @@ class StudentController extends Controller
             }
 
             $student = Student::find($id);
+
+            if($student->batch_id) $this->countBatchStudents($student->batch_id);
+
             $student->user->delete();
 
             return true;
@@ -266,5 +273,20 @@ class StudentController extends Controller
             alert('Oops!', 'Something went wrong.', 'error');
             return back();
         }
+    }
+
+    private function countBatchStudents($id)
+    {
+        $batch = Batch::find($id);
+        if ($batch) {
+            $studentCount = Student::where('batch_id', $batch->id)->count();
+            $batch->update([
+                'total_students' => $studentCount
+            ]);
+
+            return true;
+        }
+
+        return false;
     }
 }
