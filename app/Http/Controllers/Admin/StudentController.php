@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Batch;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -62,7 +63,9 @@ class StudentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('admin.student.create');
+        $batches = Batch::active()->latest()->get();
+
+        return view('admin.student.create', compact('batches'));
     }
 
     /**
