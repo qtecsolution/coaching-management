@@ -16,10 +16,16 @@
                                 <div class="row">
                                     <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
                                         <div class="stats-icon purple mb-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#FFFFFF" fill="none">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M8 15C8.91212 16.2144 10.3643 17 12 17C13.6357 17 15.0879 16.2144 16 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M8.00897 9L8 9M16 9L15.991 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                                height="24" color="#FFFFFF" fill="none">
+                                                <circle cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path
+                                                    d="M8 15C8.91212 16.2144 10.3643 17 12 17C13.6357 17 15.0879 16.2144 16 15"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M8.00897 9L8 9M16 9L15.991 9" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </div>
                                     </div>
@@ -37,10 +43,16 @@
                                 <div class="row">
                                     <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
                                         <div class="stats-icon blue mb-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#FFFFFF" fill="none">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M8 15C8.91212 16.2144 10.3643 17 12 17C13.6357 17 15.0879 16.2144 16 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M8.00897 9L8 9M16 9L15.991 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                                height="24" color="#FFFFFF" fill="none">
+                                                <circle cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path
+                                                    d="M8 15C8.91212 16.2144 10.3643 17 12 17C13.6357 17 15.0879 16.2144 16 15"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M8.00897 9L8 9M16 9L15.991 9" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </div>
                                     </div>
@@ -58,10 +70,16 @@
                                 <div class="row">
                                     <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
                                         <div class="stats-icon green mb-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#FFFFFF" fill="none">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M8 15C8.91212 16.2144 10.3643 17 12 17C13.6357 17 15.0879 16.2144 16 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M8.00897 9L8 9M16 9L15.991 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                                height="24" color="#FFFFFF" fill="none">
+                                                <circle cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path
+                                                    d="M8 15C8.91212 16.2144 10.3643 17 12 17C13.6357 17 15.0879 16.2144 16 15"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M8.00897 9L8 9M16 9L15.991 9" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </div>
                                     </div>
@@ -79,10 +97,16 @@
                                 <div class="row">
                                     <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
                                         <div class="stats-icon red mb-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#FFFFFF" fill="none">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M8 15C8.91212 16.2144 10.3643 17 12 17C13.6357 17 15.0879 16.2144 16 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M8.00897 9L8 9M16 9L15.991 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                                height="24" color="#FFFFFF" fill="none">
+                                                <circle cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path
+                                                    d="M8 15C8.91212 16.2144 10.3643 17 12 17C13.6357 17 15.0879 16.2144 16 15"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M8.00897 9L8 9M16 9L15.991 9" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </div>
                                     </div>
@@ -259,6 +283,59 @@
                                     </table>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-12">
+                        <h3>Hello, {{ $user->name }}.</h3>
+                        <p>
+                            @if (isset($user?->student?->batch?->name))
+                                You're enrolled to the <b>{{ $user->student->batch->name }}</b> batch. See the following
+                                table to check your class schedules.
+                            @else
+                                You're not enrolled to any batch.
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Day</th>
+                                        <th>Time</th>
+                                        <th>Subject</th>
+                                        <th>Teacher</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $schedules = $user?->student?->batch?->batch_days ?? [];
+                                    @endphp
+                                
+                                    @if (count($schedules) > 0)
+                                        @foreach ($schedules as $schedule)
+                                            <tr>
+                                                <td>{{ $schedule->day_name }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -
+                                                    {{ \Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}</td>
+                                                <td>{{ $schedule->subject_name }}</td>
+                                                <td>{{ $schedule->teacher_name }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="4" class="text-center">No schedule found.</td>
+                                        </tr>
+                                    @endif
+                                </tbody>                            
+                            </table>
                         </div>
                     </div>
                 </div>
