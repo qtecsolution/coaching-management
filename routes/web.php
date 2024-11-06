@@ -71,6 +71,7 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // class material routes
     Route::resource('class-materials', ClassMaterialController::class);
+    Route::post('/class-materials/get-days', [ClassMaterialController::class, 'getDays'])->name('class-materials.get-days');
 });
 
 // user routes

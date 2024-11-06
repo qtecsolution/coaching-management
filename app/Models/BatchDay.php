@@ -54,4 +54,9 @@ class BatchDay extends Model
     {
         return $this->subject ? $this->subject->name : '';
     }
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class);
+    }
 }

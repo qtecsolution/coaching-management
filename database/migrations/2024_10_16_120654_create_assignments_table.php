@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Batch;
+use App\Models\BatchDay;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,9 +14,8 @@ return new class extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Batch::class)->constrained()->restrictOnDelete();
-            $table->string('source');
-            $table->string('title');
+            $table->foreignIdFor(BatchDay::class)->constrained()->restrictOnDelete();
+            $table->text('note');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

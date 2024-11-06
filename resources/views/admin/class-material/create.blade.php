@@ -16,13 +16,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="class" class="form-label">Batch<sup class="text-danger">*</sup></label>
-                                    <select name="batch" id="class" class="form-control form-select choice" required>
+                                    <label for="batch" class="form-label">Batch<sup class="text-danger">*</sup></label>
+                                    <select name="batch" id="batch" class="form-control form-select choice" required>
                                         <option value="" selected disabled>Select Batch</option>
                                         @foreach ($batches as $batch)
-                                            <option value="{{ $batch->id }}"
-                                                {{ old('batch') == $batch->id ? 'selected' : '' }}>{{ $batch->name }}
-                                            </option>
+                                            <option value="{{ $batch->id }}">{{ $batch->name }}</option>
                                         @endforeach
                                     </select>
 
@@ -36,11 +34,6 @@
                                     <label for="subject" class="form-label">Subject<sup class="text-danger">*</sup></label>
                                     <select name="subject" id="subject" class="form-control form-select choice" required>
                                         <option value="" selected disabled>Select Subject</option>
-                                        @foreach ($subjects as $subject)
-                                            <option value="{{ $subject->id }}"
-                                                {{ old('subject') == $subject->id ? 'selected' : '' }}>
-                                                {{ $subject->name }}</option>
-                                        @endforeach
                                     </select>
 
                                     @error('subject')
@@ -123,5 +116,31 @@
         });
 
         $('#resource_type').trigger('change');
+
+        $('#batch').on('change', function() {
+            const batchId = $(this).val();
+            if (batchId) {
+                $.ajax({
+                    url: "{{ route('admin.class-materials.get-days') }}",
+                    type: "POST",
+                    data: {
+                        batch: batchId,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        console.table(response.data);
+                        
+                        $('#subject').empty();
+                        $('#subject').append('<option value="" selected disabled>Select Subject</option>');
+                        $.each(response.data, function(key, value) {
+                            $('#subject').append('<option value="' + value.id + '">' + value.subject_name + '</option>');
+                        });
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
     </script>
 @endpush

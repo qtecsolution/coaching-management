@@ -34,10 +34,10 @@ class ClassMaterialController extends Controller
                     return view('admin.class-material.action', compact('row'));
                 })
                 ->addColumn('batch', function ($row) {
-                    return $row->batch->name;
+                    return $row->batch_day->batch->name;
                 })
                 ->addColumn('subject', function ($row) {
-                    return $row->subject->name;
+                    return $row->batch_day->subject_name;
                 })
                 ->editColumn('url', function ($row) {
                     return '<a href="' . absolutePath($row->url) . '" target="_blank"><i class="bi bi-eye"></i> View</a>';
@@ -59,9 +59,7 @@ class ClassMaterialController extends Controller
         }
 
         $batches = Batch::active()->latest()->get();
-        $subjects = Subject::active()->latest()->get();
-
-        return view('admin.class-material.create', compact('batches', 'subjects'));
+        return view('admin.class-material.create', compact('batches'));
     }
 
     /**
@@ -78,7 +76,7 @@ class ClassMaterialController extends Controller
             'file' => 'nullable|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png|max:2048|file|required_if:url,null',
             'url' => 'nullable|url|required_if:file,null',
             'batch' => 'required|exists:batches,id',
-            'subject' => 'required|exists:subjects,id',
+            'subject' => 'required|integer',
         ]);
 
         if ($request->hasFile('file')) {
@@ -89,9 +87,10 @@ class ClassMaterialController extends Controller
             $isFile = false;
         }
 
+        // NOTE: request subject is the batch day ID.
+
         ClassMaterial::create([
-            'batch_id' => $request->batch,
-            'subject_id' => $request->subject,
+            'batch_day_id' => $request->subject,
             'title' => $request->title,
             'url' => $url,
             'is_file' => $isFile
@@ -120,9 +119,8 @@ class ClassMaterialController extends Controller
 
         $classMaterial = ClassMaterial::findOrFail($id);
         $batches = Batch::active()->latest()->get();
-        $subjects = Subject::active()->latest()->get();
 
-        return view('admin.class-material.edit', compact('classMaterial', 'batches', 'subjects'));
+        return view('admin.class-material.edit', compact('classMaterial', 'batches'));
     }
 
     /**
@@ -139,7 +137,7 @@ class ClassMaterialController extends Controller
             'file' => 'nullable|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png|max:2048|file|required_if:url,null',
             'url' => 'nullable|url|required_if:file,null',
             'batch' => 'required|exists:batches,id',
-            'subject' => 'required|exists:subjects,id',
+            'subject' => 'required|integer',
         ]);
 
         $classMaterial = ClassMaterial::findOrFail($id);
@@ -153,9 +151,10 @@ class ClassMaterialController extends Controller
             $isFile = false;
         }
 
+        // NOTE: request subject is the batch day ID.
+
         $classMaterial->update([
-            'batch_id' => $request->batch,
-            'subject_id' => $request->subject,
+            'batch_day_id' => $request->subject,
             'title' => $request->title,
             'url' => $url,
             'is_file' => $isFile
@@ -189,5 +188,18 @@ class ClassMaterialController extends Controller
 
             return false;
         }
+    }
+
+    public function getDays(Request $request)
+    {
+        $request->validate([
+            'batch' => 'required|exists:batches,id'
+        ]);
+
+        $batch = Batch::with('batch_days')->findOrFail($request->batch);
+        
+        return response()->json([
+            'data' => $batch->batch_days
+        ]);
     }
 }

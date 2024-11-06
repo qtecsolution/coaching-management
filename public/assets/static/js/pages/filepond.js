@@ -1,10 +1,10 @@
 
 FilePond.registerPlugin(
   FilePondPluginImagePreview,
-  FilePondPluginImageCrop,
-  FilePondPluginImageExifOrientation,
-  FilePondPluginImageFilter,
-  FilePondPluginImageResize,
+  // FilePondPluginImageCrop,
+  // FilePondPluginImageExifOrientation,
+  // FilePondPluginImageFilter,
+  // FilePondPluginImageResize,
   FilePondPluginFileValidateSize,
   FilePondPluginFileValidateType,
 )
@@ -12,8 +12,6 @@ FilePond.registerPlugin(
 // Filepond: Basic
 const fileInput = document.querySelector(".basic-filepond");
 const initialFileUrl = fileInput.getAttribute("data-source");
-console.log(initialFileUrl); // http://127.0.0.1:8000/storage/media/class_materials/173035196867231360e1d162.00457269.pdf
-
 
 FilePond.create(fileInput, {
   credits: null,
@@ -140,74 +138,74 @@ FilePond.create(document.querySelector(".image-preview-filepond"), {
 })
 
 // Filepond: Image Crop
-FilePond.create(document.querySelector(".image-crop-filepond"), {
-  credits: null,
-  allowImagePreview: true,
-  allowImageFilter: false,
-  allowImageExifOrientation: false,
-  allowImageCrop: true,
-  acceptedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
-  fileValidateTypeDetectType: (source, type) =>
-    new Promise((resolve, reject) => {
-      // Do custom type detection here and return with promise
-      resolve(type)
-    }),
-  storeAsFile: true,
-})
+// FilePond.create(document.querySelector(".image-crop-filepond"), {
+//   credits: null,
+//   allowImagePreview: true,
+//   allowImageFilter: false,
+//   allowImageExifOrientation: false,
+//   allowImageCrop: true,
+//   acceptedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
+//   fileValidateTypeDetectType: (source, type) =>
+//     new Promise((resolve, reject) => {
+//       // Do custom type detection here and return with promise
+//       resolve(type)
+//     }),
+//   storeAsFile: true,
+// })
 
 // Filepond: Image Exif Orientation
-FilePond.create(document.querySelector(".image-exif-filepond"), {
-  credits: null,
-  allowImagePreview: true,
-  allowImageFilter: false,
-  allowImageExifOrientation: true,
-  allowImageCrop: false,
-  acceptedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
-  fileValidateTypeDetectType: (source, type) =>
-    new Promise((resolve, reject) => {
-      // Do custom type detection here and return with promise
-      resolve(type)
-    }),
-  storeAsFile: true,
-})
+// FilePond.create(document.querySelector(".image-exif-filepond"), {
+//   credits: null,
+//   allowImagePreview: true,
+//   allowImageFilter: false,
+//   allowImageExifOrientation: true,
+//   allowImageCrop: false,
+//   acceptedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
+//   fileValidateTypeDetectType: (source, type) =>
+//     new Promise((resolve, reject) => {
+//       // Do custom type detection here and return with promise
+//       resolve(type)
+//     }),
+//   storeAsFile: true,
+// })
 
 // Filepond: Image Filter
-FilePond.create(document.querySelector(".image-filter-filepond"), {
-  credits: null,
-  allowImagePreview: true,
-  allowImageFilter: true,
-  allowImageExifOrientation: false,
-  allowImageCrop: false,
-  imageFilterColorMatrix: [
-    0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114,
-    0, 0, 0.0, 0.0, 0.0, 1, 0,
-  ],
-  acceptedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
-  fileValidateTypeDetectType: (source, type) =>
-    new Promise((resolve, reject) => {
-      // Do custom type detection here and return with promise
-      resolve(type)
-    }),
-  storeAsFile: true,
-})
+// FilePond.create(document.querySelector(".image-filter-filepond"), {
+//   credits: null,
+//   allowImagePreview: true,
+//   allowImageFilter: true,
+//   allowImageExifOrientation: false,
+//   allowImageCrop: false,
+//   imageFilterColorMatrix: [
+//     0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114,
+//     0, 0, 0.0, 0.0, 0.0, 1, 0,
+//   ],
+//   acceptedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
+//   fileValidateTypeDetectType: (source, type) =>
+//     new Promise((resolve, reject) => {
+//       // Do custom type detection here and return with promise
+//       resolve(type)
+//     }),
+//   storeAsFile: true,
+// })
 
 // Filepond: Image Resize
-FilePond.create(document.querySelector(".image-resize-filepond"), {
-  credits: null,
-  allowImagePreview: true,
-  allowImageFilter: false,
-  allowImageExifOrientation: false,
-  allowImageCrop: false,
-  allowImageResize: true,
-  imageResizeTargetWidth: 200,
-  imageResizeTargetHeight: 200,
-  imageResizeMode: "cover",
-  imageResizeUpscale: true,
-  acceptedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
-  fileValidateTypeDetectType: (source, type) =>
-    new Promise((resolve, reject) => {
-      // Do custom type detection here and return with promise
-      resolve(type)
-    }),
-  storeAsFile: true,
-})
+// FilePond.create(document.querySelector(".image-resize-filepond"), {
+//   credits: null,
+//   allowImagePreview: true,
+//   allowImageFilter: false,
+//   allowImageExifOrientation: false,
+//   allowImageCrop: false,
+//   allowImageResize: true,
+//   imageResizeTargetWidth: 200,
+//   imageResizeTargetHeight: 200,
+//   imageResizeMode: "cover",
+//   imageResizeUpscale: true,
+//   acceptedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
+//   fileValidateTypeDetectType: (source, type) =>
+//     new Promise((resolve, reject) => {
+//       // Do custom type detection here and return with promise
+//       resolve(type)
+//     }),
+//   storeAsFile: true,
+// })
