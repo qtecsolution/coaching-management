@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
+use LaravelBDSms, SMS;
 
 class SettingController extends Controller
 {
@@ -23,8 +22,12 @@ class SettingController extends Controller
                 return view('admin.setting.general', compact('type', 'settings'));
                 break;
 
-            case 'smtp':
-                return view('admin.setting.smtp', compact('type', 'settings'));
+            case 'email-smtp':
+                return view('admin.setting.email-smtp', compact('type', 'settings'));
+                break;
+
+            case 'sms-smtp':
+                return view('admin.setting.sms-smtp', compact('type', 'settings'));
                 break;
 
             default:

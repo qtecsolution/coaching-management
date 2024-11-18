@@ -128,8 +128,12 @@
                     <a href="{{ route('admin.settings.edit', 'general') }}">General Settings</a>
                 </li>
                 <li
-                    class="submenu-item {{ Route::currentRouteName() === 'admin.settings.edit' && request()->segment(3) === 'smtp' ? 'active' : '' }}">
-                    <a href="{{ route('admin.settings.edit', 'smtp') }}">SMTP Settings</a>
+                    class="submenu-item {{ Route::currentRouteName() === 'admin.settings.edit' && request()->segment(3) === 'email-smtp' ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.edit', 'email-smtp') }}">Email SMTP</a>
+                </li>
+                <li
+                    class="submenu-item {{ Route::currentRouteName() === 'admin.settings.edit' && request()->segment(3) === 'sms-smtp' ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.edit', 'sms-smtp') }}">SMS SMTP</a>
                 </li>
             </ul>
         </li>

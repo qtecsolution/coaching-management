@@ -1,10 +1,13 @@
 @extends('layouts.master')
 
-@section('title', 'Edit ' . Str::ucfirst($type) . ' Settings')
+@php
+    $title = Str::replace('-', ' ', Str::upper($type));
+@endphp
+@section('title', 'Edit ' . $title . ' Settings')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit {{ Str::ucfirst($type) }} Settings" subtitle="" pageTitle="Edit Settings" />
+        <x-page-title title="Edit {{ $title }} Settings" subtitle="" pageTitle="Edit Settings" />
 
         <section class="section">
             <div class="card">
