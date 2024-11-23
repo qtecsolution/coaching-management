@@ -133,9 +133,7 @@ return [
             'api_key' => env('SMS_BULK_SMS_BD_API_KEY', ''),
             'senderid' => env('SMS_BULK_SMS_BD_SENDERID', ''),
         ],
-        CustomGateway::class => [
-
-        ],
+        CustomGateway::class => [],
         DianaHost::class => [
             'senderid' => env('SMS_DIANA_HOST_SENDER_ID', ''),
             'api_key' => env('SMS_DIANA_HOST_API_KEY', ''),
@@ -320,7 +318,7 @@ return [
             'token' => env('SMS_WINTEXT_TOKEN', ''),
             'messagetype' => env('SMS_WINTEXT_MESSAGE_TYPE', ''),
             'ismasking' => env('SMS_WINTEXT_IS_MASKING', ''),
-            'masking' => env('SMS_WINTEXT_MASKING',''),
+            'masking' => env('SMS_WINTEXT_MASKING', ''),
         ],
         ZamanIt::class => [
             'api_key' => env('SMS_ZAMANIT_API_KEY', ''),
@@ -329,4 +327,3 @@ return [
         ],
     ]
 ];
-

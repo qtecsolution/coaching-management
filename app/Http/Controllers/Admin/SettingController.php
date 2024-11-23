@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use LaravelBDSms, SMS;
+
+use function App\Http\Helpers\smsProviders;
+use function App\Http\Helpers\smsProviderData;
 
 class SettingController extends Controller
 {
@@ -27,7 +31,9 @@ class SettingController extends Controller
                 break;
 
             case 'sms-smtp':
-                return view('admin.setting.sms-smtp', compact('type', 'settings'));
+                $providers = smsProviders();
+
+                return view('admin.setting.sms-smtp', compact('type', 'settings', 'providers'));
                 break;
 
             default:
@@ -49,5 +55,35 @@ class SettingController extends Controller
 
         alert('Yahoo!', 'Settings updated successfully.', 'success');
         return back();
+    }
+
+    private function updateSmsCredentials($activeProvider, $smsProviders)
+    {
+        // Path to the config file
+        $configFilePath = config_path('smsCredentials.php');
+
+        // Generate the updated content for the config file
+        $content = '<?php return ' . var_export([
+            'active_provider' => $activeProvider,
+            'providers' => $smsProviders,
+        ], true) . ';';
+
+        // Write the updated content back to the config file
+        File::put($configFilePath, $content);
+    }
+
+    public function provider()
+    {
+        $data = smsProviderData(request('provider'));
+        $keys = [];
+
+        foreach ($data as $key => $value) {
+            array_push($keys, $key);
+        }
+
+        return response()->json([
+            'message' => 'Success',
+            'data' => $keys
+        ]);
     }
 }

@@ -54,6 +54,42 @@ if (!function_exists('absolutePath')) {
         } else {
             return $path;
         }
-        
+    }
+}
+
+if (!function_exists('smsProviders')) {
+    function smsProviders()
+    {
+        $smsProviders = config('sms.providers');
+        $filteredProviders = [];
+
+        foreach ($smsProviders as $key => $smsProvider) {
+            $providerName = substr($key, strrpos($key, '\\') + 1);
+
+            if (!in_array($providerName, ['CustomGateway', 'DnsBd'])) {
+                array_push($filteredProviders, $providerName);
+            }
+        }
+
+        return $filteredProviders;
+    }
+}
+
+if (!function_exists('smsProviderData')) {
+    function smsProviderData($providerName)
+    {
+        $providers = config('sms.providers');
+
+        if (array_key_exists($providerName, $providers)) {
+            return $providers[$providerName];
+        }
+
+        foreach ($providers as $key => $value) {
+            if (class_basename($key) === $providerName) {
+                return $value;
+            }
+        }
+
+        return null;
     }
 }

@@ -57,8 +57,13 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     });
 
     // setting routes
-    Route::get('/settings/{type}/edit', [SettingController::class, 'edit'])->name('settings.edit');
-    Route::post('/settings/update', [SettingController::class, 'update'])->name('settings.update');
+    Route::prefix('/settings')->as('settings.')->controller(SettingController::class)->group(function () {
+        Route::get('/{type}/edit', 'edit')->name('edit');
+        Route::post('/update', 'update')->name('update');
+
+        Route::get('/providers/{name}', 'provider')->name('providers');
+        Route::post('/providers/update', 'updateProviders')->name('providers.update');
+    });
 
     // student routes
     Route::resource('students', StudentController::class);
