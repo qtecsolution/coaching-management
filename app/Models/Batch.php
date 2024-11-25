@@ -25,4 +25,7 @@ class Batch extends Model
     {
         return $query->where('status', 1);
     }
+    public function students()  {
+        return $this->hasMany(Student::class);
+    }
 }

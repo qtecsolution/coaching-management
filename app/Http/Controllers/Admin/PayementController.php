@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Batch;
 use App\Models\Payment;
 use App\Models\User;
 use Carbon\Carbon;
@@ -63,8 +64,12 @@ class PayementController extends Controller
         if (!auth()->user()->can('create_payment')) {
             abort(403, 'Unauthorized action.');
         }
-
-        return view('admin.payments.create');
+        $batches = Batch::active()->with('students')->get();
+        if ($batches->isEmpty()) {
+            alert('Warning!', 'No batch found.', 'warning');
+            return redirect()->back();
+        }
+        return view('admin.payments.create',compact('batches'));
     }
 
     /**

@@ -128,8 +128,8 @@
             </li>
             @endcan
             @can('create_payment')
-            <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
-                <a href="{{ route('admin.payments.index') }}">Payment Collection</a>
+            <li class="submenu-item {{ Route::is('admin.payments.create') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.create') }}">Payment Collection</a>
             </li>
             @endcan
         </ul>
