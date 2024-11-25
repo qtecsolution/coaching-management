@@ -2,6 +2,9 @@
 
 namespace App\Http\Helpers;
 
+use App\Models\Batch;
+use App\Models\Payment;
+use App\Models\PaymentReport;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -91,5 +94,26 @@ if (!function_exists('smsProviderData')) {
         }
 
         return null;
+    }
+}
+
+if (!function_exists('updatePaymentReport')) {
+    function updatePaymentReport($month)
+    {
+        $report = PaymentReport::firstOrCreate(
+            ['month' => $month],
+            [
+                'estimated_collection_amount' => 0,
+                'collected_amount' => 0,
+                'due_amount' => 0,
+            ]
+        );
+        $report->estimated_collection_amount = Batch::active()
+        ->selectRaw('SUM(total_students * tuition_fee) as total_amount')
+        ->pluck('total_amount')
+        ->first() ?? 0;
+        $report->collected_amount = Payment::where('month', $month)->sum('amount');
+        $report->due_amount = Payment::where('month', $month)->sum('due_amount');
+        $report->save();
     }
 }

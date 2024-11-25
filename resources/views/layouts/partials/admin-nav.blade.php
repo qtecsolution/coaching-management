@@ -115,16 +115,21 @@
         </ul>
     </li>
     @endcan
-    @can('view_leads')
-    <li class="sidebar-item has-sub {{ Route::is('admin.leads.*') ? 'active' : '' }}">
+    @can('view_payments')
+    <li class="sidebar-item has-sub {{ Route::is('admin.payments.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
             <i class="bi bi-clipboard2-data"></i>
-            <span>Fee Manage</span>
+            <span>Payments</span>
         </a>
-        <ul class="submenu {{ Route::is('admin.leads.*') ? 'submenu-open' : 'submenu-close' }}">
-            @can('view_leads')
-            <li class="submenu-item {{ Route::is('admin.leads.index') ? 'active' : '' }}">
-                <a href="{{ route('admin.leads.index') }}">Fee Collection</a>
+        <ul class="submenu {{ Route::is('admin.payments.*') ? 'submenu-open' : 'submenu-close' }}">
+            @can('view_payments')
+            <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.index') }}">Payment List</a>
+            </li>
+            @endcan
+            @can('create_payment')
+            <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.index') }}">Payment Collection</a>
             </li>
             @endcan
         </ul>
