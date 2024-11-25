@@ -41,6 +41,22 @@
                     }}</small>
                 </div>
             </div>
+             <div class="col-md-6">
+                <div class="form-group">
+                    <label for="class" class="form-label">Tuition Fee <sup class="text-danger">*</sup></label>
+                        <input
+                        type="number"
+                        id="tuition_fee"
+                        placeholder="Enter tuition fee"
+                        class="form-control"
+                        v-model="tuition_fee"
+                        required
+                    />
+                    <small class="text-danger" v-if="errors && errors.tuition_fee">{{
+                        errors.tuition_fee[0]
+                    }}</small>
+                </div>
+              </div>
         </div>
 
         <hr />
@@ -300,13 +316,14 @@ const save = async () => {
 
     // console.table(days.value);
 
-    if (!name.value || days.value.length < 1) {
+    if (!name.value || days.value.length < 1||!tuition_fee.value) {
         toaster("warning", "Please fill in all the required fields.");
         return false;
     }
 
     const form = new FormData();
     form.append("name", name.value);
+    form.append("tuition_fee", tuition_fee.value);
     form.append("level", level.value);
 
     if (
@@ -329,6 +346,7 @@ const save = async () => {
             toaster("success", response.data.message);
 
             name.value = "";
+            tuition_fee.value = "";
             level.value = "";
             days.value = [
                 {

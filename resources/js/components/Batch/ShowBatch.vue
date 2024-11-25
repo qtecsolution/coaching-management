@@ -29,6 +29,20 @@
                     />
                 </div>
             </div>
+
+             <div class="col-md-6">
+                <div class="form-group">
+                    <label for="class" class="form-label">Tuition Fee <sup class="text-danger">*</sup></label>
+                        <input
+                        type="number"
+                        id="tuition_fee"
+                        placeholder="Enter tuition fee"
+                        class="form-control"
+                        v-model="tuition_fee"
+                        readonly
+                    />
+                </div>
+              </div>
         </div>
 
         <hr />
@@ -125,6 +139,7 @@ import { ref, watch } from "vue";
 const props = defineProps(["batch", "edit_route"]);
 
 const name = ref(props?.batch?.name);
+const tuition_fee = ref(props?.batch?.tuition_fee);
 const level = ref(props?.batch?.level?.name);
 const days = ref([]);
 

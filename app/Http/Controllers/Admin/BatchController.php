@@ -77,6 +77,7 @@ class BatchController extends Controller
 
         $request->validate([
             'name' => 'required',
+            'tuition_fee' => 'required|numeric',
             'days' => 'required',
             'level' => 'nullable|exists:levels,id'
         ]);
@@ -84,6 +85,7 @@ class BatchController extends Controller
         try {
             $batch = Batch::create([
                 'name' => $request->name,
+                'tuition_fee' => $request->tuition_fee,
                 'level_id' => $request->level
             ]);
 
@@ -154,6 +156,7 @@ class BatchController extends Controller
 
         $request->validate([
             'name' => 'required',
+            'tuition_fee' =>'required|numeric',
             'days' => 'required',
             'level' => 'nullable|exists:levels,id'
         ]);
@@ -163,6 +166,7 @@ class BatchController extends Controller
 
             $batch->update([
                 'name' => $request->name,
+                'tuition_fee' => $request->tuition_fee,
                 'level_id' => $request->level
             ]);
 
