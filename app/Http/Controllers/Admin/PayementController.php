@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Payment;
+use App\Models\Setting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -131,12 +132,13 @@ class PayementController extends Controller
      */
     public function show(string $id)
     {
-        if (!auth()->user()->can('view_paymentes')) {
+        if (!auth()->user()->can('view_payments')) {
             abort(403, 'Unauthorized action.');
         }
 
-        $payment = Payment::with(['level', 'batch_days'])->findOrFail($id);
-        return view('admin.payments.show', compact('payment'));
+        $settings = Setting::all();
+        $payment = Payment::with('student', 'batch')->find($id);
+        return view('admin.payments.invoice', compact('payment', 'settings'));
     }
 
     /**
@@ -161,6 +163,27 @@ class PayementController extends Controller
         if (!auth()->user()->can('update_payment')) {
             abort(403, 'Unauthorized action.');
         }
+
+        $payment = Payment::findOrFail($id);
+        $validated = $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'batch_id' => 'required|exists:batches,id',
+            'amount' => 'required|numeric|min:0',
+            'month' => 'required|string',
+            'date' => 'nullable|date',
+            'payment_method' => 'nullable|string',
+            'transaction_id' => 'nullable|string',
+            'note' => 'nullable|string',
+        ], [
+            'student_id.required' => 'The student field is required.',
+            'student_id.exists' => 'The selected student is invalid.',
+            'batch_id.required' => 'The batch field is required.',
+            'batch_id.exists' => 'The selected batch is invalid.',
+        ]);
+        $validated['status'] = 1; // payment success
+        $payment->update($validated);
+        alert('Success!', 'Student payment updated', 'success');
+        return to_route('admin.payments.index');
     }
     /**
      * Remove the specified resource from storage.

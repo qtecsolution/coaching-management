@@ -25,7 +25,7 @@ class Payment extends Model
     public function student(){
         return $this->belongsTo(Student::class);
    }
-   function batch() {
+    public function batch() {
         return $this->belongsTo(Batch::class);
     
    }

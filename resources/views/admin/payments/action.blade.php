@@ -6,14 +6,14 @@
     @endcan
 
     @can('view_payments')
-    <a href=" route('admin.payments.show', $row->id) }}" class="btn btn-sm btn-info">
-        <i class="bi bi-eye"></i>
+    <a href="{{route('admin.payments.show', $row->id) }}" class="btn btn-sm btn-info">
+        <i class="bi bi-printer"></i>
     </a>
     @endcan
-    @can('delete_payment')
+    <!-- @can('delete_payment')
     <a href="javascript:void(0)" onclick="deleteResource('{{ route('admin.payments.destroy', $row->id) }}')"
         class="btn btn-sm btn-danger">
         <i class="bi bi-trash"></i>
     </a>
-    @endcan
+    @endcan -->
 </div>
