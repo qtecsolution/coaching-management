@@ -9,6 +9,17 @@ use function App\Http\Helpers\updatePaymentReport;
 class Payment extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'student_id',
+        'batch_id',
+        'amount',
+        'month',
+        'date',
+        'payment_method',
+        'transaction_id',
+        'note',
+        'status'
+    ];
 
     protected $guarded = [];
     public function student(){

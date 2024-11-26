@@ -24,9 +24,15 @@ class PayementController extends Controller
         }
 
         if (request()->ajax()) {
-            return DataTables::of(Payment::latest())
+            return DataTables::of(Payment::with('student','batch')->latest())
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
+                ->addColumn('student', function ($row) {
+                    return $row->student->name .'<br>'.$row->student->student_id;
+                })
+            ->addColumn('batch', function ($row) {
+                return $row->batch->name;
+            })
                 ->addColumn('action', function ($row) {
                     return view('admin.payments.action', compact('row'));
                 })
@@ -49,7 +55,7 @@ class PayementController extends Controller
                         return '<span class="badge bg-danger">Pending</span>';
                     }
                 })
-                ->rawColumns(['action','amount', 'transaction_id', 'month','date','status'])
+                ->rawColumns(['student', 'batch','action', 'amount', 'transaction_id', 'month', 'date', 'status'])
                 ->make(true);
         }
 
@@ -64,12 +70,12 @@ class PayementController extends Controller
         if (!auth()->user()->can('create_payment')) {
             abort(403, 'Unauthorized action.');
         }
-        $batches = Batch::active()->with('students')->get();
+        $batches = Batch::active()->has('students')->with('students')->get();
         if ($batches->isEmpty()) {
             alert('Warning!', 'No batch found.', 'warning');
             return redirect()->back();
         }
-        return view('admin.payments.create',compact('batches'));
+        return view('admin.payments.create', compact('batches'));
     }
 
     /**
@@ -81,32 +87,43 @@ class PayementController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $request->validate([
-            'name' => 'required',
-            'tuition_fee' => 'required|numeric',
-            'days' => 'required',
-            'level' => 'nullable|exists:levels,id'
+        $validated = $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'batch_id' => 'required|exists:batches,id',
+            'amount' => 'required|numeric|min:0',
+            'month' => 'required|string',
+            'date' => 'nullable|date',
+            'payment_method' => 'nullable|string',
+            'transaction_id' => 'nullable|string',
+            'note' => 'nullable|string',
+        ], [
+            'student_id.required' => 'The student field is required.',
+            'student_id.exists' => 'The selected student is invalid.',
+            'batch_id.required' => 'The batch field is required.',
+            'batch_id.exists' => 'The selected batch is invalid.',
         ]);
 
-        try {
-            $payment = Payment::create([
-                'name' => $request->name,
-                'tuition_fee' => $request->tuition_fee,
-                'level_id' => $request->level
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Payment added successfully.',
-            ]);
-        } catch (\Throwable $th) {
-            Log::info($th->getMessage() . ' on line ' . $th->getLine() . ' in ' . $th->getFile());
-
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-            ], 500);
+        // Check if the student has already paid for the same batch and month
+        $existingPayment = Payment::where('student_id', $request->student_id)
+        ->where('batch_id', $request->batch_id)
+        ->where('month', $request->month)
+        ->exists();
+        if ($existingPayment) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors(['month' => 'The student has already paid for this month. Please select another month.']);
         }
+        if(!$validated['date']){
+            $validated['date'] = Carbon::today()->toDateString();
+       }
+        $validated['status'] = 1; // payment success
+        $payment = Payment::create($validated);
+        if (!$payment) {
+            alert('Warning!', 'Failed to save payment', 'error');
+            return redirect()->back()->withInput($request->all());
+        }
+        alert('Success!', 'Student payment added', 'success');
+        return to_route('admin.payments.create');
     }
 
     /**
@@ -133,7 +150,7 @@ class PayementController extends Controller
 
         $payment = Payment::with('batch_days')->find($id);
 
-        return view('admin.payments.edit', compact('payment' ));
+        return view('admin.payments.edit', compact('payment'));
     }
 
     /**
@@ -148,8 +165,5 @@ class PayementController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-    }
+    public function destroy(string $id) {}
 }
-

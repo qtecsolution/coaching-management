@@ -16,12 +16,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="batch" class="form-label">Batch</label>
-                                <select name="batch" class="form-control" id="batch">
+                                <label for="batch_id" class="form-label">Batch<sup
+                                        class="text-danger">*</sup></label>
+                                <select name="batch_id" class="form-control" id="batch_id" required>
                                     <option value="" selected disabled>Select a Batch</option>
-
                                     @foreach ($batches as $batch)
                                     <option
+                                        {{old('batch_id')==$batch->id?'selected':''}}
                                         value="{{ $batch->id }}"
                                         data-tuition-fee="{{ $batch->tuition_fee }}"
                                         data-students="{{ optional($batch->students)->toJson() }}">
@@ -30,15 +31,16 @@
                                     @endforeach
                                 </select>
 
-                                @error('batch')
+                                @error('batch_id')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="student_id" class="form-label">Student</label>
-                                <select name="student_id" class="form-control select2" id="student_id">
+                                <label for="student_id" class="form-label">Student<sup
+                                        class="text-danger">*</sup></label>
+                                <select name="student_id" class="form-control select2" id="student_id" required>
                                     <option value="" selected disabled>Select a Student</option>
                                 </select>
                                 @error('student_id')
@@ -48,8 +50,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="amount" class="form-label">Amount</label>
-                                <input type="number" name="amount" id="amount" placeholder="amount" class="form-control" value="{{ old('amount') }}" required>
+                                <label for="amount" class="form-label">Amount<sup
+                                        class="text-danger">*</sup></label>
+                                <input type="number" readonly name="amount" id="amount" placeholder="amount" class="form-control" value="{{ old('amount') }}" required>
                                 @error('amount')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -71,13 +74,10 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-group">
-                                    <label for="date_of_birth" class="form-label">Date<sup
-                                            class="text-danger">*</sup></label>
-                                    <input type="date" name="date_of_birth" id="date_of_birth"
-                                        placeholder="Date of Birth" class="form-control" value="{{ old('date_of_birth') }}"
-                                        required>
+                                    <label for="date" class="form-label">Date</label>
+                                    <input type="date" name="date" id="date" class="form-control" value="{{ old('date') }}">
 
-                                    @error('date_of_birth')
+                                    @error('date')
                                     <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -86,15 +86,17 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="mother_name" class="form-label">Payment Method</label>
-                                <select name="batch" class="form-control" id="batch">
-                                    <option value="" selected disabled>Select a Method</option>
-                                    <option>Cash</option>
-                                    <option>Bank</option>
-                                    <option>Bkash</option>
+                                <label for="payment_method" class="form-label">Payment Method<sup
+                                        class="text-danger">*</sup></label>
+                                <select name="payment_method" class="form-control" id="payment_method" required>
+                                    <option selected disabled>Select a Method</option>
+                                    <option {{old('payment_method')=='Cash'?'selected':''}}>Cash</option>
+                                    <option {{old('payment_method')=='Bank'?'selected':''}}>Bank</option>
+                                    <option {{old('payment_method')=='Bkash'?'selected':''}}>Bkash</option>
+                                    <option {{old('payment_method')=='Other'?'selected':''}}>Other</option>
                                 </select>
 
-                                @error('mother_name')
+                                @error('payment_method')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
@@ -102,23 +104,21 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="mother_name" class="form-label">Transaction Id<sup
-                                        class="text-danger">*</sup></label>
-                                <input type="text" name="mother_name" id="mother_name" placeholder="Mother Name"
-                                    class="form-control" value="{{ old('mother_name') }}" required>
+                                <label for="transaction_id" class="form-label">Transaction Id</label>
+                                <input type="text" name="transaction_id" id="transaction_id" placeholder="Enter transaction id"
+                                    class="form-control" value="{{ old('transaction_id') }}">
 
-                                @error('mother_name')
+                                @error('transaction_id')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="address" class="form-label">Note<sup
-                                        class="text-danger">*</sup></label>
-                                <textarea name="address" id="address" rows="5" class="form-control" placeholder="Address" required>{{ old('address') }}</textarea>
+                                <label for="note" class="form-label">Note</label>
+                                <textarea name="note" id="note" rows="5" class="form-control" placeholder="Enter Note">{{ old('note') }}</textarea>
 
-                                @error('address')
+                                @error('note')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
@@ -140,9 +140,29 @@
         $('.select2').select2();
     });
     document.addEventListener('DOMContentLoaded', function() {
-        const batchSelect = document.getElementById('batch');
+        const batchSelect = document.getElementById('batch_id');
         const studentSelect = document.getElementById('student_id');
         const amountInput = document.getElementById('amount');
+
+        // Check if there's an old batch ID and select it
+        const oldBatchId = "{{ old('batch_id') }}";
+        if (oldBatchId) {
+            batchSelect.value = oldBatchId;
+            // Trigger change event to update students and tuition fee
+            const selectedOption = batchSelect.options[batchSelect.selectedIndex];
+            const tuitionFee = selectedOption.getAttribute('data-tuition-fee');
+            amountInput.value = tuitionFee;
+
+            // Get students from the selected batch
+            const students = JSON.parse(selectedOption.getAttribute('data-students'));
+            populateStudentsDropdown(students);
+
+            // Check for old student_id and select it
+            const oldStudentId = "{{ old('student_id') }}";
+            if (oldStudentId) {
+                studentSelect.value = oldStudentId;
+            }
+        }
 
         batchSelect.addEventListener('change', function() {
             const selectedOption = batchSelect.options[batchSelect.selectedIndex];
@@ -153,16 +173,18 @@
 
             // Get students from the selected batch
             const students = JSON.parse(selectedOption.getAttribute('data-students'));
-            console.log(students);
-            // Populate the students dropdown
+            populateStudentsDropdown(students);
+        });
+
+        function populateStudentsDropdown(students) {
             studentSelect.innerHTML = '<option value="" selected disabled>Select a Student</option>';
             students.forEach(student => {
                 const option = document.createElement('option');
                 option.value = student.id;
-                option.textContent = student.name;
+                option.textContent = student.name + ' (' + student.student_id + ')';
                 studentSelect.appendChild(option);
             });
-        });
+        }
     });
 </script>
 @endpush

@@ -113,7 +113,7 @@ if (!function_exists('updatePaymentReport')) {
         ->pluck('total_amount')
         ->first() ?? 0;
         $report->collected_amount = Payment::where('month', $month)->sum('amount');
-        $report->due_amount = Payment::where('month', $month)->sum('due_amount');
+        $report->due_amount = $report->estimated_collection_amount - $report->collected_amount;
         $report->save();
     }
 }
