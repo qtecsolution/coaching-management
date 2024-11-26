@@ -148,9 +148,9 @@ class PayementController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $payment = Payment::with('batch_days')->find($id);
-
-        return view('admin.payments.edit', compact('payment'));
+        $payment = Payment::find($id);
+        $batches = Batch::active()->has('students')->with('students')->get();
+        return view('admin.payments.edit', compact('payment', 'batches'));
     }
 
     /**
@@ -165,5 +165,11 @@ class PayementController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) {}
+    public function destroy(string $id) {
+        abort_if(!auth()->user()->can('delete_payment'), 403);
+        $payment = Payment::findOrFail($id);
+        $payment->delete();
+        return true;
+       
+   }
 }

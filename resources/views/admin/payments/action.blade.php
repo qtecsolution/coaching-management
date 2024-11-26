@@ -5,9 +5,15 @@
     </a>
     @endcan
 
-    @can('view_payment')
-    <a href=" route('admin.batches.show', $row->id) }}" class="btn btn-sm btn-info">
+    @can('view_payments')
+    <a href=" route('admin.payments.show', $row->id) }}" class="btn btn-sm btn-info">
         <i class="bi bi-eye"></i>
+    </a>
+    @endcan
+    @can('delete_payment')
+    <a href="javascript:void(0)" onclick="deleteResource('{{ route('admin.payments.destroy', $row->id) }}')"
+        class="btn btn-sm btn-danger">
+        <i class="bi bi-trash"></i>
     </a>
     @endcan
 </div>

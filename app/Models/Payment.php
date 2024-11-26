@@ -43,5 +43,9 @@ class Payment extends Model
         static::updated(function ($payment) {
             updatePaymentReport($payment->month);
         });
+        // Update PaymentReport on payment delete
+        static::deleted(function ($payment) {
+            updatePaymentReport($payment->month);
+        });
     }
 }
