@@ -58,6 +58,9 @@
         responsive: true,
         serverSide: true,
         processing: true,
+        language: {
+            "emptyTable": "No unpaid student found"
+        },
         ajax: {
             url: "{{ route('admin.payments.due') }}",
             data: function(d) {

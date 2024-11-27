@@ -219,18 +219,11 @@ class PaymentController extends Controller
                 }
             })
                 ->whereDoesntHave('payments', function ($query) use ($batchId, $month) {
-                    if ($batchId) {
-                        $query->where('batch_id', $batchId);
-                    }
-                    if ($month) {
-                        $query->where('month', $month);
-                    }
+                    $query->when($batchId, fn($q) => $q->where('batch_id', $batchId))
+                        ->when($month, fn($q) => $q->where('month', $month));
                 })
-                ->with(['batch' => function ($query) use ($batchId) {
-                    if ($batchId) {
-                        $query->where('id', $batchId);
-                    }
-                }])->get();
+                ->with('batch')
+                ->get();
             return DataTables::of($unpaidStudents)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
