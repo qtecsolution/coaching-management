@@ -117,3 +117,9 @@ if (!function_exists('updatePaymentReport')) {
         $report->save();
     }
 }
+if (!function_exists('formatSlug')) {
+    function formatSlug($slug)
+    {
+        return ucwords(str_replace('_', ' ', $slug));
+    }
+}
