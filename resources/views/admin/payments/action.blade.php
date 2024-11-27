@@ -7,7 +7,7 @@
 
     @can('view_payments')
     <a href="{{route('admin.payments.show', $row->id) }}" class="btn btn-sm btn-info">
-        <i class="bi bi-printer"></i>
+        <i class="bi bi-printer" title="Print Invoice"></i>
     </a>
     @endcan
     <!-- @can('delete_payment')

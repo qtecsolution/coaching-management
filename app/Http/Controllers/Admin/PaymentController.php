@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
-class PayementController extends Controller
+class PaymentController extends Controller
 {
 
     /**
@@ -25,28 +25,28 @@ class PayementController extends Controller
         }
 
         if (request()->ajax()) {
-            return DataTables::of(Payment::with('student','batch')->latest())
+            return DataTables::of(Payment::with('student', 'batch')->latest())
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('student', function ($row) {
-                    return $row->student->name .'<br>'.$row->student->student_id;
+                    return $row->student->name . '<br>' . $row->student->student_id;
                 })
-            ->addColumn('batch', function ($row) {
-                return $row->batch->name;
-            })
+                ->addColumn('batch', function ($row) {
+                    return $row->batch->name;
+                })
                 ->addColumn('action', function ($row) {
                     return view('admin.payments.action', compact('row'));
                 })
-                ->addColumn('amount', function ($row) {
+                ->editColumn('amount', function ($row) {
                     return $row->amount;
                 })
-                ->addColumn('transaction_id', function ($row) {
+                ->editColumn('transaction_id', function ($row) {
                     return $row->transaction_id;
                 })
-                ->addColumn('month', function ($row) {
-                    return Carbon::createFromFormat('Y-m', $row->month)->format('M-Y');
+                ->editColumn('month', function ($row) {
+                    return $row->month;
                 })
-                ->addColumn('date', function ($row) {
+                ->editColumn('date', function ($row) {
                     return $row->date;
                 })
                 ->editColumn('status', function ($row) {
@@ -56,7 +56,7 @@ class PayementController extends Controller
                         return '<span class="badge bg-danger">Pending</span>';
                     }
                 })
-                ->rawColumns(['student', 'batch','action', 'amount', 'transaction_id', 'month', 'date', 'status'])
+                ->rawColumns(['student', 'batch', 'action', 'amount', 'transaction_id', 'month', 'date', 'status'])
                 ->make(true);
         }
 
@@ -106,17 +106,17 @@ class PayementController extends Controller
 
         // Check if the student has already paid for the same batch and month
         $existingPayment = Payment::where('student_id', $request->student_id)
-        ->where('batch_id', $request->batch_id)
-        ->where('month', $request->month)
-        ->exists();
+            ->where('batch_id', $request->batch_id)
+            ->where('month', $request->month)
+            ->exists();
         if ($existingPayment) {
             return redirect()->back()
                 ->withInput($request->all())
                 ->withErrors(['month' => 'The student has already paid for this month. Please select another month.']);
         }
-        if(!$validated['date']){
+        if (!$validated['date']) {
             $validated['date'] = Carbon::today()->toDateString();
-       }
+        }
         $validated['status'] = 1; // payment success
         $payment = Payment::create($validated);
         if (!$payment) {
@@ -188,11 +188,65 @@ class PayementController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) {
+    public function destroy(string $id)
+    {
         abort_if(!auth()->user()->can('delete_payment'), 403);
         $payment = Payment::findOrFail($id);
         $payment->delete();
         return true;
-       
-   }
+    }
+    public function due(Request $request)
+    {
+        if (!auth()->user()->can('view_payments')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $batches = Batch::active()->get();
+        if (request()->ajax()) {
+            $query = Payment::with('student', 'batch')->latest();
+            // Apply filters only if the parameters are provided
+            if ($request->filled('batch_id')) {
+                $query->where('batch_id', $request->batch_id);
+            }
+
+            if ($request->filled('month')) {
+                $query->where('month', $request->month);
+            }
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->addColumn('DT_RowIndex', '')
+                ->addColumn('student', function ($row) {
+                    return $row->student->name . '<br>' . $row->student->student_id;
+                })
+                ->addColumn('batch', function ($row) {
+                    return $row->batch->name;
+                })
+                ->addColumn('action', function ($row) {
+                    return view('admin.payments.action', compact('row'));
+                })
+                ->editColumn('amount', function ($row) {
+                    return $row->amount;
+                })
+                ->editColumn('transaction_id', function ($row) {
+                    return $row->transaction_id;
+                })
+                ->editColumn('month', function ($row) {
+                    return $row->month;
+                })
+                ->editColumn('date', function ($row) {
+                    return $row->date;
+                })
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 1) {
+                        return '<span class="badge bg-success">Success</span>';
+                    } else {
+                        return '<span class="badge bg-danger">Pending</span>';
+                    }
+                })
+                ->rawColumns(['student', 'batch', 'action', 'amount', 'transaction_id', 'month', 'date', 'status'])
+                ->make(true);
+        }
+        return view('admin.payments.due', compact('batches'));
+    }
 }

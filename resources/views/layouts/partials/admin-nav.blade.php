@@ -118,7 +118,7 @@
     @can('view_payments')
     <li class="sidebar-item has-sub {{ Route::is('admin.payments.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
-            <i class="bi bi-clipboard2-data"></i>
+            <i class="bi bi-cash-stack"></i>
             <span>Payments</span>
         </a>
         <ul class="submenu {{ Route::is('admin.payments.*') ? 'submenu-open' : 'submenu-close' }}">
@@ -130,6 +130,11 @@
             @can('create_payment')
             <li class="submenu-item {{ Route::is('admin.payments.create') ? 'active' : '' }}">
                 <a href="{{ route('admin.payments.create') }}">Payment Collection</a>
+            </li>
+            @endcan
+            @can('view_payments')
+            <li class="submenu-item {{ Route::is('admin.payments.due') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.due') }}">Payment Due</a>
             </li>
             @endcan
         </ul>
