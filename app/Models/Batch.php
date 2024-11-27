@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use function App\Http\Helpers\updatePaymentReport;
 
 class Batch extends Model
 {
@@ -27,5 +28,13 @@ class Batch extends Model
     }
     public function students()  {
         return $this->hasMany(Student::class);
+    }
+    protected static function boot()
+    {
+        parent::boot();
+        // Update PaymentReport on payment update
+        static::updated(function () {
+            updatePaymentReport(now()->format('Y-m'));
+        });
     }
 }

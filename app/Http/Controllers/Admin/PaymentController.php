@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Payment;
 use App\Models\Setting;
+use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -203,48 +204,61 @@ class PaymentController extends Controller
 
         $batches = Batch::active()->get();
         if (request()->ajax()) {
-            $query = Payment::with('student', 'batch')->latest();
-            // Apply filters only if the parameters are provided
+            $batchId = null;
+            $month = now()->format('Y-m');
             if ($request->filled('batch_id')) {
-                $query->where('batch_id', $request->batch_id);
+                $batchId = $request->batch_id;
             }
 
             if ($request->filled('month')) {
-                $query->where('month', $request->month);
+                $month = $request->month;
             }
-
-            return DataTables::of($query)
+            $unpaidStudents = Student::whereHas('batch', function ($query) use ($batchId) {
+                if ($batchId) {
+                    $query->where('id', $batchId);
+                }
+            })
+                ->whereDoesntHave('payments', function ($query) use ($batchId, $month) {
+                    if ($batchId) {
+                        $query->where('batch_id', $batchId);
+                    }
+                    if ($month) {
+                        $query->where('month', $month);
+                    }
+                })
+                ->with(['batch' => function ($query) use ($batchId) {
+                    if ($batchId) {
+                        $query->where('id', $batchId);
+                    }
+                }])->get();
+            return DataTables::of($unpaidStudents)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
-                ->addColumn('student', function ($row) {
-                    return $row->student->name . '<br>' . $row->student->student_id;
+                ->addColumn('name', function ($row) {
+                    return $row->name;
+                })
+                ->addColumn('student_id', function ($row) {
+                    return $row->student_id;
                 })
                 ->addColumn('batch', function ($row) {
                     return $row->batch->name;
                 })
-                ->addColumn('action', function ($row) {
-                    return view('admin.payments.action', compact('row'));
-                })
                 ->editColumn('amount', function ($row) {
-                    return $row->amount;
+                    return $row->batch->tuition_fee;
                 })
-                ->editColumn('transaction_id', function ($row) {
-                    return $row->transaction_id;
-                })
-                ->editColumn('month', function ($row) {
-                    return $row->month;
-                })
-                ->editColumn('date', function ($row) {
-                    return $row->date;
-                })
-                ->editColumn('status', function ($row) {
-                    if ($row->status == 1) {
-                        return '<span class="badge bg-success">Success</span>';
-                    } else {
-                        return '<span class="badge bg-danger">Pending</span>';
+                ->editColumn('month', $month)
+                ->addColumn('action', function ($row) {
+                    if (auth()->user()->can('update_payment')) {
+                        return '
+        <div class="btn-group">
+            <a href="' . route('admin.payments.edit', $row->id) . '" class="btn btn-sm btn-primary">
+                <i class="bi bi-pencil"></i>
+            </a>
+        </div>';
                     }
+                    return '';
                 })
-                ->rawColumns(['student', 'batch', 'action', 'amount', 'transaction_id', 'month', 'date', 'status'])
+                ->rawColumns(['name', 'student_id', 'batch', 'amount', 'month', 'action'])
                 ->make(true);
         }
         return view('admin.payments.due', compact('batches'));

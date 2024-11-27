@@ -20,6 +20,10 @@ class Student extends Model
     {
         return $this->belongsTo(Batch::class);
     }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
     public function getNameAttribute() {
         return $this->user ? $this->user->name : null;
     }

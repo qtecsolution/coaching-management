@@ -25,7 +25,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label><strong>Month :</strong></label>
-                            <input type="month" class="form-control" name="month" id="month">
+                            <input type="month" value="{{now()->format('Y-m')}}" class="form-control" name="month" id="month">
                         </div>
                     </div>
                 </div>
@@ -34,14 +34,12 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Student</th>
+                                <th>Name</th>
+                                <th>Student Id</th>
                                 <th>Batch</th>
                                 <th>Amount</th>
-                                <th>TransactionId</th>
                                 <th>Month</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <!-- <th>Action</th> -->
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -56,55 +54,48 @@
 
 @push('js')
 <script>
-        const table = $("#table").DataTable({
-            responsive: true,
-            serverSide: true,
-            processing: true,
-            ajax: {
-                url: "{{ route('admin.payments.due') }}",
-                data: function(d) {
-                    d.batch_id = $('#batch').val();
-                    d.month = $('#month').val();
-                }
+    const table = $("#table").DataTable({
+        responsive: true,
+        serverSide: true,
+        processing: true,
+        ajax: {
+            url: "{{ route('admin.payments.due') }}",
+            data: function(d) {
+                d.batch_id = $('#batch').val();
+                d.month = $('#month').val();
+            }
+        },
+        columns: [{
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
             },
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'student',
-                    name: 'student'
-                },
-                {
-                    data: 'batch',
-                    name: 'batch'
-                },
-                {
-                    data: 'amount',
-                    name: 'amount'
-                },
-                {
-                    data: 'transaction_id',
-                    name: 'transaction_id'
-                },
-                {
-                    data: 'month',
-                    name: 'month'
-                },
-                {
-                    data: 'date',
-                    name: 'date'
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action'
-                },
-            ],
-        });
+            {
+                data: 'name',
+                name: 'name'
+            },
+
+            {
+                data: 'student_id',
+                name: 'student_id'
+            },
+            {
+                data: 'batch',
+                name: 'batch'
+            },
+            {
+                data: 'amount',
+                name: 'amount'
+            },
+            {
+                data: 'month',
+                name: 'month'
+            },
+            // {
+            //     data: 'action',
+            //     name: 'action'
+            // },
+        ],
+    });
 
     // Attach onchange event listeners to filters
     $('#batch, #month').on('change', function() {
