@@ -206,12 +206,16 @@ class PaymentController extends Controller
         if (request()->ajax()) {
             $batchId = null;
             $month = now()->format('Y-m');
+            $student_id = null;
             if ($request->filled('batch_id')) {
                 $batchId = $request->batch_id;
             }
 
             if ($request->filled('month')) {
                 $month = $request->month;
+            }
+            if ($request->filled('student_id')) {
+                $student_id = $request->student_id;
             }
             $unpaidStudents = Student::whereHas('batch', function ($query) use ($batchId) {
                 if ($batchId) {
@@ -221,6 +225,9 @@ class PaymentController extends Controller
                 ->whereDoesntHave('payments', function ($query) use ($batchId, $month) {
                     $query->when($batchId, fn($q) => $q->where('batch_id', $batchId))
                         ->when($month, fn($q) => $q->where('month', $month));
+                })
+                ->when($student_id, function ($query) use ($student_id) {
+                    return $query->where('student_id', $student_id);
                 })
                 ->with('batch')
                 ->get();
@@ -239,7 +246,7 @@ class PaymentController extends Controller
                 ->editColumn('amount', function ($row) {
                     return $row->batch->tuition_fee;
                 })
-                ->editColumn('month', $month)
+                ->editColumn('month', Carbon::createFromFormat('Y-m', $month)->format('M-Y'))
                 ->addColumn('action', function ($row) {
                     if (auth()->user()->can('update_payment')) {
                         return '

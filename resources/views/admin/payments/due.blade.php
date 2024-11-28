@@ -28,6 +28,12 @@
                             <input type="month" value="{{now()->format('Y-m')}}" class="form-control" name="month" id="month">
                         </div>
                     </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label><strong>Student Id :</strong></label>
+                            <input type="student_id" class="form-control" placeholder="Enter student id" name="student_id" id="student_id">
+                        </div>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table" id="table">
@@ -101,7 +107,7 @@
     });
 
     // Attach onchange event listeners to filters
-    $('#batch, #month').on('change', function() {
+    $('#batch, #month ,#student_id').on('change', function() {
         table.ajax.reload();
     });
 </script>
