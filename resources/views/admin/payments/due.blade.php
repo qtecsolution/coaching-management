@@ -45,7 +45,7 @@
                                 <th>Batch</th>
                                 <th>Amount</th>
                                 <th>Month</th>
-                                <!-- <th>Action</th> -->
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -99,10 +99,10 @@
                 data: 'month',
                 name: 'month'
             },
-            // {
-            //     data: 'action',
-            //     name: 'action'
-            // },
+            {
+                data: 'action',
+                name: 'action'
+            },
         ],
     });
 

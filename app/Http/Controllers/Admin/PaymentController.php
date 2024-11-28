@@ -67,7 +67,7 @@ class PaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         if (!auth()->user()->can('create_payment')) {
             abort(403, 'Unauthorized action.');
@@ -77,7 +77,7 @@ class PaymentController extends Controller
             alert('Warning!', 'No batch found.', 'warning');
             return redirect()->back();
         }
-        return view('admin.payments.create', compact('batches'));
+        return view('admin.payments.create', compact('batches','request'));
     }
 
     /**
@@ -247,16 +247,20 @@ class PaymentController extends Controller
                     return $row->batch->tuition_fee;
                 })
                 ->editColumn('month', Carbon::createFromFormat('Y-m', $month)->format('M-Y'))
+
                 ->addColumn('action', function ($row) {
                     if (auth()->user()->can('update_payment')) {
                         return '
         <div class="btn-group">
-            <a href="' . route('admin.payments.edit', $row->id) . '" class="btn btn-sm btn-primary">
-                <i class="bi bi-pencil"></i>
+            <a href="' . route('admin.payments.create', [
+                            'student_id' => $row->id,
+                            'batch_id' => $row->batch->id
+                        ]) . '" class="btn btn-sm btn-primary">
+                Collection
             </a>
         </div>';
                     }
-                    return '';
+                    return ''; // Return an empty string if the user does not have permission
                 })
                 ->rawColumns(['name', 'student_id', 'batch', 'amount', 'month', 'action'])
                 ->make(true);
