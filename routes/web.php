@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\ClassMaterialController;
@@ -70,6 +71,8 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // batch routes
     Route::resource('batches', BatchController::class);
+    Route::resource('payments', PaymentController::class);
+    Route::get('payment/due', [PaymentController::class,'due'])->name('payments.due');
 
     // lead routes
     Route::resource('leads', LeadController::class);

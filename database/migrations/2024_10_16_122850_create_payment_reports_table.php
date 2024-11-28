@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_records', function (Blueprint $table) {
+        Schema::create('payment_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Payment::class)->constrained()->restrictOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->restrictOnDelete();
-            $table->double('amount')->default(0);
-            $table->tinyInteger('status')->default(0)->comment('0 = Pending, 1 = Paid');
+            $table->string('month')->unique(); //'month = "2024-12" here 12 is month of 2024;
+            $table->double('estimated_collection_amount')->default(0);
+            $table->double('collected_amount')->default(0);
+            $table->double('due_amount')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_records');
+        Schema::dropIfExists('payment_reports');
     }
 };

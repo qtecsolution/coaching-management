@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Level::class)->nullable()->constrained()->restrictOnDelete();
             $table->tinyInteger('status')->default(1);
             $table->integer('total_students')->default(0);
+            $table->double('tuition_fee');
             $table->timestamps();
         });
     }

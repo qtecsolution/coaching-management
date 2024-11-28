@@ -10,7 +10,7 @@ class Student extends Model
     use HasFactory;
 
     protected $guarded = [];
-
+    protected $appends = ['name','phone'];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -19,5 +19,16 @@ class Student extends Model
     public function batch()
     {
         return $this->belongsTo(Batch::class);
+    }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+    public function getNameAttribute() {
+        return $this->user ? $this->user->name : null;
+    }
+    public function getPhoneAttribute()
+    {
+        return $this->user ? $this->user->phone : null;
     }
 }

@@ -43,6 +43,22 @@
                     >
                 </div>
             </div>
+
+             <div class="col-md-6">
+                <div class="form-group">
+                    <label for="class" class="form-label">Tuition Fee <sup class="text-danger">*</sup></label>
+                        <input
+                        type="number"
+                        id="tuition_fee"
+                        placeholder="Enter tuition fee"
+                        class="form-control"
+                        v-model="tuition_fee"
+                    />
+                    <small class="text-danger" v-if="errors && errors.tuition_fee">{{
+                        errors.tuition_fee[0]
+                    }}</small>
+                </div>
+              </div>
         </div>
 
         <hr />
@@ -211,6 +227,7 @@ const toaster = (type = "info", message = "Test notification.") => {
 const props = defineProps(["route", "teachers", "batch", "levels", "subjects"]);
 
 const name = ref(props?.batch?.name);
+const tuition_fee = ref(props?.batch?.tuition_fee);
 const level = ref(props?.batch?.level_id || "");
 const days = ref([]);
 const errors = ref("");
@@ -317,6 +334,7 @@ const save = async () => {
     const form = new FormData();
     form.append("_method", "PUT");
     form.append("name", name.value);
+    form.append("tuition_fee", tuition_fee.value);
     form.append("level", level.value);
 
     if (
