@@ -61,8 +61,8 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
         Route::get('/{type}/edit', 'edit')->name('edit');
         Route::post('/update', 'update')->name('update');
 
-        Route::get('/providers/{name}', 'provider')->name('providers');
-        Route::post('/providers/update', 'updateProviders')->name('providers.update');
+        Route::get('/providers/{name}', 'smsProvider');
+        Route::post('/providers/update', 'updateSmsProviders')->name('providers.update');
     });
 
     // student routes

@@ -9,7 +9,7 @@
     "isEntry": true
   },
   "public/assets/scss/pages/auth.scss": {
-    "file": "assets/auth-BztZqSY4.css",
+    "file": "assets/auth-Bps-hRrj.css",
     "src": "public/assets/scss/pages/auth.scss",
     "isEntry": true
   },
@@ -58,12 +58,8 @@
     "file": "assets/nunito-latin-800-normal-Dcje90FH.woff2",
     "src": "public/assets/static/fonts/nunito-latin-800-normal.woff2"
   },
-  "public/assets/static/images/bg/4853433.png": {
-    "file": "assets/4853433-6UviE6lw.png",
-    "src": "public/assets/static/images/bg/4853433.png"
-  },
   "resources/css/app.css": {
-    "file": "assets/app--nmCbNpm.css",
+    "file": "assets/app-mSB9p8TC.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },

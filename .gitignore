@@ -19,5 +19,3 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
-package-lock.json
-composer.lock

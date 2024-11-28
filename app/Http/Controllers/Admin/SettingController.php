@@ -32,8 +32,12 @@ class SettingController extends Controller
 
             case 'sms-smtp':
                 $providers = smsProviders();
+                $activeProvider = [
+                    'name' => config('smsCredentials.active_provider'),
+                    'data' => smsProviderData(config('smsCredentials.active_provider'))
+                ];
 
-                return view('admin.setting.sms-smtp', compact('type', 'settings', 'providers'));
+                return view('admin.setting.sms-smtp', compact('type', 'settings', 'providers', 'activeProvider'));
                 break;
 
             default:
@@ -72,18 +76,36 @@ class SettingController extends Controller
         File::put($configFilePath, $content);
     }
 
-    public function provider()
+    public function smsProvider($name)
     {
-        $data = smsProviderData(request('provider'));
+        $data = smsProviderData($name);
         $keys = [];
 
-        foreach ($data as $key => $value) {
+        foreach ($data['fields'] as $key => $value) {
             array_push($keys, $key);
         }
 
         return response()->json([
             'message' => 'Success',
-            'data' => $keys
+            'fields' => $keys,
+            'credentials' => $data['credentials']
         ]);
+    }
+
+    public function updateSmsProviders(Request $request)
+    {
+        if (!auth()->user()->can('update_settings')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $activeProvider = $request->provider;
+
+        $smsProviders = config('smsCredentials.providers');
+        $smsProviders[$activeProvider] = $request->except(['_token', 'provider']);
+
+        $this->updateSmsCredentials($activeProvider, $smsProviders);
+
+        alert('Yahoo!', 'Settings updated successfully.', 'success');
+        return back();
     }
 }

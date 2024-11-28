@@ -86,7 +86,10 @@ if (!function_exists('smsProviderData')) {
 
         foreach ($providers as $key => $value) {
             if (class_basename($key) === $providerName) {
-                return $value;
+                return [
+                    'fields' => $value,
+                    'credentials' => config("smsCredentials.providers.{$providerName}", null)
+                ];
             }
         }
 
