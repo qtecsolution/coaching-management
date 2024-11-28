@@ -5,11 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use LaravelBDSms, SMS;
-
-use function App\Http\Helpers\smsProviders;
-use function App\Http\Helpers\smsProviderData;
+use Illuminate\Support\Facades\File;    
 
 class SettingController extends Controller
 {

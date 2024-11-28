@@ -1,8 +1,6 @@
 @extends('layouts.master')
 
 @php
-    use function App\Http\Helpers\smsProviderData;
-
     $title = Str::replace('-', ' ', Str::upper($type));
 @endphp
 @section('title', 'Edit ' . $title)

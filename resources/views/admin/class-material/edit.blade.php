@@ -2,10 +2,6 @@
 
 @section('title', 'Edit Material')
 
-@php
-    use function App\Http\Helpers\absolutePath;
-@endphp
-
 @section('content')
     <div class="page-heading">
         <x-page-title title="Edit Material" subtitle="" pageTitle="Edit Material" />

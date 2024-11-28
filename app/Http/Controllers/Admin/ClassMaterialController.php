@@ -11,10 +11,6 @@ use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
 
-use function App\Http\Helpers\absolutePath;
-use function App\Http\Helpers\fileRemove;
-use function App\Http\Helpers\fileUpload;
-
 class ClassMaterialController extends Controller
 {
     /**

@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Http\Helpers;
-
 use App\Models\Batch;
 use App\Models\Payment;
 use App\Models\PaymentReport;
@@ -120,6 +118,7 @@ if (!function_exists('updatePaymentReport')) {
         $report->save();
     }
 }
+
 if (!function_exists('formatSlug')) {
     function formatSlug($slug)
     {
