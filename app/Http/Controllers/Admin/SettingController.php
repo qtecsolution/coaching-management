@@ -22,22 +22,22 @@ class SettingController extends Controller
         $settings = Setting::all();
 
         switch ($type) {
-            case 'general':
+            case 'general-settings':
                 return view('admin.setting.general', compact('type', 'settings'));
                 break;
 
-            case 'email-smtp':
-                return view('admin.setting.email-smtp', compact('type', 'settings'));
+            case 'email-settings':
+                return view('admin.setting.email', compact('type', 'settings'));
                 break;
 
-            case 'sms-smtp':
+            case 'sms-settings':
                 $providers = smsProviders();
                 $activeProvider = [
                     'name' => config('smsCredentials.active_provider'),
                     'data' => smsProviderData(config('smsCredentials.active_provider'))
                 ];
 
-                return view('admin.setting.sms-smtp', compact('type', 'settings', 'providers', 'activeProvider'));
+                return view('admin.setting.sms', compact('type', 'settings', 'providers', 'activeProvider'));
                 break;
 
             default:

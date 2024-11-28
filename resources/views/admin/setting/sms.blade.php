@@ -5,11 +5,11 @@
 
     $title = Str::replace('-', ' ', Str::upper($type));
 @endphp
-@section('title', 'Edit ' . $title . ' Settings')
+@section('title', 'Edit ' . $title)
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit {{ $title }} Settings" subtitle="" pageTitle="Edit Settings" />
+        <x-page-title title="Edit {{ $title }}" subtitle="" pageTitle="Edit Settings" />
 
         <section class="section">
             <div class="card">
@@ -21,7 +21,7 @@
                             <div class="form-group">
                                 <label for="provider" class="form-label">Provider</label>
                                 <select name="provider" id="provider" onchange="getProviderData(this.value)"
-                                    class="form-control select2" required>
+                                    class="select2" style="width: 100%" required>
                                     <option value="" selected disabled>Select Provider</option>
                                     @foreach ($providers as $provider)
                                         <option value="{{ $provider }}" {{ $provider == $activeProvider['name'] ? 'selected' : '' }}>{{ $provider }}</option>
@@ -37,6 +37,7 @@
 
                         </div>
                         <div class="col-12 text-end mt-2">
+                            <button type="submit" class="btn btn-warning">Test Provider</button>
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </form>

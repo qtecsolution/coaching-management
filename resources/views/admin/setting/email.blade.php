@@ -3,11 +3,11 @@
 @php
     $title = Str::replace('-', ' ', Str::upper($type));
 @endphp
-@section('title', 'Edit ' . $title . ' Settings')
+@section('title', 'Edit ' . $title)
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit {{ $title }} Settings" subtitle="" pageTitle="Edit Settings" />
+        <x-page-title title="Edit {{ $title }}" subtitle="" pageTitle="Edit Settings" />
 
         <section class="section">
             <div class="card">
