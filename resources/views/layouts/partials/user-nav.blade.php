@@ -23,8 +23,11 @@
             </li>
         </ul>
     </li> --}}
-
-    <li class="sidebar-item mt-4 {{ Route::is('auth.profile') ? 'active' : '' }}">
+    <li class="sidebar-item {{ Route::is('user.payments.index') ? 'active' : '' }}">
+        <a class="sidebar-link" href="{{ route('user.payments.index') }}"> <i class="bi bi-cash-stack"></i>
+            <span>Payment History</span></a>
+    </li>
+    <li class="sidebar-item {{ Route::is('auth.profile') ? 'active' : '' }}">
         <a href="{{ route('auth.profile') }}" class="sidebar-link">
             <i class="bi bi-person-badge"></i>
             <span>Profile</span>
