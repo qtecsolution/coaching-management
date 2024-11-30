@@ -31,7 +31,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label><strong>Student Id :</strong></label>
-                            <input type="student_id" class="form-control" placeholder="Enter student id" name="student_id" id="student_id">
+                            <input type="text" class="form-control" placeholder="Enter student id" name="student_id" id="student_id">
                         </div>
                     </div>
                 </div>
@@ -72,6 +72,7 @@
             data: function(d) {
                 d.batch_id = $('#batch').val();
                 d.month = $('#month').val();
+                d.student_id = $('#student_id').val();
             }
         },
         columns: [{
