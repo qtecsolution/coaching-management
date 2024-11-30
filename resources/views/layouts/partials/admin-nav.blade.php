@@ -119,7 +119,7 @@
         <li class="sidebar-item has-sub {{ Route::is('admin.payments.*') ? 'active' : '' }}">
             <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
                 <i class="bi bi-cash-stack"></i>
-                <span>Payments</span>
+                <span>Tuition Fee</span>
             </a>
             <ul class="submenu {{ Route::is('admin.payments.*') ? 'submenu-open' : 'submenu-close' }}">
                 @can('view_payments')

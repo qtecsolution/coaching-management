@@ -22,7 +22,7 @@
                                     <option value="" selected disabled>Select a Batch</option>
                                     @foreach ($batches as $batch)
                                     <option
-                                        {{old('batch_id')==$batch->id?'selected':''}}
+                                        {{old('batch_id',$request->batch_id)==$batch->id?'selected':''}}
                                         value="{{ $batch->id }}"
                                         data-tuition-fee="{{ $batch->tuition_fee }}"
                                         data-students="{{ optional($batch->students)->toJson() }}">
@@ -63,7 +63,7 @@
                                 <label for="month" class="form-label">Month<sup
                                         class="text-danger">*</sup></label>
                                 <input type="month" name="month" id="month"
-                                    placeholder="Enter Month" class="form-control" value="{{ old('month') }}"
+                                    placeholder="Enter Month" class="form-control" value="{{ old('month',$request->month) }}"
                                     required>
 
                                 @error('month')
@@ -75,7 +75,7 @@
                             <div class="form-group">
                                 <div class="form-group">
                                     <label for="date" class="form-label">Date</label>
-                                    <input type="date" name="date" id="date" class="form-control" value="{{ old('date') }}">
+                                    <input type="date" name="date" id="date" class="form-control" value="{{ old('date',$request->month) }}">
 
                                     @error('date')
                                     <small class="text-danger">{{ $message }}</small>
@@ -145,7 +145,7 @@
         const amountInput = document.getElementById('amount');
 
         // Check if there's an old batch ID and select it
-        const oldBatchId = "{{ old('batch_id') }}";
+        const oldBatchId = "{{ old('batch_id',$request->batch_id) }}";
         if (oldBatchId) {
             batchSelect.value = oldBatchId;
             // Trigger change event to update students and tuition fee
@@ -158,7 +158,7 @@
             populateStudentsDropdown(students);
 
             // Check for old student_id and select it
-            const oldStudentId = "{{ old('student_id') }}";
+            const oldStudentId = "{{ old('student_id',$request->student_id) }}";
             if (oldStudentId) {
                 studentSelect.value = oldStudentId;
             }
