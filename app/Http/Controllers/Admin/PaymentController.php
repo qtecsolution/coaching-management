@@ -104,6 +104,17 @@ class PaymentController extends Controller
             'batch_id.required' => 'The batch field is required.',
             'batch_id.exists' => 'The selected batch is invalid.',
         ]);
+        [$year, $mon] = explode('-', $request->month);
+        $res = Student::where('id', $request->student_id)
+            ->whereYear('created_at', '>', $year)
+            ->orWhereMonth('created_at', '>', $mon)
+            ->exists();
+
+        if ($res) {
+            return redirect()->back()
+            ->withInput($request->all())
+            ->withErrors(['month' => 'The student does not have any payment for this month.']);
+        }
 
         // Check if the student has already paid for the same batch and month
         $existingPayment = Payment::where('student_id', $request->student_id)
@@ -181,6 +192,19 @@ class PaymentController extends Controller
             'batch_id.required' => 'The batch field is required.',
             'batch_id.exists' => 'The selected batch is invalid.',
         ]);
+        [$year,
+            $mon
+        ] = explode('-', $request->month);
+        $res = Student::where('id', $request->student_id)
+            ->whereYear('created_at', '>', $year)
+            ->orWhereMonth('created_at', '>', $mon)
+            ->exists();
+
+        if ($res) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors(['month' => 'The student does not have any payment for this month.']);
+        }
         $validated['status'] = 1; // payment success
         $payment->update($validated);
         alert('Success!', 'Student payment updated', 'success');
