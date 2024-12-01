@@ -45,8 +45,8 @@
             processing: true,
             ajax: "{{ route('admin.students.index') }}",
             columns: [{
-                    data: 'student_id',
-                    name: 'student_id'
+                    data: 'reg_id',
+                    name: 'reg_id'
                 },
                 {
                     data: 'batch',

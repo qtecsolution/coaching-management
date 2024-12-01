@@ -136,7 +136,7 @@
                                     @elseif (auth()->user()->user_type == 'teacher')
                                         #{{ auth()->user()->teacher->teacher_id }}
                                     @elseif (auth()->user()->user_type == 'student')
-                                        #{{ auth()->user()->student->student_id }}
+                                        #{{ auth()->user()->student->reg_id }}
                                     @else
                                         {{ auth()->user()->phone }}
                                     @endif

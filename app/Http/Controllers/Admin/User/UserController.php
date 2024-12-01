@@ -109,7 +109,7 @@ class UserController extends Controller
                 $user->assignRole($request->role);
             }
 
-            alert('Yahoo!', 'User added successfully.', 'success');
+            alert('Success!', 'User added successfully.', 'success');
             return to_route('admin.users.index');
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
@@ -196,7 +196,7 @@ class UserController extends Controller
                 $user->syncRoles($request->role);
             }
 
-            alert('Yahoo!', 'User updated successfully.', 'success');
+            alert('Success!', 'User updated successfully.', 'success');
             return to_route('admin.users.index');
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
