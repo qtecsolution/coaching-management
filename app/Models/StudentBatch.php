@@ -12,4 +12,7 @@ class StudentBatch extends Model
     {
         return $this->belongsTo(Batch::class);
     }
+    public function student(){
+        return $this->belongsTo(Student::class);
+   }
 }

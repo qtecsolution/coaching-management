@@ -9,8 +9,7 @@ class Payment extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'reg_id',
-        'batch_id',
+        'student_batch_id',
         'amount',
         'month',
         'date',
@@ -21,13 +20,10 @@ class Payment extends Model
     ];
 
     protected $guarded = [];
-    public function student(){
-        return $this->belongsTo(Student::class);
-   }
-    public function batch() {
-        return $this->belongsTo(Batch::class);
-    
-   }
+    public function student_batch(){
+        return $this->belongsTo(StudentBatch::class);
+    }
+
     // Hook into model events
     protected static function boot()
     {

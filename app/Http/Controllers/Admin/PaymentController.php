@@ -7,6 +7,7 @@ use App\Models\Batch;
 use App\Models\Payment;
 use App\Models\Setting;
 use App\Models\Student;
+use App\Models\StudentBatch;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -24,16 +25,15 @@ class PaymentController extends Controller
         if (!auth()->user()->can('view_payments')) {
             abort(403, 'Unauthorized action.');
         }
-
         if (request()->ajax()) {
-            return DataTables::of(Payment::with('student', 'batch')->latest())
+            return DataTables::of(Payment::with(['student_batch.student', 'student_batch.batch'])->latest())
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('student', function ($row) {
-                    return $row->student->name . '<br>' . $row->student->reg_id;
+                    return $row->student_batch->student->name . '<br>' . $row->student_batch->student->student_id;
                 })
                 ->addColumn('batch', function ($row) {
-                    return $row->batch->name;
+                    return $row->student_batch->batch->name;
                 })
                 ->addColumn('action', function ($row) {
                     return view('admin.payments.action', compact('row'));
@@ -72,7 +72,7 @@ class PaymentController extends Controller
         if (!auth()->user()->can('create_payment')) {
             abort(403, 'Unauthorized action.');
         }
-        $batches = Batch::active()->has('students')->with('students')->get();
+        $batches = Batch::active()->has('students')->with('students.student')->get();
         if ($batches->isEmpty()) {
             alert('Warning!', 'No batch found.', 'warning');
             return redirect()->back();
@@ -90,8 +90,7 @@ class PaymentController extends Controller
         }
 
         $validated = $request->validate([
-            'reg_id' => 'required|exists:students,id',
-            'batch_id' => 'required|exists:batches,id',
+            'student_batch_id' => 'required|exists:student_batches,id',
             'amount' => 'required|numeric|min:0',
             'month' => 'required|string',
             'date' => 'nullable|date',
@@ -99,13 +98,11 @@ class PaymentController extends Controller
             'transaction_id' => 'nullable|string',
             'note' => 'nullable|string',
         ], [
-            'reg_id.required' => 'The student field is required.',
-            'reg_id.exists' => 'The selected student is invalid.',
-            'batch_id.required' => 'The batch field is required.',
-            'batch_id.exists' => 'The selected batch is invalid.',
+            'student_batch_id.required' => 'The student field is required.',
+            'student_batch_id.exists' => 'The selected student is invalid.',
         ]);
         $comparisonDate = $this->endOfMonthWithDate($request->month);
-        $res = Student::where('id', $request->reg_id)
+        $res = StudentBatch::where('id', $request->student_batch_id)
             ->where('created_at', '>', $comparisonDate)
             ->exists();
 
@@ -115,8 +112,7 @@ class PaymentController extends Controller
             ->withErrors(['month' => 'The student does not have any payment for this month.']);
         }
         // Check if the student has already paid for the same batch and month
-        $existingPayment = Payment::where('reg_id', $request->reg_id)
-            ->where('batch_id', $request->batch_id)
+        $existingPayment = Payment::where('student_batch_id', $request->student_batch_id)
             ->where('month', $request->month)
             ->exists();
         if ($existingPayment) {
@@ -160,8 +156,8 @@ class PaymentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $payment = Payment::find($id);
-        $batches = Batch::active()->has('students')->with('students')->get();
+        $payment = Payment::with('student_batch')->find($id);
+        $batches = Batch::active()->has('students')->with('students.student')->get();
         return view('admin.payments.edit', compact('payment', 'batches'));
     }
 
@@ -176,8 +172,7 @@ class PaymentController extends Controller
 
         $payment = Payment::findOrFail($id);
         $validated = $request->validate([
-            'reg_id' => 'required|exists:students,id',
-            'batch_id' => 'required|exists:batches,id',
+            'student_batch_id' => 'required|exists:student_batches,id',
             'amount' => 'required|numeric|min:0',
             'month' => 'required|string',
             'date' => 'nullable|date',
@@ -185,13 +180,11 @@ class PaymentController extends Controller
             'transaction_id' => 'nullable|string',
             'note' => 'nullable|string',
         ], [
-            'reg_id.required' => 'The student field is required.',
-            'reg_id.exists' => 'The selected student is invalid.',
-            'batch_id.required' => 'The batch field is required.',
-            'batch_id.exists' => 'The selected batch is invalid.',
+            'student_batch_id.required' => 'The student field is required.',
+            'student_batch_id.exists' => 'The selected student is invalid.',
         ]);
         $comparisonDate = $this->endOfMonthWithDate($request->month);
-        $res = Student::where('id', $request->reg_id)
+        $res = StudentBatch::where('id', $request->student_batch_id)
             ->where('created_at', '>', $comparisonDate)
             ->exists();
 
