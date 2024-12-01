@@ -90,6 +90,7 @@ Route::prefix('user')->as('user.')->middleware('isStudent')->group(function () {
     Route::get('/', [StudentDashboardController::class, 'index'])->name('dashboard');
     Route::get('payments', [StudentPaymentController::class, 'index'])->name('payments.index');
     Route::get('payments/{id}', [StudentPaymentController::class, 'show'])->name('payments.show');
+    Route::get('payment/due', [StudentPaymentController::class, 'due'])->name('payments.due');
 
 });
 
