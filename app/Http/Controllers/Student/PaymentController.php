@@ -32,13 +32,13 @@ class PaymentController extends Controller
     public function index()
     {
         $student = Student::where('user_id', auth()->id())->first();
-        $payments = Payment::where('student_id', $student->id)->with('batch')->latest();
+        $payments = Payment::where('reg_id', $student->id)->with('batch')->latest();
         if (request()->ajax()) {
             return DataTables::of($payments)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('student', function ($row) use ($student) {
-                    return $student->name . '<br>' . $student->student_id;
+                    return $student->name . '<br>' . $student->reg_id;
                 })
                 ->addColumn('batch', function ($row) {
                     return $row->batch->name;

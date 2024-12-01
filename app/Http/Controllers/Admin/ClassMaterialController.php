@@ -92,7 +92,7 @@ class ClassMaterialController extends Controller
             'is_file' => $isFile
         ]);
 
-        alert('Yahoo!', 'Class material added successfully.', 'success');
+        alert('Success!', 'Class material added successfully.', 'success');
         return to_route('admin.class-materials.index', ['batch' => $request->batch]);
     }
 
@@ -156,7 +156,7 @@ class ClassMaterialController extends Controller
             'is_file' => $isFile
         ]);
 
-        alert('Yahoo!', 'Class material updated successfully.', 'success');
+        alert('Success!', 'Class material updated successfully.', 'success');
         return to_route('admin.class-materials.index', ['batch' => $request->batch]);
     }
 

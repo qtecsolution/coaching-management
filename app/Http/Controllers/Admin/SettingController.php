@@ -53,7 +53,7 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
-        alert('Yahoo!', 'Settings updated successfully.', 'success');
+        alert('Success!', 'Settings updated successfully.', 'success');
         return back();
     }
 
@@ -101,7 +101,7 @@ class SettingController extends Controller
 
         $this->updateSmsCredentials($activeProvider, $smsProviders);
 
-        alert('Yahoo!', 'Settings updated successfully.', 'success');
+        alert('Success!', 'Settings updated successfully.', 'success');
         return back();
     }
 }

@@ -31,7 +31,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label><strong>Student Id :</strong></label>
-                            <input type="text" class="form-control" placeholder="Enter student id" name="student_id" id="student_id">
+                            <input type="text" class="form-control" placeholder="Enter student id" name="reg_id" id="reg_id">
                         </div>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
             data: function(d) {
                 d.batch_id = $('#batch').val();
                 d.month = $('#month').val();
-                d.student_id = $('#student_id').val();
+                d.reg_id = $('#reg_id').val();
             }
         },
         columns: [{
@@ -85,8 +85,8 @@
             },
 
             {
-                data: 'student_id',
-                name: 'student_id'
+                data: 'reg_id',
+                name: 'reg_id'
             },
             {
                 data: 'batch',
@@ -108,7 +108,7 @@
     });
 
     // Attach onchange event listeners to filters
-    $('#batch, #month ,#student_id').on('change', function() {
+    $('#batch, #month ,#reg_id').on('change', function() {
         table.ajax.reload();
     });
 </script>

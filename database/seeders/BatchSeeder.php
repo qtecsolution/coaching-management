@@ -29,18 +29,19 @@ class BatchSeeder extends Seeder
         foreach ($batches as $batch) {
             Batch::create($batch);
         }
+
         // Fetch some Batches, Teachers (Users), and Subjects from the database
         $batches = Batch::all();
-        $users = User::where('user_type', 'teacher')->get();
         $subjects = Subject::all();
+        $teachers = User::where('user_type', 'teacher')->get();
 
         // Define some batch days data
         $batchDays = [
-            ['batch_id' => $batches->random()->id, 'user_id' => $users->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '1', 'start_time' => '09:00 AM', 'end_time' => '12:00 PM'],
-            ['batch_id' => $batches->random()->id, 'user_id' => $users->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '2', 'start_time' => '09:00 AM', 'end_time' => '12:00 PM'],
-            ['batch_id' => $batches->random()->id, 'user_id' => $users->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '3', 'start_time' => '01:00 PM', 'end_time' => '04:00 PM'],
-            ['batch_id' => $batches->random()->id, 'user_id' => $users->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '4', 'start_time' => '01:00 PM', 'end_time' => '04:00 PM'],
-            ['batch_id' => $batches->random()->id, 'user_id' => $users->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '5', 'start_time' => '09:00 AM', 'end_time' => '12:00 PM'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '1', 'start_time' => '09:00', 'end_time' => '12:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '2', 'start_time' => '09:00', 'end_time' => '12:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '3', 'start_time' => '01:00', 'end_time' => '04:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '4', 'start_time' => '01:00', 'end_time' => '04:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '5', 'start_time' => '09:00', 'end_time' => '12:00'],
         ];
 
         // Insert the data into the batch_days table

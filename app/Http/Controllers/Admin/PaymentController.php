@@ -30,7 +30,7 @@ class PaymentController extends Controller
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('student', function ($row) {
-                    return $row->student->name . '<br>' . $row->student->student_id;
+                    return $row->student->name . '<br>' . $row->student->reg_id;
                 })
                 ->addColumn('batch', function ($row) {
                     return $row->batch->name;
@@ -90,7 +90,7 @@ class PaymentController extends Controller
         }
 
         $validated = $request->validate([
-            'student_id' => 'required|exists:students,id',
+            'reg_id' => 'required|exists:students,id',
             'batch_id' => 'required|exists:batches,id',
             'amount' => 'required|numeric|min:0',
             'month' => 'required|string',
@@ -99,13 +99,13 @@ class PaymentController extends Controller
             'transaction_id' => 'nullable|string',
             'note' => 'nullable|string',
         ], [
-            'student_id.required' => 'The student field is required.',
-            'student_id.exists' => 'The selected student is invalid.',
+            'reg_id.required' => 'The student field is required.',
+            'reg_id.exists' => 'The selected student is invalid.',
             'batch_id.required' => 'The batch field is required.',
             'batch_id.exists' => 'The selected batch is invalid.',
         ]);
         $comparisonDate = $this->endOfMonthWithDate($request->month);
-        $res = Student::where('id', $request->student_id)
+        $res = Student::where('id', $request->reg_id)
             ->where('created_at', '>', $comparisonDate)
             ->exists();
 
@@ -115,7 +115,7 @@ class PaymentController extends Controller
             ->withErrors(['month' => 'The student does not have any payment for this month.']);
         }
         // Check if the student has already paid for the same batch and month
-        $existingPayment = Payment::where('student_id', $request->student_id)
+        $existingPayment = Payment::where('reg_id', $request->reg_id)
             ->where('batch_id', $request->batch_id)
             ->where('month', $request->month)
             ->exists();
@@ -176,7 +176,7 @@ class PaymentController extends Controller
 
         $payment = Payment::findOrFail($id);
         $validated = $request->validate([
-            'student_id' => 'required|exists:students,id',
+            'reg_id' => 'required|exists:students,id',
             'batch_id' => 'required|exists:batches,id',
             'amount' => 'required|numeric|min:0',
             'month' => 'required|string',
@@ -185,13 +185,13 @@ class PaymentController extends Controller
             'transaction_id' => 'nullable|string',
             'note' => 'nullable|string',
         ], [
-            'student_id.required' => 'The student field is required.',
-            'student_id.exists' => 'The selected student is invalid.',
+            'reg_id.required' => 'The student field is required.',
+            'reg_id.exists' => 'The selected student is invalid.',
             'batch_id.required' => 'The batch field is required.',
             'batch_id.exists' => 'The selected batch is invalid.',
         ]);
         $comparisonDate = $this->endOfMonthWithDate($request->month);
-        $res = Student::where('id', $request->student_id)
+        $res = Student::where('id', $request->reg_id)
             ->where('created_at', '>', $comparisonDate)
             ->exists();
 
@@ -225,7 +225,7 @@ class PaymentController extends Controller
         if (request()->ajax()) {
             $batchId = null;
             $month = now()->format('Y-m');
-            $student_id = null;
+            $reg_id = null;
             if ($request->filled('batch_id')) {
                 $batchId = $request->batch_id;
             }
@@ -233,8 +233,8 @@ class PaymentController extends Controller
             if ($request->filled('month')) {
                 $month = $request->month;
             }
-            if ($request->filled('student_id')) {
-                $student_id = $request->student_id;
+            if ($request->filled('reg_id')) {
+                $reg_id = $request->reg_id;
             }
             $compareDate = $this->endOfMonthWithDate($month);
             $unpaidStudents = Student::where('created_at', '<=', $compareDate)
@@ -247,8 +247,8 @@ class PaymentController extends Controller
                     $query->when($batchId, fn($q) => $q->where('batch_id', $batchId))
                         ->when($month, fn($q) => $q->where('month', $month));
                 })
-                ->when($student_id, function ($query) use ($student_id) {
-                    return $query->where('student_id', $student_id);
+                ->when($reg_id, function ($query) use ($reg_id) {
+                    return $query->where('reg_id', $reg_id);
                 })
                 ->with('batch')
                 ->get();
@@ -258,8 +258,8 @@ class PaymentController extends Controller
                 ->addColumn('name', function ($row) {
                     return $row->name;
                 })
-                ->addColumn('student_id', function ($row) {
-                    return $row->student_id;
+                ->addColumn('reg_id', function ($row) {
+                    return $row->reg_id;
                 })
                 ->addColumn('batch', function ($row) {
                     return $row->batch->name;
@@ -274,7 +274,7 @@ class PaymentController extends Controller
                         return '
         <div class="btn-group">
             <a href="' . route('admin.payments.create', [
-                            'student_id' => $row->id,
+                            'reg_id' => $row->id,
                             'batch_id' => $row->batch->id,
                             'month' => $month
                         ]) . '" class="btn btn-sm btn-primary">
@@ -284,7 +284,7 @@ class PaymentController extends Controller
                     }
                     return ''; // Return an empty string if the user does not have permission
                 })
-                ->rawColumns(['name', 'student_id', 'batch', 'amount', 'month', 'action'])
+                ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month', 'action'])
                 ->make(true);
         }
         return view('admin.payments.due', compact('batches'));

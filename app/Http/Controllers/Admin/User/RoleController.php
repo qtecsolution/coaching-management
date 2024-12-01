@@ -34,7 +34,7 @@ class RoleController extends Controller
         ]);
 
         if (Role::create($request->only('name'))) {
-            alert('Yahoo!', 'Role added successfully.', 'success');
+            alert('Success!', 'Role added successfully.', 'success');
             return back();
         } else {
             alert('Oops!', 'Something went wrong.', 'error');
@@ -63,7 +63,7 @@ class RoleController extends Controller
             'name' => $request->name
         ]);
 
-        alert('Yahoo!', 'Role updated successfully.', 'success');
+        alert('Success!', 'Role updated successfully.', 'success');
         return back();
     }
 
@@ -116,7 +116,7 @@ class RoleController extends Controller
             $permissions = $request->get('permissions', []);
             $role->syncPermissions($permissions);
 
-            alert('Yahoo!', 'Permissions has been updated.', 'success');
+            alert('Success!', 'Permissions has been updated.', 'success');
             return back();
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());

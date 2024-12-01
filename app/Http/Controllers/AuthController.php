@@ -95,7 +95,7 @@ class AuthController extends Controller
 
             $user->save();
 
-            alert('Yahoo!', 'Profile updated successfully.', 'success');
+            alert('Success!', 'Profile updated successfully.', 'success');
             return back();
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());

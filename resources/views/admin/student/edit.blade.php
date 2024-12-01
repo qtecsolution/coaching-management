@@ -23,7 +23,7 @@
 
                                         @foreach ($batches as $batch)
                                             <option value="{{ $batch->id }}"
-                                                {{ old('batch', $student->batch_id) == $batch->id ? 'selected' : '' }}>{{ $batch->name }}
+                                                {{ old('batch', $student?->currentBatch?->batch?->id) == $batch->id ? 'selected' : '' }}>{{ $batch->name }}
                                             </option>
                                         @endforeach
                                     </select>

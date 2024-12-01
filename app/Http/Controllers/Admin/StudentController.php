@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Student;
+use App\Models\StudentBatch;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -41,7 +42,13 @@ class StudentController extends Controller
                     }
                 })
                 ->addColumn('batch', function ($row) {
-                    return $row?->batch?->name ?? '--';
+                    $currentBatch = $row?->currentBatch?->batch;
+
+                    if ($currentBatch && $currentBatch->status == 1) {
+                        return $row?->currentBatch?->batch?->name ?? '--';
+                    } else {
+                        return '--';
+                    }
                 })
                 ->editColumn('emergency_contact', function ($row) {
                     $emergencyContact = json_decode($row->emergency_contact, true);
@@ -91,7 +98,7 @@ class StudentController extends Controller
             'address' => 'required',
             'contact_name' => 'required',
             'contact_phone' => 'required',
-            'batch' => 'nullable|exists:batches,id'
+            'batch' => 'required|exists:batches,id'
         ]);
 
         try {
@@ -104,7 +111,7 @@ class StudentController extends Controller
 
             $student = Student::create([
                 'user_id' => $user->id,
-                'student_id' => rand(1000, 9999) . $user->id,
+                'reg_id' => rand(1000, 9999) . $user->id,
                 'school_name' => $request->school_name,
                 'class' => $request->class,
                 'date_of_birth' => $request->date_of_birth,
@@ -114,13 +121,17 @@ class StudentController extends Controller
                 'emergency_contact' => json_encode([
                     'name' => $request->contact_name,
                     'phone' => $request->contact_phone
-                ]),
+                ])
+            ]);
+
+            StudentBatch::create([
+                'student_id' => $student->id,
                 'batch_id' => $request->batch
             ]);
 
             if ($request->has('batch')) $this->countBatchStudents($request->batch);
 
-            alert('Yahoo!', 'Student added successfully.', 'success');
+            alert('Success!', 'Student added successfully.', 'success');
             return to_route('admin.students.index');
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
@@ -181,7 +192,7 @@ class StudentController extends Controller
             'contact_name' => 'required',
             'contact_phone' => 'required',
             'status' => 'required|boolean',
-            'batch' => 'nullable|exists:batches,id'
+            'batch' => 'required|exists:batches,id'
         ]);
 
         try {
@@ -203,13 +214,22 @@ class StudentController extends Controller
                     'name' => $request->contact_name,
                     'phone' => $request->contact_phone
                 ]),
-                'status' => $request->status,
-                'batch_id' => $request->batch
+                'status' => $request->status
             ]);
+
+            $currentBatch = $student?->currentBatch;
+            if ($currentBatch && $currentBatch?->batch?->status == 1) {
+                $currentBatch->update(['batch_id' => $request->batch]);
+            } else {
+                StudentBatch::create([
+                    'student_id' => $student->id,
+                    'batch_id' => $request->batch
+                ]);
+            }
 
             if ($request->has('batch')) $this->countBatchStudents($request->batch);
 
-            alert('Yahoo!', 'Student updated successfully.', 'success');
+            alert('Success!', 'Student updated successfully.', 'success');
             return to_route('admin.students.index');
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
@@ -265,7 +285,7 @@ class StudentController extends Controller
                 'status' => $request->status
             ]);
 
-            alert('Yahoo!', 'Status updated successfully.', 'success');
+            alert('Success!', 'Status updated successfully.', 'success');
             return back();
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
@@ -279,7 +299,7 @@ class StudentController extends Controller
     {
         $batch = Batch::find($id);
         if ($batch) {
-            $studentCount = Student::where('batch_id', $batch->id)->count();
+            $studentCount = StudentBatch::where('batch_id', $batch->id)->count();
             $batch->update([
                 'total_students' => $studentCount
             ]);

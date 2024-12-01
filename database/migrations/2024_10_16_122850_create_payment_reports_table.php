@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('payment_reports', function (Blueprint $table) {
             $table->id();
-            $table->string('month')->unique(); //'month = "2024-12" here 12 is month of 2024;
+            $table->string('month')->unique(); // month = "2024-12" here 12 is month of 2024;
             $table->double('estimated_collection_amount')->default(0);
             $table->double('collected_amount')->default(0);
             $table->double('due_amount')->default(0);

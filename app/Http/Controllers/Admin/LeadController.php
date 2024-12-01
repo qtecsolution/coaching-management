@@ -91,7 +91,7 @@ class LeadController extends Controller
                 'note' => $request->note
             ]);
     
-            alert('Yahoo!', 'Lead added successfully.', 'success');
+            alert('Success!', 'Lead added successfully.', 'success');
             return to_route('admin.leads.index');
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
@@ -153,7 +153,7 @@ class LeadController extends Controller
                 'status' => $request->status
             ]);
     
-            alert('Yahoo!', 'Lead updated successfully.', 'success');
+            alert('Success!', 'Lead updated successfully.', 'success');
             return to_route('admin.leads.index');
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
