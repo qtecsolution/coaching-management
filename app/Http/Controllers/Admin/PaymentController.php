@@ -77,7 +77,7 @@ class PaymentController extends Controller
             alert('Warning!', 'No batch found.', 'warning');
             return redirect()->back();
         }
-        return view('admin.payments.create', compact('batches','request'));
+        return view('admin.payments.create', compact('batches', 'request'));
     }
 
     /**
@@ -104,7 +104,16 @@ class PaymentController extends Controller
             'batch_id.required' => 'The batch field is required.',
             'batch_id.exists' => 'The selected batch is invalid.',
         ]);
+        $comparisonDate = $this->endOfMonthWithDate($request->month);
+        $res = Student::where('id', $request->student_id)
+            ->where('created_at', '>', $comparisonDate)
+            ->exists();
 
+        if ($res) {
+            return redirect()->back()
+            ->withInput($request->all())
+            ->withErrors(['month' => 'The student does not have any payment for this month.']);
+        }
         // Check if the student has already paid for the same batch and month
         $existingPayment = Payment::where('student_id', $request->student_id)
             ->where('batch_id', $request->batch_id)
@@ -181,6 +190,16 @@ class PaymentController extends Controller
             'batch_id.required' => 'The batch field is required.',
             'batch_id.exists' => 'The selected batch is invalid.',
         ]);
+        $comparisonDate = $this->endOfMonthWithDate($request->month);
+        $res = Student::where('id', $request->student_id)
+            ->where('created_at', '>', $comparisonDate)
+            ->exists();
+
+        if ($res) {
+            return redirect()->back()
+            ->withInput($request->all())
+            ->withErrors(['month' => 'The student does not have any payment for this month.']);
+        }
         $validated['status'] = 1; // payment success
         $payment->update($validated);
         alert('Success!', 'Student payment updated', 'success');
@@ -217,11 +236,13 @@ class PaymentController extends Controller
             if ($request->filled('student_id')) {
                 $student_id = $request->student_id;
             }
-            $unpaidStudents = Student::whereHas('batch', function ($query) use ($batchId) {
-                if ($batchId) {
-                    $query->where('id', $batchId);
-                }
-            })
+            $compareDate = $this->endOfMonthWithDate($month);
+            $unpaidStudents = Student::where('created_at', '<=', $compareDate)
+                ->whereHas('batch', function ($query) use ($batchId) {
+                    if ($batchId) {
+                        $query->where('id', $batchId);
+                    }
+                })
                 ->whereDoesntHave('payments', function ($query) use ($batchId, $month) {
                     $query->when($batchId, fn($q) => $q->where('batch_id', $batchId))
                         ->when($month, fn($q) => $q->where('month', $month));
@@ -248,13 +269,14 @@ class PaymentController extends Controller
                 })
                 ->editColumn('month', Carbon::createFromFormat('Y-m', $month)->format('M-Y'))
 
-                ->addColumn('action', function ($row) {
+                ->addColumn('action', function ($row) use ($month) {
                     if (auth()->user()->can('update_payment')) {
                         return '
         <div class="btn-group">
             <a href="' . route('admin.payments.create', [
                             'student_id' => $row->id,
-                            'batch_id' => $row->batch->id
+                            'batch_id' => $row->batch->id,
+                            'month' => $month
                         ]) . '" class="btn btn-sm btn-primary">
                 Collection
             </a>
@@ -266,5 +288,9 @@ class PaymentController extends Controller
                 ->make(true);
         }
         return view('admin.payments.due', compact('batches'));
+    }
+    private function endOfMonthWithDate($yearMonth){
+        [$year, $mon] = explode('-', $yearMonth);
+        return Carbon::createFromDate($year, $mon, 1)->endOfMonth();
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\User\PermissionController;
 use App\Http\Controllers\Admin\User\RoleController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+use App\Http\Controllers\Student\PaymentController as StudentPaymentController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -87,6 +88,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 Route::prefix('user')->as('user.')->middleware('isStudent')->group(function () {
     // dashboard
     Route::get('/', [StudentDashboardController::class, 'index'])->name('dashboard');
+    Route::get('payments', [StudentPaymentController::class, 'index'])->name('payments.index');
+    Route::get('payments/{id}', [StudentPaymentController::class, 'show'])->name('payments.show');
+
 });
 
 // test routes
