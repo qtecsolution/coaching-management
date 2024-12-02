@@ -183,6 +183,7 @@ class PaymentController extends Controller
             'student_batch_id.required' => 'The student field is required.',
             'student_batch_id.exists' => 'The selected student is invalid.',
         ]);
+        $oldMonth = $payment->month;
         $comparisonDate = $this->endOfMonthWithDate($request->month);
         $res = StudentBatch::where('id', $request->student_batch_id)
             ->where('created_at', '>', $comparisonDate)
@@ -195,6 +196,9 @@ class PaymentController extends Controller
         }
         $validated['status'] = 1; // payment success
         $payment->update($validated);
+        if($oldMonth != $validated['month']){
+            updatePaymentReport($validated['month']);
+        }
         alert('Success!', 'Student payment updated', 'success');
         return to_route('admin.payments.index');
     }
