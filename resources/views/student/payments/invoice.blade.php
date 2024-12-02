@@ -30,9 +30,9 @@
           <div class="col-sm-5 invoice-col">
             To
             <address>
-              Name: {{$payment->student->name??"N/A"}} ({{$payment->student->id??"N/A"}})<br>
-              Batch: {{$payment->batch->name??"N/A"}}<br>
-              Institution: {{$payment->student->school_name??"N/A"}}
+              Name: {{$payment->student_batch->student->name??"N/A"}} ({{$payment->student_batch->student->reg_id??"N/A"}})<br>
+              Batch: {{$payment->student_batch->batch->name??"N/A"}}<br>
+              Institution: {{$payment->student_batch->student->school_name??"N/A"}}
             </address>
           </div>
           <div class="col-sm-4 invoice-col">

@@ -8,6 +8,7 @@ use App\Models\Batch;
 use App\Models\Payment;
 use App\Models\Setting;
 use App\Models\Student;
+use App\Models\StudentBatch;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -31,8 +32,9 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $student = Student::where('user_id', auth()->id())->first();
-        $payments = Payment::where('reg_id', $student->id)->with('batch')->latest();
+        $student = $this->getStudent();
+        $student_batch_ids = StudentBatch::where('student_id', $student->id)->get()->pluck('id');
+        $payments = Payment::whereIn('student_batch_id', $student_batch_ids)->with(['student_batch.batch'])->latest();
         if (request()->ajax()) {
             return DataTables::of($payments)
                 ->addIndexColumn()
@@ -41,7 +43,7 @@ class PaymentController extends Controller
                     return $student->name . '<br>' . $student->reg_id;
                 })
                 ->addColumn('batch', function ($row) {
-                    return $row->batch->name;
+                    return $row->student_batch->batch->name;
                 })
                 ->addColumn('action', function ($row) {
                     return '<a href="' . route('user.payments.show', $row->id) . '" class="btn btn-sm btn-info">
@@ -79,7 +81,7 @@ class PaymentController extends Controller
     public function show(string $id)
     {
         $settings = Setting::all();
-        $payment = Payment::with('student', 'batch')->find($id);
+        $payment = Payment::with('student_batch.student', 'student_batch.batch')->find($id);
         return view('student.payments.invoice', compact('payment', 'settings'));
     }
     public function due(Request $request)

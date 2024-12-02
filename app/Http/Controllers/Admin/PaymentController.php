@@ -143,7 +143,7 @@ class PaymentController extends Controller
         }
 
         $settings = Setting::all();
-        $payment = Payment::with('student', 'batch')->find($id);
+        $payment = Payment::with('student_batch.student', 'student_batch.batch')->find($id);
         return view('admin.payments.invoice', compact('payment', 'settings'));
     }
 
