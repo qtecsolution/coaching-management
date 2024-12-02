@@ -51,11 +51,7 @@ class PaymentController extends Controller
                     return $row->date;
                 })
                 ->editColumn('status', function ($row) {
-                    if ($row->status == 1) {
-                        return '<span class="badge bg-success">Success</span>';
-                    } else {
-                        return '<span class="badge bg-danger">Pending</span>';
-                    }
+                        return $row->status_badge;
                 })
                 ->rawColumns(['student', 'batch', 'action', 'amount', 'transaction_id', 'month', 'date', 'status'])
                 ->make(true);
@@ -108,8 +104,8 @@ class PaymentController extends Controller
 
         if ($res) {
             return redirect()->back()
-            ->withInput($request->all())
-            ->withErrors(['month' => 'The student does not have any payment for this month.']);
+                ->withInput($request->all())
+                ->withErrors(['month' => 'The student does not have any payment for this month.']);
         }
         // Check if the student has already paid for the same batch and month
         $existingPayment = Payment::where('student_batch_id', $request->student_batch_id)
@@ -191,12 +187,14 @@ class PaymentController extends Controller
 
         if ($res) {
             return redirect()->back()
-            ->withInput($request->all())
-            ->withErrors(['month' => 'The student does not have any payment for this month.']);
+                ->withInput($request->all())
+                ->withErrors(['month' => 'The student does not have any payment for this month.']);
         }
         $validated['status'] = 1; // payment success
         $payment->update($validated);
-        if($oldMonth != $validated['month']){
+
+        //old month payment updated
+        if ($oldMonth != $validated['month']) {
             updatePaymentReport($validated['month']);
         }
         alert('Success!', 'Student payment updated', 'success');
@@ -235,7 +233,7 @@ class PaymentController extends Controller
             }
             $compareDate = $this->endOfMonthWithDate($month);
             $unpaidStudents = Student::where('created_at', '<=', $compareDate)
-                ->whereHas('batch', function ($query) use ($batchId) {
+                ->whereHas('batches', function ($query) use ($batchId) {
                     if ($batchId) {
                         $query->where('id', $batchId);
                     }
@@ -286,7 +284,8 @@ class PaymentController extends Controller
         }
         return view('admin.payments.due', compact('batches'));
     }
-    private function endOfMonthWithDate($yearMonth){
+    private function endOfMonthWithDate($yearMonth)
+    {
         [$year, $mon] = explode('-', $yearMonth);
         return Carbon::createFromDate($year, $mon, 1)->endOfMonth();
     }

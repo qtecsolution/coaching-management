@@ -63,11 +63,7 @@ class PaymentController extends Controller
                     return $row->date;
                 })
                 ->editColumn('status', function ($row) {
-                    if ($row->status == 1) {
-                        return '<span class="badge bg-success">Success</span>';
-                    } else {
-                        return '<span class="badge bg-danger">Pending</span>';
-                    }
+                    return $row->status_badge;
                 })
                 ->rawColumns(['student', 'batch', 'action', 'amount', 'transaction_id', 'month', 'date', 'status'])
                 ->make(true);
