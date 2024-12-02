@@ -34,7 +34,7 @@ class PaymentController extends Controller
     {
         $student = $this->getStudent();
         $student_batch_ids = StudentBatch::where('student_id', $student->id)->get()->pluck('id');
-        $payments = Payment::whereIn('student_batch_id', $student_batch_ids)->with(['student_batch.batch'])->latest();
+        $payments = Payment::where('status', 1)->whereIn('student_batch_id', $student_batch_ids)->with(['student_batch.batch'])->latest();
         if (request()->ajax()) {
             return DataTables::of($payments)
                 ->addIndexColumn()

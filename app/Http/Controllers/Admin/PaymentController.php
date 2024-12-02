@@ -27,7 +27,7 @@ class PaymentController extends Controller
             abort(403, 'Unauthorized action.');
         }
         if (request()->ajax()) {
-            return DataTables::of(Payment::with(['student_batch.student', 'student_batch.batch'])->latest())
+            return DataTables::of(Payment::where('status',1)->with(['student_batch.student', 'student_batch.batch'])->latest())
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('student', function ($row) {
