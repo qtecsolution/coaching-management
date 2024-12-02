@@ -11,6 +11,7 @@ use App\Models\StudentBatch;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
@@ -51,7 +52,7 @@ class PaymentController extends Controller
                     return $row->date;
                 })
                 ->editColumn('status', function ($row) {
-                        return $row->status_badge;
+                    return $row->status_badge;
                 })
                 ->rawColumns(['student', 'batch', 'action', 'amount', 'transaction_id', 'month', 'date', 'status'])
                 ->make(true);
@@ -284,6 +285,15 @@ class PaymentController extends Controller
         }
         return view('admin.payments.due', compact('batches'));
     }
+    public function generatePaymentsForMonth(Request $request)
+    {
+        $month = $request->input('month', now()->format('Y-m'));
+
+        Artisan::call('payments:generate', ['month' => $month]);
+
+        return response()->json(['message' => "Payments for {$month} generated successfully."]);
+    }
+
     private function endOfMonthWithDate($yearMonth)
     {
         [$year, $mon] = explode('-', $yearMonth);
