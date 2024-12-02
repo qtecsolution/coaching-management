@@ -217,6 +217,8 @@ class PaymentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $payments_due = Payment::where('status','!=',1)->with(['student_batch.student','student_batch.batch'])->get();
+        dd($payments_due);
         $batches = Batch::active()->get();
         if (request()->ajax()) {
             $batchId = null;
@@ -233,6 +235,7 @@ class PaymentController extends Controller
                 $reg_id = $request->reg_id;
             }
             $compareDate = $this->endOfMonthWithDate($month);
+
             $unpaidStudents = Student::where('created_at', '<=', $compareDate)
                 ->whereHas('batches', function ($query) use ($batchId) {
                     if ($batchId) {
@@ -248,6 +251,25 @@ class PaymentController extends Controller
                 })
                 ->with('batch')
                 ->get();
+            $payments_due = Payment::query()
+            ->where('status', '!=', 1) // Exclude completed payments
+            ->whereHas('student_batch', function ($query) use ($batchId, $reg_id) {
+                // Filter by batch ID if provided
+                $query->when($batchId, fn($q) => $q->where('batch_id', $batchId));
+
+                // Filter by registration ID if provided
+                $query->when($reg_id, fn($q) => $q->whereHas('student', fn($q) => $q->where('reg_id', $reg_id)));
+            })
+            ->when($month, function ($query) use ($month) {
+                // Filter by the specific month if provided
+                $query->where('month', $month);
+            })
+            ->with([
+                'student_batch.student',
+                'student_batch.batch'
+            ])
+            ->get();
+
             return DataTables::of($unpaidStudents)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
