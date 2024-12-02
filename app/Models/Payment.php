@@ -25,7 +25,7 @@ class Payment extends Model
     }
     // Define the status map
     private const STATUS_MAP = [
-        0 => ['class' => 'warning', 'label' => 'Pending'],
+        0 => ['class' => 'warning', 'label' => 'Due'],
         1 => ['class' => 'success', 'label' => 'Paid'],
         2 => ['class' => 'primary', 'label' => 'Requested'],
         3 => ['class' => 'danger', 'label' => 'Failed']

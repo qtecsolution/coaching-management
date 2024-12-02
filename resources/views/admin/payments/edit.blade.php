@@ -74,9 +74,12 @@
                                             <div class="form-group">
                                                 <label for="month" class="form-label">Month<sup
                                                         class="text-danger">*</sup></label>
-                                                <input type="month" name="month" id="month"
+                                                <input type="hidden" name="month" id="month"
                                                     placeholder="Enter Month" class="form-control" value="{{ old('month',$payment->month) }}"
-                                                    required>
+                                                    required readonly>
+                                                <input type="month" name="" id=""
+                                                    placeholder="Enter Month" class="form-control" value="{{ old('month',$payment->month) }}"
+                                                    required readonly>
 
                                                 @error('month')
                                                 <small class="text-danger">{{ $message }}</small>

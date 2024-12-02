@@ -25,7 +25,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label><strong>Month :</strong></label>
-                            <input type="month" value="{{now()->format('Y-m')}}" class="form-control" name="month" id="month">
+                            <input type="month" class="form-control" name="month" id="month">
                         </div>
                     </div>
                     <div class="col-4">
@@ -45,6 +45,7 @@
                                 <th>Batch</th>
                                 <th>Amount</th>
                                 <th>Month</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -99,6 +100,10 @@
             {
                 data: 'month',
                 name: 'month'
+            },
+            {
+                data: 'status',
+                name: 'status'
             },
             {
                 data: 'action',
