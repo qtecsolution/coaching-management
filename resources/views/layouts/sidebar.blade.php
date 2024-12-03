@@ -3,8 +3,16 @@
         {{-- d-flex justify-content-between align-items-center --}}
         <div class="d-block text-center">
             <div class="logo">
-                <a href="{{ url('/') }}"><img src="{{ asset('assets/static/images/logo/logo.svg') }}" alt="Logo"></a>
-            </div>
+                @php
+                    $logo = asset('assets/static/images/logo/logo.svg');
+                    $logoSetting = \App\Models\Setting::where('key', 'app_logo')->value('value');
+            
+                    if ($logoSetting) {
+                        $logo = asset('storage/' . $logoSetting);
+                    }
+                @endphp
+                <a href="{{ url('/') }}"><img src="{{ $logo }}" alt="Logo"></a>
+            </div>            
         </div>
     </div>
     <div class="sidebar-menu">

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;    
+use Illuminate\Support\Facades\File;
 
 class SettingController extends Controller
 {
@@ -50,7 +50,21 @@ class SettingController extends Controller
 
         $requests = $request->except('_token');
         foreach ($requests as $key => $value) {
-            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+            $data = $value;
+
+            if ($request->hasFile($key)) {
+                if (Setting::where('key', $key)->exists()) {
+                    fileRemove(Setting::where('key', $key)->first()->value);
+                }
+
+                $request->validate([
+                    $key => 'file|mimes:jpg,jpeg,png,gif,webp|max:2048',
+                ]);
+
+                $data = fileUpload($request->file($key), 'media/settings');
+            }
+
+            Setting::updateOrCreate(['key' => $key], ['value' => $data]);
         }
 
         alert('Success!', 'Settings updated successfully.', 'success');
