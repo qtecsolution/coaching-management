@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Batch;
 use App\Models\Payment;
+use App\Models\PaymentReport;
 use App\Models\StudentBatch;
 use Illuminate\Console\Command;
 
@@ -36,6 +37,21 @@ class GenerateMonthlyPayments extends Command
         // Fetch all active batches
         $activeBatches = Batch::active()->get();
 
+        $report = PaymentReport::firstOrCreate(
+            ['month' => $month],
+            [
+                'estimated_collection_amount' => 0,
+                'collected_amount' => 0,
+                'due_amount' => 0,
+            ]
+        );
+        $report->estimated_collection_amount = $activeBatches
+        ->selectRaw('SUM(total_students * tuition_fee) as total_amount')
+        ->pluck('total_amount')
+            ->first() ?? 0;
+        $report->collected_amount = Payment::where('month', $month)->where('status',1)->sum('amount');
+        $report->due_amount = $report->estimated_collection_amount - $report->collected_amount;
+        $report->save();
         foreach ($activeBatches as $batch) {
             // Fetch all student-batch relationships
             $studentBatches = StudentBatch::where('batch_id', $batch->id)->get();

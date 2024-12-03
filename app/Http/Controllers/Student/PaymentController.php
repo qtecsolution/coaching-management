@@ -82,7 +82,7 @@ class PaymentController extends Controller
     }
     public function due(Request $request)
     {
-        $student = $this->student;
+        $student = $this->getStudent();
         $batches = Batch::active()->get();
         if (request()->ajax()) {
             $batchId = null;

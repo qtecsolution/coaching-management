@@ -113,7 +113,7 @@ if (!function_exists('updatePaymentReport')) {
         ->selectRaw('SUM(total_students * tuition_fee) as total_amount')
         ->pluck('total_amount')
         ->first() ?? 0;
-        $report->collected_amount = Payment::where('month', $month)->sum('amount');
+        $report->collected_amount = Payment::where('month', $month)->where('status', 1)->sum('amount');
         $report->due_amount = $report->estimated_collection_amount - $report->collected_amount;
         $report->save();
     }
