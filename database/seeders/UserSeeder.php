@@ -33,7 +33,6 @@ class UserSeeder extends Seeder
         $students->each(function ($studentUser) {
             Student::factory()->create(['user_id' => $studentUser->id]);
         });
-
         // Create fake teachers
         $teachers = User::factory(50)->create([
             'user_type' => 'teacher'
@@ -43,5 +42,13 @@ class UserSeeder extends Seeder
         $teachers->each(function ($teacherUser) {
             Teacher::factory()->create(['user_id' => $teacherUser->id]);
         });
+
+        // Ensure the first student's information remains fixed for login purposes
+        $user = User::where('user_type', 'student')->first();
+        $user->phone = '0123456789';
+        $user->name = 'Student 1';
+        $user->email = 'student_1@localhost';
+        $user->password = bcrypt('password');
+        $user->save();
     }
 }

@@ -21,7 +21,6 @@ return new class extends Migration
             $table->date('date');
             $table->string('payment_method')->default('Cash');
             $table->text('note')->nullable();
-            $table->double('due_amount')->default(0);
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });

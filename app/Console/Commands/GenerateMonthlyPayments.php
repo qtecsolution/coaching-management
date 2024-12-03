@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Batch;
 use App\Models\Payment;
+use App\Models\PaymentReport;
 use App\Models\StudentBatch;
 use Illuminate\Console\Command;
 
@@ -32,33 +33,46 @@ class GenerateMonthlyPayments extends Command
     {
         // Determine the month
         $month = $this->argument('month') ?? now()->format('Y-m');
-
-        // Fetch all active batches
+        if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $month)) {
+            $this->error('Invalid month format. Please use YYYY-MM format, and month must be between 01 and 12.');
+            return;
+        }
         $activeBatches = Batch::active()->get();
 
+        $estimatedCollectionAmount = $activeBatches->sum(function ($batch) {
+            return $batch->total_students * $batch->tuition_fee;
+        }) ?? 0;
+
+        $collectedAmount = Payment::where('month', $month)
+            ->where('status', 1) 
+            ->sum('amount');
+
+        $report = PaymentReport::updateOrCreate(
+            ['month' => $month],
+            [
+                'estimated_collection_amount' => $estimatedCollectionAmount,
+                'collected_amount' => $collectedAmount,
+                'due_amount' => $estimatedCollectionAmount - $collectedAmount,
+            ]
+        );
+
         foreach ($activeBatches as $batch) {
-            // Fetch all student-batch relationships
             $studentBatches = StudentBatch::where('batch_id', $batch->id)->get();
-
             foreach ($studentBatches as $studentBatch) {
-                // Check if a payment already exists for the given month
-                $paymentExists = Payment::where('student_batch_id', $studentBatch->id)
-                    ->where('month', $month)
-                    ->exists();
-
-                if (!$paymentExists) {
-                    // Create a payment record
-                    Payment::create([
+                Payment::firstOrCreate(
+                    [
                         'student_batch_id' => $studentBatch->id,
-                        'transaction_id' => null,
-                        'amount' => $batch->tuition_fee, 
                         'month' => $month,
+                    ],
+                    [
+                        'transaction_id' => null,
+                        'amount' => $batch->tuition_fee,
                         'date' => now(),
-                        'payment_method' => "Others", 
+                        'payment_method' => 'Others',
                         'note' => null,
-                        'status' => 0, // Default as pending
-                    ]);
-                }
+                        'status' => 0,
+                    ]
+                );
             }
         }
 
