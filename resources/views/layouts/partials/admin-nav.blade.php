@@ -140,7 +140,7 @@
         </ul>
     </li>
     @endcan
-    <li class="sidebar-item mt-4 {{ Route::is('admin.attendance') ? 'active' : '' }}">
+    <li class="sidebar-item {{ Route::is('admin.attendance') ? 'active' : '' }}">
         <a href="{{ route('admin.attendance') }}" class="sidebar-link">
             <i class="bi bi-person-badge"></i>
             <span>Attendance</span>
