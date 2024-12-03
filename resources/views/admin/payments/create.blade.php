@@ -38,12 +38,12 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="reg_id" class="form-label">Student<sup
+                                <label for="student_batch_id" class="form-label">Student<sup
                                         class="text-danger">*</sup></label>
-                                <select name="reg_id" class="form-control select2" id="reg_id" required>
+                                <select name="student_batch_id" class="form-control select2" id="student_batch_id" required>
                                     <option value="" selected disabled>Select a Student</option>
                                 </select>
-                                @error('reg_id')
+                                @error('student_batch_id')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
@@ -141,7 +141,7 @@
     });
     document.addEventListener('DOMContentLoaded', function() {
         const batchSelect = document.getElementById('batch_id');
-        const studentSelect = document.getElementById('reg_id');
+        const studentSelect = document.getElementById('student_batch_id');
         const amountInput = document.getElementById('amount');
 
         // Check if there's an old batch ID and select it
@@ -158,7 +158,7 @@
             populateStudentsDropdown(students);
 
             // Check for old reg_id and select it
-            const oldStudentId = "{{ old('reg_id',$request->reg_id) }}";
+            const oldStudentId = "{{ old('student_batch_id',$request->student_batch_id) }}";
             if (oldStudentId) {
                 studentSelect.value = oldStudentId;
             }
@@ -181,7 +181,7 @@
             students.forEach(student => {
                 const option = document.createElement('option');
                 option.value = student.id;
-                option.textContent = student.name + ' (' + student.reg_id + ')';
+                option.textContent = student.student.name + ' (' + student.student.reg_id + ')';
                 studentSelect.appendChild(option);
             });
         }

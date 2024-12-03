@@ -28,12 +28,6 @@
                             <input type="month" class="form-control" name="month" id="month">
                         </div>
                     </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label><strong>Student Id :</strong></label>
-                            <input type="text" class="form-control" placeholder="Enter student id" name="reg_id" id="reg_id">
-                        </div>
-                    </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table" id="table">
@@ -46,7 +40,7 @@
                                 <th>Amount</th>
                                 <th>Month</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <!-- <th>Action</th> -->
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -69,11 +63,10 @@
             "emptyTable": "No unpaid student found"
         },
         ajax: {
-            url: "{{ route('admin.payments.due') }}",
+            url: "{{ route('user.payments.due') }}",
             data: function(d) {
                 d.batch_id = $('#batch').val();
                 d.month = $('#month').val();
-                d.reg_id = $('#reg_id').val();
             }
         },
         columns: [{
@@ -105,15 +98,15 @@
                 data: 'status',
                 name: 'status'
             },
-            {
-                data: 'action',
-                name: 'action'
-            },
+            // {
+            //     data: 'action',
+            //     name: 'action'
+            // },
         ],
     });
 
     // Attach onchange event listeners to filters
-    $('#batch, #month ,#reg_id').on('change', function() {
+    $('#batch, #month').on('change', function() {
         table.ajax.reload();
     });
 </script>

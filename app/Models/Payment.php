@@ -9,8 +9,7 @@ class Payment extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'reg_id',
-        'batch_id',
+        'student_batch_id',
         'amount',
         'month',
         'date',
@@ -21,13 +20,33 @@ class Payment extends Model
     ];
 
     protected $guarded = [];
-    public function student(){
-        return $this->belongsTo(Student::class);
-   }
-    public function batch() {
-        return $this->belongsTo(Batch::class);
-    
-   }
+    public function student_batch(){
+        return $this->belongsTo(StudentBatch::class);
+    }
+    // Define the status map
+    private const STATUS_MAP = [
+        0 => ['class' => 'warning', 'label' => 'Due'],
+        1 => ['class' => 'success', 'label' => 'Paid'],
+        2 => ['class' => 'primary', 'label' => 'Requested'],
+        3 => ['class' => 'danger', 'label' => 'Failed']
+    ];
+
+    /**
+     * Get the status badge HTML.
+     *
+     * @return string
+     */
+    public function getStatusBadgeAttribute(): string
+    {
+        $statusInfo = self::STATUS_MAP[$this->status] ?? ['class' => 'secondary', 'label' => 'Unknown'];
+
+        return sprintf(
+            '<span class="badge bg-%s">%s</span>',
+            $statusInfo['class'],
+            $statusInfo['label']
+        );
+    }
+
     // Hook into model events
     protected static function boot()
     {

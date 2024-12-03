@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Payment;
 use App\Models\Setting;
-use App\Models\Student;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 use Yajra\DataTables\DataTables;
 
 class PaymentController extends Controller
@@ -24,16 +22,15 @@ class PaymentController extends Controller
         if (!auth()->user()->can('view_payments')) {
             abort(403, 'Unauthorized action.');
         }
-
         if (request()->ajax()) {
-            return DataTables::of(Payment::with('student', 'batch')->latest())
+            return DataTables::of(Payment::where('status', 1)->with(['student_batch.student', 'student_batch.batch'])->latest())
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('student', function ($row) {
-                    return $row->student->name . '<br>' . $row->student->reg_id;
+                    return $row->student_batch->student->name . '<br>' . $row->student_batch->student->student_id;
                 })
                 ->addColumn('batch', function ($row) {
-                    return $row->batch->name;
+                    return $row->student_batch->batch->name;
                 })
                 ->addColumn('action', function ($row) {
                     return view('admin.payments.action', compact('row'));
@@ -51,11 +48,7 @@ class PaymentController extends Controller
                     return $row->date;
                 })
                 ->editColumn('status', function ($row) {
-                    if ($row->status == 1) {
-                        return '<span class="badge bg-success">Success</span>';
-                    } else {
-                        return '<span class="badge bg-danger">Pending</span>';
-                    }
+                    return $row->status_badge;
                 })
                 ->rawColumns(['student', 'batch', 'action', 'amount', 'transaction_id', 'month', 'date', 'status'])
                 ->make(true);
@@ -72,7 +65,7 @@ class PaymentController extends Controller
         if (!auth()->user()->can('create_payment')) {
             abort(403, 'Unauthorized action.');
         }
-        $batches = Batch::active()->has('students')->with('students')->get();
+        $batches = Batch::active()->has('students')->with('students.student')->get();
         if ($batches->isEmpty()) {
             alert('Warning!', 'No batch found.', 'warning');
             return redirect()->back();
@@ -90,8 +83,7 @@ class PaymentController extends Controller
         }
 
         $validated = $request->validate([
-            'reg_id' => 'required|exists:students,id',
-            'batch_id' => 'required|exists:batches,id',
+            'student_batch_id' => 'required|exists:student_batches,id',
             'amount' => 'required|numeric|min:0',
             'month' => 'required|string',
             'date' => 'nullable|date',
@@ -99,39 +91,23 @@ class PaymentController extends Controller
             'transaction_id' => 'nullable|string',
             'note' => 'nullable|string',
         ], [
-            'reg_id.required' => 'The student field is required.',
-            'reg_id.exists' => 'The selected student is invalid.',
-            'batch_id.required' => 'The batch field is required.',
-            'batch_id.exists' => 'The selected batch is invalid.',
+            'student_batch_id.required' => 'The student field is required.',
+            'student_batch_id.exists' => 'The selected student is invalid.',
         ]);
-        $comparisonDate = $this->endOfMonthWithDate($request->month);
-        $res = Student::where('id', $request->reg_id)
-            ->where('created_at', '>', $comparisonDate)
-            ->exists();
 
-        if ($res) {
-            return redirect()->back()
-            ->withInput($request->all())
-            ->withErrors(['month' => 'The student does not have any payment for this month.']);
-        }
-        // Check if the student has already paid for the same batch and month
-        $existingPayment = Payment::where('reg_id', $request->reg_id)
-            ->where('batch_id', $request->batch_id)
-            ->where('month', $request->month)
-            ->exists();
-        if ($existingPayment) {
-            return redirect()->back()
-                ->withInput($request->all())
-                ->withErrors(['month' => 'The student has already paid for this month. Please select another month.']);
-        }
         if (!$validated['date']) {
             $validated['date'] = Carbon::today()->toDateString();
         }
         $validated['status'] = 1; // payment success
-        $payment = Payment::create($validated);
-        if (!$payment) {
-            alert('Warning!', 'Failed to save payment', 'error');
-            return redirect()->back()->withInput($request->all());
+
+        $payment = Payment::where('status', '!=', 1)->where('student_batch_id', $request->student_batch_id)
+            ->where('month', $request->month)->first();
+        if ($payment) {
+            $payment->update($validated);
+        } else {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors(['month' => 'The student does not have any due payment for this month.']);
         }
         alert('Success!', 'Student payment added', 'success');
         return to_route('admin.payments.create');
@@ -147,7 +123,7 @@ class PaymentController extends Controller
         }
 
         $settings = Setting::all();
-        $payment = Payment::with('student', 'batch')->find($id);
+        $payment = Payment::with('student_batch.student', 'student_batch.batch')->find($id);
         return view('admin.payments.invoice', compact('payment', 'settings'));
     }
 
@@ -160,8 +136,8 @@ class PaymentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $payment = Payment::find($id);
-        $batches = Batch::active()->has('students')->with('students')->get();
+        $payment = Payment::with('student_batch')->find($id);
+        $batches = Batch::active()->has('students')->with('students.student')->get();
         return view('admin.payments.edit', compact('payment', 'batches'));
     }
 
@@ -176,8 +152,7 @@ class PaymentController extends Controller
 
         $payment = Payment::findOrFail($id);
         $validated = $request->validate([
-            'reg_id' => 'required|exists:students,id',
-            'batch_id' => 'required|exists:batches,id',
+            'student_batch_id' => 'required|exists:student_batches,id',
             'amount' => 'required|numeric|min:0',
             'month' => 'required|string',
             'date' => 'nullable|date',
@@ -185,23 +160,12 @@ class PaymentController extends Controller
             'transaction_id' => 'nullable|string',
             'note' => 'nullable|string',
         ], [
-            'reg_id.required' => 'The student field is required.',
-            'reg_id.exists' => 'The selected student is invalid.',
-            'batch_id.required' => 'The batch field is required.',
-            'batch_id.exists' => 'The selected batch is invalid.',
+            'student_batch_id.required' => 'The student field is required.',
+            'student_batch_id.exists' => 'The selected student is invalid.',
         ]);
-        $comparisonDate = $this->endOfMonthWithDate($request->month);
-        $res = Student::where('id', $request->reg_id)
-            ->where('created_at', '>', $comparisonDate)
-            ->exists();
-
-        if ($res) {
-            return redirect()->back()
-            ->withInput($request->all())
-            ->withErrors(['month' => 'The student does not have any payment for this month.']);
-        }
         $validated['status'] = 1; // payment success
-        $payment->update($validated);
+        $payment->update($request->only(['date', 'payment_method', 'transaction_id', 'note']));
+
         alert('Success!', 'Student payment updated', 'success');
         return to_route('admin.payments.index');
     }
@@ -224,7 +188,7 @@ class PaymentController extends Controller
         $batches = Batch::active()->get();
         if (request()->ajax()) {
             $batchId = null;
-            $month = now()->format('Y-m');
+            $month = null;
             $reg_id = null;
             if ($request->filled('batch_id')) {
                 $batchId = $request->batch_id;
@@ -236,47 +200,50 @@ class PaymentController extends Controller
             if ($request->filled('reg_id')) {
                 $reg_id = $request->reg_id;
             }
-            $compareDate = $this->endOfMonthWithDate($month);
-            $unpaidStudents = Student::where('created_at', '<=', $compareDate)
-                ->whereHas('batch', function ($query) use ($batchId) {
-                    if ($batchId) {
-                        $query->where('id', $batchId);
-                    }
+
+            $payments_due = Payment::query()
+                ->where('status', '!=', 1)
+                ->whereHas('student_batch', function ($query) use ($batchId, $reg_id) {
+                    $query->when($batchId, fn($q) => $q->where('batch_id', $batchId));
+                    $query->when($reg_id, fn($q) => $q->whereHas('student', fn($q) => $q->where('reg_id', $reg_id)));
                 })
-                ->whereDoesntHave('payments', function ($query) use ($batchId, $month) {
-                    $query->when($batchId, fn($q) => $q->where('batch_id', $batchId))
-                        ->when($month, fn($q) => $q->where('month', $month));
-                })
-                ->when($reg_id, function ($query) use ($reg_id) {
-                    return $query->where('reg_id', $reg_id);
-                })
-                ->with('batch')
-                ->get();
-            return DataTables::of($unpaidStudents)
+                ->with([
+                    'student_batch.student',
+                    'student_batch.batch'
+                ]);
+            if (!empty($month)) {
+                $payments_due = $payments_due->where('month', $month);
+            }
+            $payments_due = $payments_due->get();
+            return DataTables::of($payments_due)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('name', function ($row) {
-                    return $row->name;
+                    return $row->student_batch->student->name;
                 })
                 ->addColumn('reg_id', function ($row) {
-                    return $row->reg_id;
+                    return $row->student_batch->student->reg_id;
                 })
                 ->addColumn('batch', function ($row) {
-                    return $row->batch->name;
+                    return $row->student_batch->batch->name;
                 })
                 ->editColumn('amount', function ($row) {
-                    return $row->batch->tuition_fee;
+                    return $row->amount;
                 })
-                ->editColumn('month', Carbon::createFromFormat('Y-m', $month)->format('M-Y'))
-
-                ->addColumn('action', function ($row) use ($month) {
+                ->editColumn('month', function ($row) {
+                    return Carbon::createFromFormat('Y-m', $row->month)->format('M-Y');
+                })
+                ->editColumn('status', function ($row) {
+                    return $row->status_badge;
+                })
+                ->addColumn('action', function ($row) {
                     if (auth()->user()->can('update_payment')) {
                         return '
         <div class="btn-group">
             <a href="' . route('admin.payments.create', [
-                            'reg_id' => $row->id,
-                            'batch_id' => $row->batch->id,
-                            'month' => $month
+                            'student_batch_id' => $row->student_batch->id,
+                            'batch_id' => $row->student_batch->batch->id,
+                            'month' => $row->month
                         ]) . '" class="btn btn-sm btn-primary">
                 Collection
             </a>
@@ -284,13 +251,17 @@ class PaymentController extends Controller
                     }
                     return ''; // Return an empty string if the user does not have permission
                 })
-                ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month', 'action'])
+                ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month', 'action', 'status'])
                 ->make(true);
         }
         return view('admin.payments.due', compact('batches'));
     }
-    private function endOfMonthWithDate($yearMonth){
-        [$year, $mon] = explode('-', $yearMonth);
-        return Carbon::createFromDate($year, $mon, 1)->endOfMonth();
+    public function generatePaymentsForMonth(Request $request)
+    {
+        $month = $request->input('month', now()->format('Y-m'));
+
+        Artisan::call('payments:generate', ['month' => $month]);
+
+        return response()->json(['message' => "Payments for {$month} generated successfully."]);
     }
 }

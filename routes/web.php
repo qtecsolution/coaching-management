@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BatchController;
@@ -75,6 +76,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::resource('batches', BatchController::class);
     Route::resource('payments', PaymentController::class);
     Route::get('payment/due', [PaymentController::class,'due'])->name('payments.due');
+    Route::post('/generate-payments', [PaymentController::class, 'generatePaymentsForMonth']);
+
+    Route::get('attendance', [AttendanceController::class, 'attendance'])->name('attendance');
 
     // lead routes
     Route::resource('leads', LeadController::class);
@@ -90,6 +94,7 @@ Route::prefix('user')->as('user.')->middleware('isStudent')->group(function () {
     Route::get('/', [StudentDashboardController::class, 'index'])->name('dashboard');
     Route::get('payments', [StudentPaymentController::class, 'index'])->name('payments.index');
     Route::get('payments/{id}', [StudentPaymentController::class, 'show'])->name('payments.show');
+    Route::get('payment/due', [StudentPaymentController::class, 'due'])->name('payments.due');
 
 });
 

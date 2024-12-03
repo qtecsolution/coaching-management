@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Admin\StudentController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,9 +26,11 @@ class Batch extends Model
     {
         return $query->where('status', 1);
     }
-    public function students()  {
-        return $this->hasMany(Student::class);
+    public function students()
+    {
+        return $this->hasMany(StudentBatch::class);
     }
+
     protected static function boot()
     {
         parent::boot();
