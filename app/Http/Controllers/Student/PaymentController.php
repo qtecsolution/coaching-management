@@ -85,9 +85,9 @@ class PaymentController extends Controller
         $student = $this->student;
         $batches = Batch::active()->get();
         if (request()->ajax()) {
-            $batchId = $student->batch_id;
-            $month = now()->format('Y-m');
-            $student_id = $student->id;
+            $batchId = null;
+            $month = null;
+            $reg_id = $student->reg_id;
             if ($request->filled('batch_id')) {
                 $batchId = $request->batch_id;
             }
@@ -95,65 +95,57 @@ class PaymentController extends Controller
             if ($request->filled('month')) {
                 $month = $request->month;
             }
-            if ($request->filled('student_id')) {
-                $student_id = $request->student_id;
+
+            $payments_due = Payment::query()
+                ->where('status', '!=', 1)
+                ->whereHas('student_batch', function ($query) use ($batchId, $reg_id) {
+                    $query->when($batchId, fn($q) => $q->where('batch_id', $batchId));
+                    $query->when($reg_id, fn($q) => $q->whereHas('student', fn($q) => $q->where('reg_id', $reg_id)));
+                })
+                ->with([
+                    'student_batch.student',
+                    'student_batch.batch'
+                ]);
+            if (!empty($month)) {
+                $payments_due = $payments_due->where('month', $month);
             }
-            $compareDate = $this->endOfMonthWithDate($month);
-            $unpaidStudents = Student::where('created_at', '<=', $compareDate)
-                ->whereHas('batch', function ($query) use ($batchId) {
-                    if ($batchId) {
-                        $query->where('id', $batchId);
-                    }
-                })
-                ->whereDoesntHave('payments', function ($query) use ($batchId, $month) {
-                    $query->when($batchId, fn($q) => $q->where('batch_id', $batchId))
-                        ->when($month, fn($q) => $q->where('month', $month));
-                })
-                ->when($student_id, function ($query) use ($student_id) {
-                    return $query->where('student_id', $student_id);
-                })
-                ->with('batch')
-                ->get();
-            return DataTables::of($unpaidStudents)
+            $payments_due = $payments_due->get();
+            return DataTables::of($payments_due)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('name', function ($row) {
-                    return $row->name;
+                    return $row->student_batch->student->name;
                 })
-                ->addColumn('student_id', function ($row) {
-                    return $row->student_id;
+                ->addColumn('reg_id', function ($row) {
+                    return $row->student_batch->student->reg_id;
                 })
                 ->addColumn('batch', function ($row) {
-                    return $row->batch->name;
+                    return $row->student_batch->batch->name;
                 })
                 ->editColumn('amount', function ($row) {
-                    return $row->batch->tuition_fee;
+                    return $row->amount;
                 })
-                ->editColumn('month', Carbon::createFromFormat('Y-m', $month)->format('M-Y'))
-
-                ->addColumn('action', function ($row) use ($month) {
-                    if (auth()->user()->can('update_payment')) {
-                        return '
+                ->editColumn('month', function ($row) {
+                    return Carbon::createFromFormat('Y-m', $row->month)->format('M-Y');
+                })
+                ->editColumn('status', function ($row) {
+                    return $row->status_badge;
+                })
+                ->addColumn('action', function ($row) {
+                    return '
         <div class="btn-group">
             <a href="' . route('admin.payments.create', [
-                            'student_id' => $row->id,
-                            'batch_id' => $row->batch->id,
-                            'month' => $month
-                        ]) . '" class="btn btn-sm btn-primary">
+                        'student_batch_id' => $row->student_batch->id,
+                        'batch_id' => $row->student_batch->batch->id,
+                        'month' => $row->month
+                    ]) . '" class="btn btn-sm btn-primary">
                 Collection
             </a>
         </div>';
-                    }
-                    return ''; // Return an empty string if the user does not have permission
                 })
-                ->rawColumns(['name', 'student_id', 'batch', 'amount', 'month', 'action'])
+                ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month', 'action', 'status'])
                 ->make(true);
         }
         return view('student.payments.due', compact('batches'));
-    }
-    private function endOfMonthWithDate($yearMonth)
-    {
-        [$year, $mon] = explode('-', $yearMonth);
-        return Carbon::createFromDate($year, $mon, 1)->endOfMonth();
     }
 }

@@ -228,13 +228,15 @@ class PaymentController extends Controller
                     return $row->student_batch->batch->name;
                 })
                 ->editColumn('amount', function ($row) {
-                    return $row->student_batch->batch->tuition_fee;
+                    return $row->amount;
                 })
-                ->editColumn('month', Carbon::createFromFormat('Y-m', $month)->format('M-Y'))
+                ->editColumn('month', function ($row) {
+                    return Carbon::createFromFormat('Y-m', $row->month)->format('M-Y');
+                })
                 ->editColumn('status', function ($row) {
                     return $row->status_badge;
                 })
-                ->addColumn('action', function ($row)  {
+                ->addColumn('action', function ($row) {
                     if (auth()->user()->can('update_payment')) {
                         return '
         <div class="btn-group">

@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <!-- <div class="col-4">
+                    <div class="col-4">
                         <div class="form-group">
                             <label><strong>Batch :</strong></label>
                             <select id='batch' class="form-control" name="batch_id">
@@ -21,19 +21,13 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div> -->
+                    </div>
                     <div class="col-4">
                         <div class="form-group">
                             <label><strong>Month :</strong></label>
-                            <input type="month" value="{{now()->format('Y-m')}}" class="form-control" name="month" id="month">
+                            <input type="month" class="form-control" name="month" id="month">
                         </div>
                     </div>
-                    <!-- <div class="col-4">
-                        <div class="form-group">
-                            <label><strong>Student Id :</strong></label>
-                            <input type="text" class="form-control" placeholder="Enter student id" name="student_id" id="student_id">
-                        </div>
-                    </div> -->
                 </div>
                 <div class="table-responsive">
                     <table class="table" id="table">
@@ -45,7 +39,8 @@
                                 <th>Batch</th>
                                 <th>Amount</th>
                                 <th>Month</th>
-                                <th>Action</th>
+                                <th>Status</th>
+                                <!-- <th>Action</th> -->
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -64,12 +59,14 @@
         responsive: true,
         serverSide: true,
         processing: true,
+        language: {
+            "emptyTable": "No unpaid student found"
+        },
         ajax: {
             url: "{{ route('user.payments.due') }}",
             data: function(d) {
                 d.batch_id = $('#batch').val();
                 d.month = $('#month').val();
-                d.student_id = $('#student_id').val();
             }
         },
         columns: [{
@@ -82,8 +79,8 @@
             },
 
             {
-                data: 'student_id',
-                name: 'student_id'
+                data: 'reg_id',
+                name: 'reg_id'
             },
             {
                 data: 'batch',
@@ -98,14 +95,18 @@
                 name: 'month'
             },
             {
-                data: 'action',
-                name: 'action'
+                data: 'status',
+                name: 'status'
             },
+            // {
+            //     data: 'action',
+            //     name: 'action'
+            // },
         ],
     });
 
     // Attach onchange event listeners to filters
-    $('#batch, #month ,#student_id').on('change', function() {
+    $('#batch, #month').on('change', function() {
         table.ajax.reload();
     });
 </script>
