@@ -19,10 +19,11 @@ class StudentBatchSeeder extends Seeder
         $students = Student::all();
         foreach ($students as $student) {
             $batch = $batches->random();
-            StudentBatch::create([
+            $student_batch = StudentBatch::create([
                 'student_id' => $student->id,
                 'batch_id' => $batch->id,
             ]);
+            $batch->update(['total_students' => StudentBatch::where('batch_id', $batch->id)->count()]);
         }
     }
 }
