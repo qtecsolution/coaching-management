@@ -5,14 +5,20 @@
 @section('content')
     <div class="row h-100">
         <div class="col-lg-5 d-none d-lg-block">
-            <div id="auth-right">
-
-            </div>
+            <div id="auth-right"></div>
         </div>
         <div class="col-lg-7 col-12">
             <div id="auth-left">
                 <div class="auth-logo">
-                    <a href="index.html"><img src="{{ asset('assets/static/images/logo/logo.svg') }}" alt="Logo"></a>
+                    @php
+                        $logo = asset('assets/static/images/logo/logo.svg');
+                        $logoSetting = \App\Models\Setting::where('key', 'app_logo')->value('value');
+
+                        if ($logoSetting) {
+                            $logo = asset('storage/' . $logoSetting);
+                        }
+                    @endphp
+                    <a href="index.html"><img src="{{ $logo }}" alt="Logo"></a>
                 </div>
                 <h1 class="auth-title">Log in.</h1>
                 <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
