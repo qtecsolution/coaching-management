@@ -2,6 +2,39 @@
 
 @section('title', 'Dashboard')
 
+@php
+    $schedules = $user?->student?->currentbatch->batch?->batch_days ?? [];
+    $daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    $currentDayIndex = Carbon\Carbon::now()->dayOfWeek;
+
+    // Find the next class day
+    $nextClassDay = null;
+    foreach ($schedules as $schedule) {
+        $scheduleDayIndex = array_search($schedule->day_name, $daysOfWeek);
+        if ($scheduleDayIndex > $currentDayIndex) {
+            $nextClassDay = $schedule->day_name;
+            break;
+        }
+    }
+
+    // If no next day is found, assume the first day of the next week
+    if (!$nextClassDay) {
+        $nextClassDay = $schedules->first()?->day_name;
+    }
+@endphp
+
+@push('css')
+    <style>
+        tr.highlighted-row {
+            background-color: rgb(99, 99, 56) !important;
+        }
+
+        .highlighted-row td {
+            color: white !important;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="page-heading">
         <h3>Dashboard</h3>
@@ -13,8 +46,9 @@
                     <div class="col-12">
                         <h3>Hello, {{ $user->name }}.</h3>
                         <p>
-                            @if (isset($user?->student?->batch?->name))
-                                You're enrolled to the <b>{{ $user->student->batch->name }}</b> batch. See the following
+                            @if (isset($user?->student?->currentBatch?->batch?->name))
+                                You're enrolled to the <b>{{ $user->student->currentBatch?->batch?->name }}</b>. See the
+                                following
                                 table to check your class schedules.
                             @else
                                 You're not enrolled to any batch.
@@ -33,16 +67,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @php
-                                        $schedules = $user?->student?->currentbatch->batch?->batch_days ?? [];
-                                    @endphp
-                                
                                     @if (count($schedules) > 0)
                                         @foreach ($schedules as $schedule)
-                                            <tr>
+                                            <tr @if ($schedule->day_name === $nextClassDay) class="highlighted-row" @endif>
                                                 <td>{{ $schedule->day_name }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -
-                                                    {{ \Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}</td>
+                                                <td>
+                                                    {{ Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -
+                                                    {{ Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
+                                                </td>
                                                 <td>{{ $schedule->subject_name }}</td>
                                                 <td>{{ $schedule->teacher_name }}</td>
                                             </tr>
@@ -52,7 +84,7 @@
                                             <td colspan="4" class="text-center">No schedule found.</td>
                                         </tr>
                                     @endif
-                                </tbody>                            
+                                </tbody>
                             </table>
                         </div>
                     </div>
