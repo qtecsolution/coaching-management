@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Payment List')
+@section('title', 'Payment history')
 
 @section('content')
 <div class="page-heading">
-    <x-page-title title="Payment List" subtitle="" pageTitle="Payment List" />
+    <x-page-title title="Payment history" subtitle="" pageTitle="Payment history" />
 
     <!-- Basic Tables start -->
     <section class="section">

@@ -47,7 +47,9 @@
           <div class="col-sm-3 invoice-col">
             Info <br>
             Payment ID #{{$payment->id}}<br>
+            @if($payment->status == 1 )
             Payment Date: {{date('d/m/Y', strtotime($payment->date))}}<br>
+            @endif
             <!-- <br>
           <b>Payment Due:</b> 2/22/2014<br>
           <b>Account:</b> 968-34567 -->
@@ -84,10 +86,14 @@
           <!-- accepted payments column -->
           <div class="col-6">
             <!-- <p class="lead">Payment:Cash Paid</p> -->
+            @if($payment->status == 1 )
             <small class="text-small text-bold">Payment Method: {{$payment->payment_method}}</small>
             <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
               Note: {{$payment->note}}
             </p>
+            @else
+            <p class="lead">Status: {!!$payment->status_badge!!}</p>
+            @endif
           </div>
           <!-- /.col -->
           <div class="col-6">
