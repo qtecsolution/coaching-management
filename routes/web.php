@@ -75,11 +75,17 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // batch routes
     Route::resource('batches', BatchController::class);
+
+    // payment routes
     Route::resource('payments', PaymentController::class);
     Route::get('payment/due', [PaymentController::class,'due'])->name('payments.due');
     Route::match(['get', 'post'], '/payment/generate', [PaymentController::class, 'generatePaymentsForMonth'])->name('payments.generate');
+    
+    // report routes
     Route::get('reports/daily-collection', [ReportController::class, 'dailyCollection'])->name('reports.daily.collection');
-    Route::get('attendance', [AttendanceController::class, 'attendance'])->name('attendance');
+    
+    // attendance routes
+    Route::get('attendance/{batchDayId}', [AttendanceController::class, 'attendance'])->name('attendance');
 
     // lead routes
     Route::resource('leads', LeadController::class);
@@ -93,6 +99,8 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 Route::prefix('user')->as('user.')->middleware('isStudent')->group(function () {
     // dashboard
     Route::get('/', [StudentDashboardController::class, 'index'])->name('dashboard');
+
+    // payment routes
     Route::get('payments', [StudentPaymentController::class, 'index'])->name('payments.index');
     Route::get('payments/{id}', [StudentPaymentController::class, 'show'])->name('payments.show');
     Route::get('payment/due', [StudentPaymentController::class, 'due'])->name('payments.due');

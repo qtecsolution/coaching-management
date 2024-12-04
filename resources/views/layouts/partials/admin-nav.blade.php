@@ -144,12 +144,6 @@
         </ul>
     </li>
     @endcan
-    <li class="sidebar-item {{ Route::is('admin.attendance') ? 'active' : '' }}">
-        <a href="{{ route('admin.attendance') }}" class="sidebar-link">
-            <i class="bi bi-person-badge"></i>
-            <span>Attendance</span>
-        </a>
-    </li>
     @can('view_payments')
     <li class="sidebar-item has-sub {{ Route::is('admin.reports.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">

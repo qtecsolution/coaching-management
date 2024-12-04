@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    public function attendance(){
-        $batches = Batch::active()->get();
-        return view('admin.attendance.index',compact('batches'));
+    public function attendance($batchDayId)
+    {
+        return view('admin.attendance.attendance');
     }
 }

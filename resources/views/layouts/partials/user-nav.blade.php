@@ -4,24 +4,6 @@
         <span>Dashboard</span>
     </a>
 </li>
-
-{{-- <li class="sidebar-item has-sub">
-        <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
-            <i class="bi bi-people"></i>
-            <span>Users</span>
-        </a>
-        <ul class="submenu submenu-close">
-            <li class="submenu-item">
-                <a href="#">User List</a>
-            </li>
-            <li class="submenu-item">
-                <a href="#">Add User</a>
-            </li>
-            <li class="submenu-item">
-                <a href="#">Role & Permission</a>
-            </li>
-        </ul>
-    </li> --}}
 <li class="sidebar-item has-sub {{ Route::is('user.payments.*') ? 'active' : '' }}">
     <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
         <i class="bi bi-cash-stack"></i>
