@@ -43,12 +43,16 @@ class AuthController extends Controller
     // function to show signup page
     public function signupView()
     {
+        return abort(403, 'Unauthorized action.');
+
         return view('auth.signup');
     }
 
     // function to signup user
     public function signup(Request $request)
     {
+        return abort(403, 'Unauthorized action.');
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:users,phone',
