@@ -64,14 +64,18 @@
             <table class="table">
               <thead>
                 <tr style="font-weight: bold !important;">
+                  @if($payment->status == 1 )
                   <td>Transaction Id</td>
+                  @endif
                   <td>Month</td>
                   <td>Amount</td>
                 </tr>
               </thead>
               <tbody>
                 <tr>
+                  @if($payment->status == 1 )
                   <td>{{$payment->transaction_id}}</td>
+                  @endif
                   <td>{{ \Carbon\Carbon::parse($payment->month)->format('M-Y') }}</td>
                   <td>{{number_format($payment->amount,2,'.',',')}}</td>
                 </tr>
