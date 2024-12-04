@@ -38,7 +38,11 @@ class GenerateMonthlyPayments extends Command
             $this->error('Invalid month format. Please use YYYY-MM format, and month must be between 01 and 12.');
             return;
         }
-        $activeBatches = Batch::active()->get();
+
+
+        // Convert the month to the start of the month using Carbon
+        $cutoffDate = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+        $activeBatches = Batch::active()->where('created_at', '<', $cutoffDate)->get();
 
         $estimatedCollectionAmount = $activeBatches->sum(function ($batch) {
             return $batch->total_students * $batch->tuition_fee;
