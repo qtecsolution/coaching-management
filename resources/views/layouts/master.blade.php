@@ -77,7 +77,11 @@ $title = \App\Models\Setting::where('key', 'app_name')->value('value') ?? config
         flatpickr('.flatpickr-date', {
             enableTime: false,
             dateFormat: "Y-m-d",
-        })
+        });
+        flatpickr('.flatpickr-range-Y-m-d', {
+            dateFormat: "Y-m-d",
+            mode: 'range'
+        });
     </script>
 </body>
 

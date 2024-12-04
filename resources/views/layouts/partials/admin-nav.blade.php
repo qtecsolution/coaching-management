@@ -151,6 +151,21 @@
             <span>Attendance</span>
         </a>
     </li>
+    @can('view_payments')
+    <li class="sidebar-item has-sub {{ Route::is('admin.reports.*') ? 'active' : '' }}">
+        <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
+            <i class="bi bi-cash-stack"></i>
+            <span>Reports</span>
+        </a>
+        <ul class="submenu {{ Route::is('admin.reports.daily.collection') ? 'submenu-open' : 'submenu-close' }}">
+            @can('create_payment')
+            <li class="submenu-item {{ Route::is('admin.reports.daily.collection') ? 'active' : '' }}">
+                <a href="{{ route('admin.reports.daily.collection') }}">Daily Payment Collection</a>
+            </li>
+            @endcan
+        </ul>
+    </li>
+    @endcan
     @can('view_settings')
     <li class="sidebar-item has-sub {{ Route::is('admin.settings.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
