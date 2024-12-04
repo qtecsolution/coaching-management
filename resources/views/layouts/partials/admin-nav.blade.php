@@ -132,6 +132,11 @@
                 <a href="{{ route('admin.payments.create') }}">Payment Collection</a>
             </li>
             @endcan
+            @can('create_payment')
+            <li class="submenu-item {{ Route::is('admin.payments.generate') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.generate') }}">Payment Generate</a>
+            </li>
+            @endcan
             @can('view_payments')
             <li class="submenu-item {{ Route::is('admin.payments.due') ? 'active' : '' }}">
                 <a href="{{ route('admin.payments.due') }}">Payment Due</a>

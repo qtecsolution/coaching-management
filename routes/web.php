@@ -76,7 +76,7 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::resource('batches', BatchController::class);
     Route::resource('payments', PaymentController::class);
     Route::get('payment/due', [PaymentController::class,'due'])->name('payments.due');
-    Route::post('/generate-payments', [PaymentController::class, 'generatePaymentsForMonth']);
+    Route::match(['get', 'post'], '/payment/generate', [PaymentController::class, 'generatePaymentsForMonth'])->name('payments.generate');
 
     Route::get('attendance', [AttendanceController::class, 'attendance'])->name('attendance');
 
