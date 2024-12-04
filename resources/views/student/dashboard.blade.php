@@ -4,7 +4,7 @@
 
 @php
     $schedules = $user?->student?->currentbatch->batch?->batch_days ?? [];
-    $daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    $daysOfWeek = \App\Models\BatchDay::$daysOfWeek;
     $currentDayIndex = Carbon\Carbon::now()->dayOfWeek;
 
     // Find the next class day

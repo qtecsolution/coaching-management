@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class BatchDay extends Model
 {
+    public static $daysOfWeek = [
+        'Saturday',
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday'
+    ];
+
     use HasFactory;
 
     protected $guarded = [];

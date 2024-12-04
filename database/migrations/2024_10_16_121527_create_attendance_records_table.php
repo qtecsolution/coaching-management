@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Attendance::class)->constrained()->restrictOnDelete();
             $table->foreignIdFor(User::class)->constrained()->restrictOnDelete();
             $table->integer('status')->default(0)->comment('0 = Absent, 1 = Present, 2 = Late');
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }
