@@ -39,8 +39,13 @@ class DashboardController extends Controller
         ])->get()
             ->keyBy('month');
 
+        $areaChartIsBlank = true;
+        $message = '';
         // Prepare the data for the chart
-        $chartData = $months->mapWithKeys(function ($month) use ($monthlyCollections) {
+        $chartData = $months->mapWithKeys(function ($month) use ($monthlyCollections, &$areaChartIsBlank) {
+            if($monthlyCollections->get($month)?->collected_amount > 0){
+                $areaChartIsBlank = false;
+            }
             return [
                 $month => [
                     'month' => $month,
@@ -48,9 +53,10 @@ class DashboardController extends Controller
                 ]
             ];
         });
-
         $amounts = $chartData->pluck('collected_amount');
-
-        return view('admin.dashboard', compact('data', 'amounts'));
+        if($areaChartIsBlank){
+            $message = 'No data available';
+        }
+        return view('admin.dashboard', compact('data', 'amounts', 'message'));
     }
 }

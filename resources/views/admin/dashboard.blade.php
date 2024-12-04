@@ -115,6 +115,11 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
+                                <div class="col-7">
+                                    <div class="d-flex align-items-center">
+                                        <h5 class="mb-0 ms-3">{{$message}}</h5>
+                                    </div>
+                                </div>
                                 <div class="col-12">
                                     <div id="chart-america1"></div>
                                 </div>
