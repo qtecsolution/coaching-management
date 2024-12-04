@@ -258,10 +258,25 @@ class PaymentController extends Controller
     }
     public function generatePaymentsForMonth(Request $request)
     {
-        $month = $request->input('month', now()->format('Y-m'));
-
-        Artisan::call('payments:generate', ['month' => $month]);
-
-        return response()->json(['message' => "Payments for {$month} generated successfully."]);
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'month' => 'nullable|date_format:Y-m',
+            ]);
+            $month = $request->input('month', now()->format('Y-m'));
+            try {
+                $exitCode = Artisan::call('payments:generate', ['month' => $month]);
+                $output = Artisan::output();
+                if ($exitCode !== 0) {
+                    alert('Error!', $output, 'error');
+                    return redirect()->back()->withInput();
+                }
+                alert('Success!', $output, 'success');
+                return redirect()->back();
+            } catch (\Exception $e) {
+                alert('Error!', $e->getMessage(), 'error');
+                return redirect()->back()->withInput();
+            }
+        }
+        return view('admin.payments.generate');
     }
 }

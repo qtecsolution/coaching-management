@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\ClassMaterialController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\User\PermissionController;
@@ -76,8 +77,8 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::resource('batches', BatchController::class);
     Route::resource('payments', PaymentController::class);
     Route::get('payment/due', [PaymentController::class,'due'])->name('payments.due');
-    Route::post('/generate-payments', [PaymentController::class, 'generatePaymentsForMonth']);
-
+    Route::match(['get', 'post'], '/payment/generate', [PaymentController::class, 'generatePaymentsForMonth'])->name('payments.generate');
+    Route::get('reports/daily-collection', [ReportController::class, 'dailyCollection'])->name('reports.daily.collection');
     Route::get('attendance', [AttendanceController::class, 'attendance'])->name('attendance');
 
     // lead routes

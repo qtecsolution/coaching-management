@@ -6,6 +6,7 @@ use App\Models\Batch;
 use App\Models\Payment;
 use App\Models\PaymentReport;
 use App\Models\StudentBatch;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class GenerateMonthlyPayments extends Command
@@ -75,7 +76,7 @@ class GenerateMonthlyPayments extends Command
                 );
             }
         }
-
-        $this->info("Payments for the month {$month} have been generated.");
+        $message = 'Payments for ' . Carbon::parse($month)->format('M-Y') . ' generated successfully.';
+        $this->info($message);
     }
 }

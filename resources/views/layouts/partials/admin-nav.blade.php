@@ -121,15 +121,20 @@
             <span>Tuition Fee</span>
         </a>
         <ul class="submenu {{ Route::is('admin.payments.*') ? 'submenu-open' : 'submenu-close' }}">
-            @can('view_payments')
-                <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
-                    <a href="{{ route('admin.payments.index') }}">Payment List</a>
-                </li>
+            @can('create_payment')
+            <li class="submenu-item {{ Route::is('admin.payments.generate') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.generate') }}">Payment Generate</a>
+            </li>
             @endcan
             @can('create_payment')
-                <li class="submenu-item {{ Route::is('admin.payments.create') ? 'active' : '' }}">
-                    <a href="{{ route('admin.payments.create') }}">Payment Collection</a>
-                </li>
+            <li class="submenu-item {{ Route::is('admin.payments.create') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.create') }}">Payment Collection</a>
+            </li>
+            @endcan
+            @can('view_payments')
+            <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.index') }}">Payment List</a>
+            </li>
             @endcan
             @can('view_payments')
                 <li class="submenu-item {{ Route::is('admin.payments.due') ? 'active' : '' }}">
@@ -138,14 +143,29 @@
             @endcan
         </ul>
     </li>
-@endcan
-<li class="sidebar-item {{ Route::is('admin.attendance') ? 'active' : '' }}">
-    <a href="{{ route('admin.attendance') }}" class="sidebar-link">
-        <i class="bi bi-person-badge"></i>
-        <span>Attendance</span>
-    </a>
-</li>
-@can('view_settings')
+    @endcan
+    <li class="sidebar-item {{ Route::is('admin.attendance') ? 'active' : '' }}">
+        <a href="{{ route('admin.attendance') }}" class="sidebar-link">
+            <i class="bi bi-person-badge"></i>
+            <span>Attendance</span>
+        </a>
+    </li>
+    @can('view_payments')
+    <li class="sidebar-item has-sub {{ Route::is('admin.reports.*') ? 'active' : '' }}">
+        <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
+            <i class="bi bi-cash-stack"></i>
+            <span>Reports</span>
+        </a>
+        <ul class="submenu {{ Route::is('admin.reports.daily.collection') ? 'submenu-open' : 'submenu-close' }}">
+            @can('create_payment')
+            <li class="submenu-item {{ Route::is('admin.reports.daily.collection') ? 'active' : '' }}">
+                <a href="{{ route('admin.reports.daily.collection') }}">Daily Payment Collection</a>
+            </li>
+            @endcan
+        </ul>
+    </li>
+    @endcan
+    @can('view_settings')
     <li class="sidebar-item has-sub {{ Route::is('admin.settings.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
             <i class="bi bi-gear"></i>

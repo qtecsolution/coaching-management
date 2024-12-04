@@ -1,5 +1,5 @@
 @php
-    $title = \App\Models\Setting::where('key', 'app_name')->value('value') ?? config('app.name');
+$title = \App\Models\Setting::where('key', 'app_name')->value('value') ?? config('app.name');
 @endphp
 
 <!DOCTYPE html>
@@ -20,6 +20,7 @@
     <link rel="stylesheet"
         href="{{ asset('assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('assets/extensions/flatpickr/flatpickr.min.css') }}">
     @vite('public/assets/scss/pages/datatables.scss')
     @vite('public/assets/scss/app.scss')
     @vite('resources/css/app.css')
@@ -45,7 +46,8 @@
         </div>
     </div>
 
-    <script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
+    <script src=" {{ asset('assets/extensions/jquery/jquery.min.js') }}">
+    </script>
     <script src="{{ asset('assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
@@ -64,10 +66,23 @@
     <script src="{{ asset('assets/static/js/pages/filepond.js') }}"></script>
     <script src="{{ asset('assets/extensions/toastify-js/src/toastify.js') }}"></script>
     <script src="{{ asset('assets/extensions/select2/select2.min.js') }}"></script>
+
+    <script src="{{ asset('assets/extensions/flatpickr/flatpickr.min.js') }}"></script>
+    <script src="{{ asset('assets/static/js/pages/date-picker.js') }}"></script>
     @include('sweetalert::alert')
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
     @stack('js')
+    <script>
+        flatpickr('.flatpickr-date', {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+        });
+        flatpickr('.flatpickr-range-Y-m-d', {
+            dateFormat: "Y-m-d",
+            mode: 'range'
+        });
+    </script>
 </body>
 
 </html>
