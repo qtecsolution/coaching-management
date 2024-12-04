@@ -75,7 +75,7 @@
                             <div class="form-group">
                                 <div class="form-group">
                                     <label for="date" class="form-label">Date</label>
-                                    <input type="date" name="date" id="date" class="form-control" value="{{ old('date',$request->month) }}">
+                                    <input type="date" name="date" id="date" class="form-control flatpickr-date" value="{{ old('date',$request->month) }}">
 
                                     @error('date')
                                     <small class="text-danger">{{ $message }}</small>
