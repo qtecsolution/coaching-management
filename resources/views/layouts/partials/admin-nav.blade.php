@@ -122,9 +122,9 @@
             <span>Tuition Fee</span>
         </a>
         <ul class="submenu {{ Route::is('admin.payments.*') ? 'submenu-open' : 'submenu-close' }}">
-            @can('view_payments')
-            <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
-                <a href="{{ route('admin.payments.index') }}">Payment List</a>
+            @can('create_payment')
+            <li class="submenu-item {{ Route::is('admin.payments.generate') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.generate') }}">Payment Generate</a>
             </li>
             @endcan
             @can('create_payment')
@@ -132,9 +132,9 @@
                 <a href="{{ route('admin.payments.create') }}">Payment Collection</a>
             </li>
             @endcan
-            @can('create_payment')
-            <li class="submenu-item {{ Route::is('admin.payments.generate') ? 'active' : '' }}">
-                <a href="{{ route('admin.payments.generate') }}">Payment Generate</a>
+            @can('view_payments')
+            <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.index') }}">Payment List</a>
             </li>
             @endcan
             @can('view_payments')
