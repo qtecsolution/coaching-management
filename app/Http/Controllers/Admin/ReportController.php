@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Payment;
+use App\Models\PaymentReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+
+use function PHPUnit\Framework\isEmpty;
 
 class ReportController extends Controller
 {
@@ -48,8 +51,8 @@ class ReportController extends Controller
             if (!empty($month)) {
                 $payments_due = $payments_due->where('month', $month);
             }
-            if (!empty($date_from)|| !empty($date_to)) {
-                $payments_due = $payments_due->whereBetween('date',  [$date_from,$date_to]);
+            if (!empty($date_from) || !empty($date_to)) {
+                $payments_due = $payments_due->whereBetween('date',  [$date_from, $date_to]);
             }
             $payments_due = $payments_due->get();
             return DataTables::of($payments_due)
@@ -67,16 +70,16 @@ class ReportController extends Controller
                 ->editColumn('amount', function ($row) {
                     return $row->amount;
                 })
-               ->editColumn('transaction_id', function ($row) {
-                return $row->transaction_id;
-               })
+                ->editColumn('transaction_id', function ($row) {
+                    return $row->transaction_id;
+                })
                 ->editColumn('month', function ($row) {
                     return Carbon::createFromFormat('Y-m', $row->month)->format('M-Y');
                 })
                 ->editColumn('date', function ($row) {
                     return $row->date;
                 })
-                ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month','transaction_id','date'])
+                ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month', 'transaction_id', 'date'])
                 ->make(true);
         }
         return view('admin.reports.payments.daily-collection', compact('batches'));
@@ -157,5 +160,50 @@ class ReportController extends Controller
                 ->make(true);
         }
         return view('admin.reports.payments.due', compact('batches'));
+    }
+    public function paymentsSummary(Request $request)
+    {
+        if (!auth()->user()->can('view_payments')) {
+            abort(403, 'Unauthorized action.');
+        }
+        if (request()->ajax()) {
+            $month_from = null;
+            $month_to = null;
+            if ($request->filled('month_from')) {
+                $month_from = $request->month_from;
+            }
+            if ($request->filled('month_to')) {
+                $month_to = $request->month_to;
+            }
+
+            $payments = PaymentReport::latest('month');
+
+            if ($month_from && $month_to) {
+                $payments = $payments->whereBetween('month', [$month_from, $month_to]);
+            } elseif ($month_from) {
+                $payments = $payments->where('month', $month_from);
+            } elseif ($month_to) {
+                $payments = $payments->where('month', $month_to);
+            }
+            $payments->get();
+            return DataTables::of($payments)
+                ->addIndexColumn()
+                ->addColumn('DT_RowIndex', '')
+                ->editColumn('month', function ($row) {
+                    return Carbon::createFromFormat('Y-m', $row->month)->format('M-Y');
+                })
+                ->editColumn('estimated_collection_amount', function ($row) {
+                    return $row->estimated_collection_amount;
+                })
+                ->editColumn('collected_amount', function ($row) {
+                    return $row->collected_amount;
+                })
+                ->editColumn('due_amount', function ($row) {
+                    return $row->due_amount;
+                })
+                ->rawColumns(['month', 'estimated_collection_amount', 'collected_amount', 'due_amount'])
+                ->make(true);
+        }
+        return view('admin.reports.payments.summary');
     }
 }

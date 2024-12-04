@@ -161,6 +161,11 @@
             <a href="{{ route('admin.reports.payments.due') }}">Payments Due</a>
         </li>
         @endcan
+        @can('view_payments')
+        <li class="submenu-item {{ Route::is('admin.reports.payments.summary') ? 'active' : '' }}">
+            <a href="{{ route('admin.reports.payments.summary') }}">Payments Summary</a>
+        </li>
+        @endcan
     </ul>
 </li>
 @endcan
