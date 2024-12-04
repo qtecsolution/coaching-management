@@ -13,6 +13,6 @@ class DashboardController extends Controller
     {
         $user = User::with(['student', 'student.currentbatch', 'student.currentbatch.batch.batch_days'])->find(auth()->id());
 
-        return view('user.dashboard', compact('user'));
+        return view('student.dashboard', compact('user'));
     }
 }

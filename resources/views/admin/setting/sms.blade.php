@@ -35,7 +35,6 @@
 
                         </div>
                         <div class="col-12 text-end mt-2">
-                            <button type="submit" class="btn btn-warning">Test Provider</button>
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </form>
