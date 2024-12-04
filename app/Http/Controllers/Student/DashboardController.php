@@ -11,7 +11,7 @@ class DashboardController extends Controller
     // function to show dashboard page
     public function index()
     {
-        $user = User::with(['student', 'student.batch', 'student.batch.batch_days'])->find(auth()->id());
+        $user = User::with(['student', 'student.currentbatch', 'student.currentbatch.batch.batch_days'])->find(auth()->id());
 
         return view('user.dashboard', compact('user'));
     }

@@ -12,10 +12,14 @@ class StudentBatch extends Model
     {
         return $this->belongsTo(Batch::class);
     }
-    public function student(){
+
+    public function student()
+    {
         return $this->belongsTo(Student::class);
-   }
-    public function payments(){
-        return $this->hasMany(Payment::class, 'student_batch_id'); 
-}
+    }
+    
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'student_batch_id');
+    }
 }
