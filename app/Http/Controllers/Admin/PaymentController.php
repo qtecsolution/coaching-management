@@ -185,7 +185,7 @@ class PaymentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $batches = Batch::active()->get();
+        $batches = Batch::get();
         if (request()->ajax()) {
             $batchId = null;
             $month = null;

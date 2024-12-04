@@ -132,17 +132,22 @@ class PaymentController extends Controller
                     return $row->status_badge;
                 })
                 ->addColumn('action', function ($row) {
-                    return '
-        <div class="btn-group">
-            <a href="' . route('admin.payments.create', [
-                        'student_batch_id' => $row->student_batch->id,
-                        'batch_id' => $row->student_batch->batch->id,
-                        'month' => $row->month
-                    ]) . '" class="btn btn-sm btn-primary">
-                Collection
-            </a>
-        </div>';
+                    return '<a href="' . route('user.payments.show', $row->id) . '" class="btn btn-sm btn-info">
+        <i class="bi bi-printer" title="Print Invoice"></i>
+    </a>';
                 })
+        //         ->addColumn('action', function ($row) {
+        //             return '
+        // <div class="btn-group">
+        //     <a href="' . route('admin.payments.create', [
+        //                 'student_batch_id' => $row->student_batch->id,
+        //                 'batch_id' => $row->student_batch->batch->id,
+        //                 'month' => $row->month
+        //             ]) . '" class="btn btn-sm btn-primary">
+        //         Collection
+        //     </a>
+        // </div>';
+        //         })
                 ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month', 'action', 'status'])
                 ->make(true);
         }

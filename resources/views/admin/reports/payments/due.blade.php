@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Payment paid report')
+@section('title', 'Payment due report')
 
 @section('content')
 <div class="page-heading">
-  <x-page-title title="Payment paid report" subtitle="" pageTitle="Payment paid report" />
+  <x-page-title title="Payment due report" subtitle="" pageTitle="Payment due report" />
 
   <!-- Basic Tables start -->
   <section class="section">
@@ -25,15 +25,15 @@
           <div class="col-4">
             <div class="form-group">
               <label><strong>Month :</strong></label>
-              <input type="month" class="form-control" name="month" id="month">
+              <input type="month" class="form-control" value="{{ \Carbon\Carbon::now()->format('Y-m') }}" name="month" id="month">
             </div>
           </div>
-          <div class="col-4">
+          <!-- <div class="col-4">
             <div class="form-group">
-              <label><strong>Date Range :</strong></label>
-              <input type="date" class="form-control flatpickr-range-Y-m-d" name="date_range" id="date_range">
+              <label><strong>Student Id :</strong></label>
+              <input type="text" class="form-control" placeholder="Enter student id" name="reg_id" id="reg_id">
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="table-responsive">
           <table class="table" id="table">
@@ -44,9 +44,9 @@
                 <th>Student Id</th>
                 <th>Batch</th>
                 <th>Amount</th>
-                <th>TXID</th>
                 <th>Month</th>
-                <th>Date</th>
+                <!-- <th>Status</th>
+                <th>Action</th> -->
               </tr>
             </thead>
             <tbody></tbody>
@@ -68,8 +68,6 @@
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-
-
 <script>
   const table = $("#table").DataTable({
     responsive: true,
@@ -77,6 +75,9 @@
     processing: true,
     paginate: false,
     searching: false,
+    language: {
+      "emptyTable": "No unpaid student found"
+    },
     dom: 'lBfrtip', // Enables the buttons
     buttons: [{
         extend: 'excel',
@@ -95,18 +96,11 @@
       }
     ],
     ajax: {
-      url: "{{ route('admin.reports.daily.collection') }}",
+      url: "{{ route('admin.reports.payments.due') }}",
       data: function(d) {
         d.batch_id = $('#batch').val();
         d.month = $('#month').val();
         d.reg_id = $('#reg_id').val();
-        let dateRange = $('#date_range').val();
-        let [date_from, date_to] = dateRange.split(' to ');
-        if (!date_to) {
-          date_to = date_from;
-        }
-        d.date_from = date_from;
-        d.date_to = date_to;
       }
     },
     columns: [{
@@ -131,22 +125,22 @@
         name: 'amount'
       },
       {
-        data: 'transaction_id',
-        name: 'transaction_id'
-      },
-      {
         data: 'month',
         name: 'month'
       },
-      {
-        data: 'date',
-        name: 'date'
-      },
+      // {
+      //   data: 'status',
+      //   name: 'status'
+      // },
+      // {
+      //   data: 'action',
+      //   name: 'action'
+      // },
     ],
   });
 
   // Attach onchange event listeners to filters
-  $('#batch, #month ,#reg_id, #date_range').on('change', function() {
+  $('#batch, #month ,#reg_id').on('change', function() {
     table.ajax.reload();
   });
 </script>

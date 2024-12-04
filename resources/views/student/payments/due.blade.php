@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-4">
+                    <!-- <div class="col-4">
                         <div class="form-group">
                             <label><strong>Batch :</strong></label>
                             <select id='batch' class="form-control" name="batch_id">
@@ -21,7 +21,7 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-4">
                         <div class="form-group">
                             <label><strong>Month :</strong></label>
@@ -40,7 +40,7 @@
                                 <th>Amount</th>
                                 <th>Month</th>
                                 <th>Status</th>
-                                <!-- <th>Action</th> -->
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -98,10 +98,10 @@
                 data: 'status',
                 name: 'status'
             },
-            // {
-            //     data: 'action',
-            //     name: 'action'
-            // },
+            {
+                data: 'action',
+                name: 'action'
+            },
         ],
     });
 
