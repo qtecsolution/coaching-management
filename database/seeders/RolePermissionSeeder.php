@@ -16,10 +16,11 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $role = Role::create(['name' => 'Admin']);
+        $adminRole = Role::create(['name' => 'Admin']);
+        $teacherRole = Role::create(['name' => 'Teacher']);
 
         $user = User::find(1);
-        $user->syncRoles($role);
+        $user->syncRoles($adminRole);
 
         // create permissions
         $permissions = [
