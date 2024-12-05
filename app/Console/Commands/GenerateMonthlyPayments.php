@@ -49,23 +49,6 @@ class GenerateMonthlyPayments extends Command
         $cutoffDate = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
         $activeBatches = Batch::active()->whereDate('created_at', '<=', $cutoffDate)->get();
 
-        $estimatedCollectionAmount = $activeBatches->sum(function ($batch) {
-            return $batch->total_students * $batch->tuition_fee;
-        }) ?? 0;
-
-        $collectedAmount = Payment::where('month', $month)
-            ->where('status', 1) 
-            ->sum('amount');
-
-        $report = PaymentReport::updateOrCreate(
-            ['month' => $month],
-            [
-                'estimated_collection_amount' => $estimatedCollectionAmount,
-                'collected_amount' => $collectedAmount,
-                'due_amount' => $estimatedCollectionAmount - $collectedAmount,
-            ]
-        );
-
         foreach ($activeBatches as $batch) {
             $studentBatches = StudentBatch::where('batch_id', $batch->id)->get();
             foreach ($studentBatches as $studentBatch) {
@@ -85,6 +68,23 @@ class GenerateMonthlyPayments extends Command
                 );
             }
         }
+
+        $estimatedCollectionAmount = $activeBatches->sum(function ($batch) {
+            return $batch->total_students * $batch->tuition_fee;
+        }) ?? 0;
+
+        $collectedAmount = Payment::where('month', $month)
+        ->where('status', 1)
+            ->sum('amount');
+
+        $report = PaymentReport::updateOrCreate(
+            ['month' => $month],
+            [
+                'estimated_collection_amount' => $estimatedCollectionAmount,
+                'collected_amount' => $collectedAmount,
+                'due_amount' => $estimatedCollectionAmount - $collectedAmount,
+            ]
+        );
         $message = 'Payments for ' . Carbon::parse($month)->format('M-Y') . ' generated successfully.';
         $this->info($message);
     }
