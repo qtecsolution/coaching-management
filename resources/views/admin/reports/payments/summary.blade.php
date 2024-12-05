@@ -217,14 +217,7 @@
 
 
   document.getElementById('print-button').addEventListener('click', function() {
-
-    const table = document.getElementById('table');
-    const table2 = document.getElementById('table2');
-    $('#table').removeClass('table');
-    $('#table2').removeClass('table2');
     window.print();
-    table.classList.add('table');
-    table2.classList.add('table');
   });
 </script>
 @endpush
