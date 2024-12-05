@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\AttendanceRecordController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BatchController;
@@ -87,8 +88,8 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::get('reports/payments-summary', [ReportController::class, 'paymentsSummary'])->name('reports.payments.summary');
     
     // attendance routes
-    Route::get('attendance/{batchDayId}', [AttendanceController::class, 'attendance'])->name('attendance');
-    Route::post('attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
+    Route::resource('attendance', AttendanceController::class);
+    Route::get('attendance/{id}/list', [AttendanceController::class, 'list'])->name('attendance.list');
 
     // lead routes
     Route::resource('leads', LeadController::class);

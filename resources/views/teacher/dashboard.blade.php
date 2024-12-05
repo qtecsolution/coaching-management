@@ -75,7 +75,7 @@
                                                         <a href="#" class="btn btn-sm btn-light" title="Student List">
                                                             <i class="bi bi-list-task"></i>
                                                         </a>
-                                                        <a href="{{ route('admin.attendance', $schedule->id) }}" class="btn btn-sm btn-light" title="Attendence">
+                                                        <a href="{{ route('admin.attendance.show', $schedule->id) }}" class="btn btn-sm btn-light" title="Attendence">
                                                             <i class="bi bi-calendar3"></i>
                                                         </a>
                                                         <a href="#" class="btn btn-sm btn-light" title="Grades">

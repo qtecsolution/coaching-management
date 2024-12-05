@@ -32,6 +32,7 @@ class RolePermissionSeeder extends Seeder
             'view_payments','create_payment','update_payment','delete_payment',
             'view_settings', 'update_settings',
             'view_class_materials', 'create_class_material', 'update_class_material', 'delete_class_material',
+            'view_attendance', 'create_attendance', 'update_attendance', 'delete_attendance'
         ];
 
         $permissions = collect($permissions)->map(function ($permission) {

@@ -12,11 +12,16 @@ use App\Models\StudentBatch;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Facades\DataTables;
 
 class AttendanceController extends Controller
 {
-    public function attendance($batchDayId)
+    public function show($batchDayId)
     {
+        if (!auth()->user()->can('view_attendance')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         // Retrieve the batch day with its associated batch
         $batchDay = BatchDay::with('batch')->find($batchDayId);
 
@@ -91,6 +96,10 @@ class AttendanceController extends Controller
                 ->exists();
 
             if ($isRecordExists) {
+                if (!auth()->user()->can('update_attendance')) {
+                    abort(403, 'Unauthorized action.');
+                }
+                
                 $record = AttendanceRecord::where('student_id', $student->id)
                     ->where('attendance_id', $attendance->id)
                     ->update([
@@ -99,6 +108,10 @@ class AttendanceController extends Controller
 
                 $msgText = 'Attendance record updated successfully';
             } else {
+                if (!auth()->user()->can('create_attendance')) {
+                    abort(403, 'Unauthorized action.');
+                }
+
                 // Create the attendance record
                 $record = AttendanceRecord::create([
                     'attendance_id' => $attendance->id,
@@ -126,5 +139,52 @@ class AttendanceController extends Controller
                 'error' => $th->getMessage()
             ]);
         }
+    }
+
+    public function index()
+    {
+        if (!auth()->user()->can('view_attendance')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            return DataTables::of(Attendance::latest())
+                ->addIndexColumn()
+                ->addColumn('DT_RowIndex', '')
+                ->addColumn('action', function ($row) {
+                    return view('admin.attendance.action', compact('row'));
+                })
+                ->addColumn('batch_name', function ($row) {
+                    return $row?->batch->name;
+                })
+                ->addColumn('total_student', function ($row) {
+                    return $row->records->count();
+                })
+                ->addColumn('total_absent', function ($row) {
+                    return $row->records->where('status', 0)->count();
+                })
+                ->addColumn('total_present', function ($row) {
+                    return $row->records->where('status', 1)->count();
+                })
+                ->addColumn('total_late', function ($row) {
+                    return $row->records->where('status', 2)->count();
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('admin.attendance.index');
+    }
+
+    public function list($id)
+    {
+        if (!auth()->user()->can('view_attendance')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $attendance = Attendance::findOrFail($id);
+
+        // Return the attendance view with the retrieved data
+        return view('admin.attendance.show', compact('attendance'));
     }
 }

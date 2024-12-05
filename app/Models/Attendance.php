@@ -15,4 +15,9 @@ class Attendance extends Model
     {
         return $this->hasMany(AttendanceRecord::class);
     }
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class);
+    }
 }
