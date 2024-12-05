@@ -38,28 +38,16 @@ class GenerateMonthlyPayments extends Command
             $this->error('Invalid month format. Please use YYYY-MM format, and month must be between 01 and 12.');
             return;
         }
+        $currentMonth = now()->format('Y-m');
 
-
+        // Check if the provided month is greater than the current month
+        if ($month > $currentMonth) {
+            $this->error('The provided month cannot be greater than the current month of the current year.');
+            return;
+        }
         // Convert the month to the start of the month using Carbon
         $cutoffDate = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
-        $activeBatches = Batch::active()->where('created_at', '<', $cutoffDate)->get();
-
-        $estimatedCollectionAmount = $activeBatches->sum(function ($batch) {
-            return $batch->total_students * $batch->tuition_fee;
-        }) ?? 0;
-
-        $collectedAmount = Payment::where('month', $month)
-            ->where('status', 1) 
-            ->sum('amount');
-
-        $report = PaymentReport::updateOrCreate(
-            ['month' => $month],
-            [
-                'estimated_collection_amount' => $estimatedCollectionAmount,
-                'collected_amount' => $collectedAmount,
-                'due_amount' => $estimatedCollectionAmount - $collectedAmount,
-            ]
-        );
+        $activeBatches = Batch::active()->whereDate('created_at', '<=', $cutoffDate)->get();
 
         foreach ($activeBatches as $batch) {
             $studentBatches = StudentBatch::where('batch_id', $batch->id)->get();
@@ -80,6 +68,23 @@ class GenerateMonthlyPayments extends Command
                 );
             }
         }
+
+        $estimatedCollectionAmount = $activeBatches->sum(function ($batch) {
+            return $batch->total_students * $batch->tuition_fee;
+        }) ?? 0;
+
+        $collectedAmount = Payment::where('month', $month)
+        ->where('status', 1)
+            ->sum('amount');
+
+        $report = PaymentReport::updateOrCreate(
+            ['month' => $month],
+            [
+                'estimated_collection_amount' => $estimatedCollectionAmount,
+                'collected_amount' => $collectedAmount,
+                'due_amount' => $estimatedCollectionAmount - $collectedAmount,
+            ]
+        );
         $message = 'Payments for ' . Carbon::parse($month)->format('M-Y') . ' generated successfully.';
         $this->info($message);
     }

@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\PaymentReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
 use function PHPUnit\Framework\isEmpty;
@@ -166,7 +167,7 @@ class ReportController extends Controller
         if (!auth()->user()->can('view_payments')) {
             abort(403, 'Unauthorized action.');
         }
-        if (request()->ajax()) {
+        if (request()->ajax() && $request->payment_report == 1) {
             $month_from = null;
             $month_to = null;
             if ($request->filled('month_from')) {
@@ -202,6 +203,67 @@ class ReportController extends Controller
                     return $row->due_amount;
                 })
                 ->rawColumns(['month', 'estimated_collection_amount', 'collected_amount', 'due_amount'])
+                ->make(true);
+        }
+        if (request()->ajax() && $request->payments == 1) {
+            $month_from = null;
+            $month_to = null;
+            if ($request->filled('month_from')) {
+                $month_from = $request->month_from;
+            }
+            if ($request->filled('month_to')) {
+                $month_to = $request->month_to;
+            }
+            $payments = Payment::query();
+            if ($month_from && $month_to) {
+                $payments = $payments->whereBetween('month', [$month_from, $month_to]);
+            } elseif ($month_from) {
+                $payments = $payments->where('month', $month_from);
+            } elseif ($month_to) {
+                $payments = $payments->where('month', $month_to);
+            }
+            $payments = $payments->with([
+                'student_batch.student',
+                'student_batch.batch'
+            ]);
+            $payments->get();
+            return DataTables::of($payments)
+                ->addIndexColumn()
+                ->addColumn('DT_RowIndex', '')
+                ->addColumn('name', function ($row) {
+                    return $row->student_batch->student->name;
+                })
+                ->addColumn('reg_id', function ($row) {
+                    return $row->student_batch->student->reg_id;
+                })
+                ->addColumn('batch', function ($row) {
+                    return $row->student_batch->batch->name;
+                })
+                ->editColumn('amount', function ($row) {
+                    return $row->amount;
+                })
+                ->editColumn('month', function ($row) {
+                    return Carbon::createFromFormat('Y-m', $row->month)->format('M-Y');
+                })
+                ->editColumn('status', function ($row) {
+                    return $row->status_badge;
+                })
+                ->addColumn('action', function ($row) {
+                    if (auth()->user()->can('update_payment')) {
+                        return '
+        <div class="btn-group">
+            <a href="' . route('admin.payments.create', [
+                            'student_batch_id' => $row->student_batch->id,
+                            'batch_id' => $row->student_batch->batch->id,
+                            'month' => $row->month
+                        ]) . '" class="btn btn-sm btn-primary">
+                Collection
+            </a>
+        </div>';
+                    }
+                    return ''; // Return an empty string if the user does not have permission
+                })
+                ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month', 'action', 'status'])
                 ->make(true);
         }
         return view('admin.reports.payments.summary');
