@@ -15,13 +15,13 @@
                     <table class="table" id="table">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>Student</th>
                                 <th>Batch</th>
                                 <th>Amount</th>
-                                <th>TransactionId</th>
+                                <th>Transaction ID</th>
                                 <th>Month</th>
-                                <th>Date</th>
+                                <th>Payment Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>

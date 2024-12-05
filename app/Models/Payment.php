@@ -8,6 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     use HasFactory;
+
+    public static $paymentMethods = [
+        'Cash' => 'Cash',
+        'Cheque' => 'Cheque',
+        'Bank' => 'Bank',
+        'bKash' => 'bKash',
+        'Nagad' => 'Nagad',
+        'Rocket' => 'Rocket',
+        'Other' => 'Other'
+    ];
+
     protected $fillable = [
         'student_batch_id',
         'amount',
@@ -19,10 +30,11 @@ class Payment extends Model
         'status'
     ];
 
-    protected $guarded = [];
-    public function student_batch(){
+    public function student_batch()
+    {
         return $this->belongsTo(StudentBatch::class);
     }
+    
     // Define the status map
     private const STATUS_MAP = [
         0 => ['class' => 'warning text-black', 'label' => 'Due'],
@@ -66,6 +78,7 @@ class Payment extends Model
         static::updated(function ($payment) {
             updatePaymentReport($payment->month);
         });
+
         // Update PaymentReport on payment delete
         static::deleted(function ($payment) {
             updatePaymentReport($payment->month);

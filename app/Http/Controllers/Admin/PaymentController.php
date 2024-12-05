@@ -27,7 +27,7 @@ class PaymentController extends Controller
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('student', function ($row) {
-                    return $row->student_batch->student->name . '<br>' . $row->student_batch->student->student_id;
+                    return $row->student_batch->student->name . ' (' . $row?->student_batch?->student->reg_id . ')';
                 })
                 ->addColumn('batch', function ($row) {
                     return $row->student_batch->batch->name;
@@ -36,16 +36,16 @@ class PaymentController extends Controller
                     return view('admin.payments.action', compact('row'));
                 })
                 ->editColumn('amount', function ($row) {
-                    return $row->amount;
+                    return number_format($row->amount, 2);
                 })
                 ->editColumn('transaction_id', function ($row) {
-                    return $row->transaction_id;
+                    return $row->transaction_id ?? '--';
                 })
                 ->editColumn('month', function ($row) {
-                    return $row->month;
+                    return date('F, Y', strtotime($row->month));
                 })
                 ->editColumn('date', function ($row) {
-                    return $row->date;
+                    return Carbon::parse($row->date)->format('d/m/Y');
                 })
                 ->editColumn('status', function ($row) {
                     return $row->status_badge;
@@ -65,12 +65,16 @@ class PaymentController extends Controller
         if (!auth()->user()->can('create_payment')) {
             abort(403, 'Unauthorized action.');
         }
+
+        // Get all batches
         $batches = Batch::active()->has('students')->with('students.student')->get();
         if ($batches->isEmpty()) {
             alert('Warning!', 'No batch found.', 'warning');
             return redirect()->back();
         }
-        return view('admin.payments.create', compact('batches', 'request'));
+
+        $paymentMethods = Payment::$paymentMethods;
+        return view('admin.payments.create', compact('batches', 'request', 'paymentMethods'));
     }
 
     /**
@@ -98,10 +102,12 @@ class PaymentController extends Controller
         if (!$validated['date']) {
             $validated['date'] = Carbon::today()->toDateString();
         }
+
         $validated['status'] = 1; // payment success
 
         $payment = Payment::where('status', '!=', 1)->where('student_batch_id', $request->student_batch_id)
             ->where('month', $request->month)->first();
+
         if ($payment) {
             $payment->update($validated);
         } else {
@@ -109,8 +115,9 @@ class PaymentController extends Controller
                 ->withInput($request->all())
                 ->withErrors(['month' => 'The student does not have any due payment for this month.']);
         }
-        alert('Success!', 'Student payment added', 'success');
-        return to_route('admin.payments.create');
+
+        alert('Success!', 'Payment added successfully.', 'success');
+        return to_route('admin.payments.index');
     }
 
     /**
@@ -124,6 +131,7 @@ class PaymentController extends Controller
 
         $settings = Setting::all();
         $payment = Payment::with('student_batch.student', 'student_batch.batch')->find($id);
+
         return view('admin.payments.invoice', compact('payment', 'settings'));
     }
 
@@ -138,6 +146,7 @@ class PaymentController extends Controller
 
         $payment = Payment::with('student_batch')->find($id);
         $batches = Batch::active()->has('students')->with('students.student')->get();
+
         return view('admin.payments.edit', compact('payment', 'batches'));
     }
 
@@ -163,22 +172,28 @@ class PaymentController extends Controller
             'student_batch_id.required' => 'The student field is required.',
             'student_batch_id.exists' => 'The selected student is invalid.',
         ]);
+
         $validated['status'] = 1; // payment success
         $payment->update($request->only(['date', 'payment_method', 'transaction_id', 'note']));
 
-        alert('Success!', 'Student payment updated', 'success');
+        alert('Success!', 'Payment updated successfully.', 'success');
         return to_route('admin.payments.index');
     }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         abort_if(!auth()->user()->can('delete_payment'), 403);
+
         $payment = Payment::findOrFail($id);
         $payment->delete();
+        
         return true;
     }
+
+    // Show due payments
     public function due(Request $request)
     {
         if (!auth()->user()->can('view_payments')) {
@@ -186,10 +201,12 @@ class PaymentController extends Controller
         }
 
         $batches = Batch::get();
+
         if (request()->ajax()) {
             $batchId = null;
             $month = null;
             $reg_id = null;
+
             if ($request->filled('batch_id')) {
                 $batchId = $request->batch_id;
             }
@@ -197,6 +214,7 @@ class PaymentController extends Controller
             if ($request->filled('month')) {
                 $month = $request->month;
             }
+
             if ($request->filled('reg_id')) {
                 $reg_id = $request->reg_id;
             }
@@ -211,10 +229,13 @@ class PaymentController extends Controller
                     'student_batch.student',
                     'student_batch.batch'
                 ]);
+
             if (!empty($month)) {
                 $payments_due = $payments_due->where('month', $month);
             }
+
             $payments_due = $payments_due->get();
+
             return DataTables::of($payments_due)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
@@ -228,10 +249,10 @@ class PaymentController extends Controller
                     return $row->student_batch->batch->name;
                 })
                 ->editColumn('amount', function ($row) {
-                    return $row->amount;
+                    return number_format($row->amount, 2);
                 })
                 ->editColumn('month', function ($row) {
-                    return Carbon::createFromFormat('Y-m', $row->month)->format('M-Y');
+                    return Carbon::createFromFormat('Y-m', $row->month)->format('F, Y');
                 })
                 ->editColumn('status', function ($row) {
                     return $row->status_badge;
@@ -239,16 +260,17 @@ class PaymentController extends Controller
                 ->addColumn('action', function ($row) {
                     if (auth()->user()->can('update_payment')) {
                         return '
-        <div class="btn-group">
-            <a href="' . route('admin.payments.create', [
+                            <div class="btn-group">
+                                <a href="' . route('admin.payments.create', [
                             'student_batch_id' => $row->student_batch->id,
                             'batch_id' => $row->student_batch->batch->id,
                             'month' => $row->month
                         ]) . '" class="btn btn-sm btn-primary">
-                Collection
-            </a>
-        </div>';
+                                    Collection
+                                </a>
+                            </div>';
                     }
+
                     return ''; // Return an empty string if the user does not have permission
                 })
                 ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month', 'action', 'status'])
@@ -256,7 +278,9 @@ class PaymentController extends Controller
         }
         return view('admin.payments.due', compact('batches'));
     }
-    public function generatePaymentsForMonth(Request $request)
+
+    // Generate payments for a specific month
+    public function generatePayments(Request $request)
     {
         if ($request->isMethod('post')) {
             $request->validate([
@@ -279,10 +303,9 @@ class PaymentController extends Controller
                     alert('Error!', $output, 'error');
                     return redirect()->back()->withInput();
                 }
-                
+
                 alert('Success!', $output, 'success');
                 return redirect()->back();
-
             } catch (\Exception $e) {
                 alert('Error!', $e->getMessage(), 'error');
                 return redirect()->back()->withInput();

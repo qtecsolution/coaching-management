@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Payment Generate')
+@section('title', 'Generate Payments')
 
 @section('content')
 <div class="page-heading">
-    <x-page-title title="Payment Generate" subtitle="" pageTitle="Payment Generate" />
+    <x-page-title title="Generate Payments" subtitle="" pageTitle="Generate Payments" />
 
     <section class="section">
         <div class="card">
