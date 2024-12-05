@@ -25,7 +25,7 @@ class Payment extends Model
     }
     // Define the status map
     private const STATUS_MAP = [
-        0 => ['class' => 'warning', 'label' => 'Due'],
+        0 => ['class' => 'warning text-black', 'label' => 'Due'],
         1 => ['class' => 'success', 'label' => 'Paid'],
         2 => ['class' => 'primary', 'label' => 'Requested'],
         3 => ['class' => 'danger', 'label' => 'Failed']
@@ -45,6 +45,11 @@ class Payment extends Model
             $statusInfo['class'],
             $statusInfo['label']
         );
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return self::STATUS_MAP[$this->status]['label'] ?? 'Unknown';
     }
 
     // Hook into model events
