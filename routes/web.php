@@ -82,7 +82,7 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     // payment routes
     Route::resource('payments', PaymentController::class);
     Route::get('payments/due', [PaymentController::class,'due'])->name('payments.due');
-    Route::match(['get', 'post'], '/payments/generate', [PaymentController::class, 'generatePaymentsForMonth'])->name('payments.generate');
+    Route::match(['get', 'post'], '/payment/generate', [PaymentController::class, 'generatePaymentsForMonth'])->name('payments.generate');
 
     // report routes
     Route::get('reports/daily-collection', [ReportController::class, 'dailyCollection'])->name('reports.daily.collection');
