@@ -133,7 +133,7 @@
         @endcan
         @can('view_payments')
         <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
-            <a href="{{ route('admin.payments.index') }}">Payment List</a>
+            <a href="{{ route('admin.payments.index') }}">Payments Paid</a>
         </li>
         @endcan
         @can('view_payments')
@@ -144,24 +144,24 @@
     </ul>
 </li>
 @endcan
-@can('view_payments')
+@can('view_reports')
 <li class="sidebar-item has-sub {{ Route::is('admin.reports.*') ? 'active' : '' }}">
     <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
         <i class="bi bi-cash-stack"></i>
         <span>Reports</span>
     </a>
     <ul class="submenu {{ Route::is('admin.reports.*') ? 'submenu-open' : 'submenu-close' }}">
-        @can('view_payments')
+        @can('paid_reports')
         <li class="submenu-item {{ Route::is('admin.reports.daily.collection') ? 'active' : '' }}">
             <a href="{{ route('admin.reports.daily.collection') }}">Payments Paid</a>
         </li>
         @endcan
-        @can('view_payments')
+        @can('due_reports')
         <li class="submenu-item {{ Route::is('admin.reports.payments.due') ? 'active' : '' }}">
             <a href="{{ route('admin.reports.payments.due') }}">Payments Due</a>
         </li>
         @endcan
-        @can('view_payments')
+        @can('summary_reports')
         <li class="submenu-item {{ Route::is('admin.reports.payments.summary') ? 'active' : '' }}">
             <a href="{{ route('admin.reports.payments.summary') }}">Payments Summary</a>
         </li>

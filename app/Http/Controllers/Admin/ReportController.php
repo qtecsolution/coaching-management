@@ -17,7 +17,7 @@ class ReportController extends Controller
 {
     public function dailyCollection(Request $request)
     {
-        if (!auth()->user()->can('view_payments')) {
+        if (!auth()->user()->can('paid_reports')) {
             abort(403, 'Unauthorized action.');
         }
         $batches = Batch::active()->get();
@@ -87,7 +87,7 @@ class ReportController extends Controller
     }
     public function duePayments(Request $request)
     {
-        if (!auth()->user()->can('view_payments')) {
+        if (!auth()->user()->can('due_reports')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -164,7 +164,7 @@ class ReportController extends Controller
     }
     public function paymentsSummary(Request $request)
     {
-        if (!auth()->user()->can('view_payments')) {
+        if (!auth()->user()->can('summary_reports')) {
             abort(403, 'Unauthorized action.');
         }
         if (request()->ajax() && $request->payment_report == 1) {

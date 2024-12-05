@@ -50,5 +50,15 @@ class UserSeeder extends Seeder
         $user->email = 'student_1@localhost';
         $user->password = bcrypt('password');
         $user->save();
+        // Ensure the first student's information remains fixed for login purposes
+        $teacher = User::where('user_type',
+            'teacher'
+        )->first();
+        $teacher->phone = '1234567891';
+        $teacher->name = 'Teacher 1';
+        $teacher->email = 'teacher_1@localhost';
+        $teacher->password = bcrypt('password');
+        $teacher->save();
+
     }
 }
