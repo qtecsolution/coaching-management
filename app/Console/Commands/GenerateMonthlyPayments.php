@@ -38,6 +38,8 @@ class GenerateMonthlyPayments extends Command
             $this->error('Invalid month format. Please use YYYY-MM format, and month must be between 01 and 12.');
             return;
         }
+
+        // Get the current month
         $currentMonth = now()->format('Y-m');
 
         // Check if the provided month is greater than the current month
@@ -45,6 +47,7 @@ class GenerateMonthlyPayments extends Command
             $this->error('The provided month cannot be greater than the current month of the current year.');
             return;
         }
+
         // Convert the month to the start of the month using Carbon
         $cutoffDate = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
         $activeBatches = Batch::active()->whereDate('created_at', '<=', $cutoffDate)->get();
@@ -77,6 +80,7 @@ class GenerateMonthlyPayments extends Command
         ->where('status', 1)
             ->sum('amount');
 
+        // Update or create the report
         $report = PaymentReport::updateOrCreate(
             ['month' => $month],
             [
@@ -85,7 +89,9 @@ class GenerateMonthlyPayments extends Command
                 'due_amount' => $estimatedCollectionAmount - $collectedAmount,
             ]
         );
-        $message = 'Payments for ' . Carbon::parse($month)->format('M-Y') . ' generated successfully.';
+
+        // Display a success message
+        $message = 'Payment data generated for ' . Carbon::parse($month)->format('M, Y') . ' successfully.';
         $this->info($message);
     }
 }

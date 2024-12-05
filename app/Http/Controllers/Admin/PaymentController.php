@@ -262,21 +262,33 @@ class PaymentController extends Controller
             $request->validate([
                 'month' => 'nullable|date_format:Y-m',
             ]);
+
             $month = $request->input('month', now()->format('Y-m'));
+
             try {
+                $isPaymentGenerated = Payment::where('month', $month)->exists();
+                if ($isPaymentGenerated) {
+                    alert('Info!', 'Payment already generated for this month', 'info');
+                    return redirect()->back()->withInput();
+                }
+
                 $exitCode = Artisan::call('payments:generate', ['month' => $month]);
                 $output = Artisan::output();
+
                 if ($exitCode !== 0) {
                     alert('Error!', $output, 'error');
                     return redirect()->back()->withInput();
                 }
+                
                 alert('Success!', $output, 'success');
                 return redirect()->back();
+
             } catch (\Exception $e) {
                 alert('Error!', $e->getMessage(), 'error');
                 return redirect()->back()->withInput();
             }
         }
+
         return view('admin.payments.generate');
     }
 }

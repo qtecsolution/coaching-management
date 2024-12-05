@@ -50,6 +50,9 @@ class BatchController extends Controller
                 ->editColumn('class', function ($row) {
                     return $row->level->name ?? '--';
                 })
+                ->editColumn('tuition_fee', function ($row) {
+                    return number_format($row->tuition_fee, 2);
+                })
                 ->rawColumns(['action', 'weekly_classes', 'status'])
                 ->make(true);
         }
