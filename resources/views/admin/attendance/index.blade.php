@@ -11,6 +11,26 @@
         <div class="card">
             {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
             <div class="card-body">
+                <div class="row my-4">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="" class="form-label">Batch</label>
+                            <select name="batch_id" id="batch_id" class="form-control form-select">
+                                <option value="">--Select Batch--</option>
+                                @foreach ($batches as $batch )
+                                <option value="{{$batch->id}}">{{$batch->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="" class="form-label">Date</label>
+                            <input type="date" class="form-control" name="date" id="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table" id="table">
                         <thead>
@@ -37,11 +57,20 @@
 
 @push('js')
 <script>
+    let batchId = null;
+    let date = null;
+
     let datatable = $("#table").DataTable({
         responsive: true,
         serverSide: true,
         processing: true,
-        ajax: "{{ route('admin.attendance.index') }}",
+        ajax: {
+            url: "{{ route('admin.attendance.index') }}",
+            data: function(d) {
+                d.batch_id = batchId;
+                d.date = date;
+            }
+        },
         columns: [{
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex'
@@ -75,6 +104,16 @@
                 name: 'action'
             },
         ],
-    })
+    });
+
+    $('#batch_id').on('change', function() {
+        batchId = $(this).val();
+        datatable.ajax.reload();
+    });
+
+    $('#date').on('change', function() {
+        date = $(this).val();
+        datatable.ajax.reload();
+    });
 </script>
 @endpush

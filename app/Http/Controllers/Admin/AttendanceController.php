@@ -16,7 +16,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AttendanceController extends Controller
 {
-    public function show($batchDayId)
+    public function attendance($batchDayId)
     {
         if (!auth()->user()->can('view_attendance')) {
             abort(403, 'Unauthorized action.');
@@ -35,6 +35,7 @@ class AttendanceController extends Controller
         $currentTime = now()->format('H:i'); // 24-hour format for time comparison
 
         // Check if today is the batch day
+        // dd($batchDay->day_name, $currentDayName);
         if ($batchDay->day_name === $currentDayName) {
             // Check if attendance has started
             if ($currentTime < $batchDay->start_time) {
@@ -122,12 +123,18 @@ class AttendanceController extends Controller
                 $msgText = 'Attendance record created successfully';
             }
 
+            $attendance = [
+                'total_absent' => $student?->currentBatch?->total_absent(),
+                'total_present' => $student?->currentBatch?->total_present(),
+                'total_late' => $student?->currentBatch?->total_late(),
+            ];
 
             // Return a success response
             return response()->json([
                 'success' => true,
                 'message' => $msgText,
-                'data' => $record
+                'data' => $record,
+                'attendance' => $attendance
             ]);
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
@@ -141,18 +148,31 @@ class AttendanceController extends Controller
         }
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (!auth()->user()->can('view_attendance')) {
             abort(403, 'Unauthorized action.');
         }
 
-        if (request()->ajax()) {
-            return DataTables::of(Attendance::latest())
+        if ($request->ajax()) {
+            $query = Attendance::latest();
+            
+            if ($request->batch_id) {
+                $query = $query->where('batch_id', $request->batch_id);
+            }
+
+            if ($request->date) {
+                $query = $query->whereDate('date', $request->date);
+            }
+
+            return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('action', function ($row) {
                     return view('admin.attendance.action', compact('row'));
+                })
+                ->editColumn('date', function ($row) {
+                    return Carbon::parse($row->date)->format('d/m/Y');
                 })
                 ->addColumn('batch_name', function ($row) {
                     return $row?->batch->name;
@@ -173,10 +193,11 @@ class AttendanceController extends Controller
                 ->make(true);
         }
 
-        return view('admin.attendance.index');
+        $batches = Batch::active()->latest()->get();
+        return view('admin.attendance.index', compact('batches'));
     }
 
-    public function list($id)
+    public function show($id)
     {
         if (!auth()->user()->can('view_attendance')) {
             abort(403, 'Unauthorized action.');

@@ -24,7 +24,14 @@ class BatchController extends Controller
         }
 
         if (request()->ajax()) {
-            return DataTables::of(Batch::latest())
+            if (auth()->user()->user_type == 'teacher') {
+                $batchIds = BatchDay::where('user_id', auth()->id())->pluck('batch_id');
+                $query = Batch::whereIn('id', $batchIds);
+            } else {
+                $query = Batch::latest();
+            }
+
+            return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('action', function ($row) {

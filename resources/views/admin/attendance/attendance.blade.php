@@ -36,9 +36,9 @@
                                         <td>{{ $record?->student->reg_id }}</td>
                                         <td>{{ $record?->student->name }}</td>
                                         <td>
-                                            <span class="text-sm d-block">Absent: {{ $record?->student?->currentBatch?->total_absent() }}</span>
-                                            <span class="text-sm d-block">Present: {{ $record?->student?->currentBatch?->total_present() }}</span>
-                                            <span class="text-sm d-block">Late: {{ $record?->student?->currentBatch?->total_late() }}</span>
+                                            <span class="text-sm d-block">Absent: <span id="absent-count-{{ $record?->student->reg_id }}">{{ $record?->student?->currentBatch?->total_absent() }}</span></span>
+                                            <span class="text-sm d-block">Present: <span id="present-count-{{ $record?->student->reg_id }}">{{ $record?->student?->currentBatch?->total_present() }}</span></span>
+                                            <span class="text-sm d-block">Late: <span id="late-count-{{ $record?->student->reg_id }}">{{ $record?->student?->currentBatch?->total_late() }}</span></span>
                                         </td>
                                         <td>
                                             <div class="btn-group">
@@ -114,6 +114,11 @@
 
                         // Add `bg-primary` to the clicked button
                         $(`#${statusText}-${regId}`).addClass('bg-primary text-white');
+
+                        // Update the count
+                        $(`#absent-count-${regId}`).text(response.attendance.total_absent);
+                        $(`#present-count-${regId}`).text(response.attendance.total_present);
+                        $(`#late-count-${regId}`).text(response.attendance.total_late);
                     } else {
                         alert(response.message || "Something went wrong.");
                     }

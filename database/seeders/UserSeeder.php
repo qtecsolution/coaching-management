@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Create an admin user
-        User::create([
+        $admin = User::create([
             'name' => 'Admin',
             'phone' => '1234567890',
             'email' => 'admin@localhost',
@@ -45,21 +45,21 @@ class UserSeeder extends Seeder
         });
 
         // Ensure the first student's information remains fixed for login purposes
-        $user = User::where('user_type', 'student')->first();
-        $user->phone = '0123456789';
-        $user->name = 'Student 1';
-        $user->email = 'student_1@localhost';
-        $user->password = bcrypt('password');
-        $user->save();
+        $student = User::where('user_type', 'student')->first();
+        $student->phone = '1234567891';
+        $student->name = 'Student';
+        $student->email = 'student@localhost';
+        $student->password = bcrypt('password');
+        $student->save();
+        
         // Ensure the first student's information remains fixed for login purposes
         $teacher = User::where('user_type',
             'teacher'
         )->first();
-        $teacher->phone = '1234567891';
-        $teacher->name = 'Teacher 1';
-        $teacher->email = 'teacher_1@localhost';
+        $teacher->phone = '1234567892';
+        $teacher->name = 'Teacher';
+        $teacher->email = 'teacher@localhost';
         $teacher->password = bcrypt('password');
         $teacher->save();
-
     }
 }
