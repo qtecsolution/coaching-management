@@ -41,11 +41,8 @@ class BatchController extends Controller
                     return $row->batch_days->count() . ' days';
                 })
                 ->editColumn('status', function ($row) {
-                    if ($row->status == 1) {
-                        return '<span class="badge bg-success">Active</span>';
-                    } else {
-                        return '<span class="badge bg-danger">Inactive</span>';
-                    }
+                    $status = Batch::$statusList[$row->status];
+                    return '<span class="badge bg-success">' . $status . '</span>';
                 })
                 ->editColumn('class', function ($row) {
                     return $row->level->name ?? '--';
@@ -166,9 +163,10 @@ class BatchController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'tuition_fee' =>'required|numeric',
+            'tuition_fee' => 'required|numeric',
             'days' => 'required',
-            'level' => 'nullable|exists:levels,id'
+            'level' => 'nullable|exists:levels,id',
+            'status' => 'nullable|in:0,1,2'
         ]);
 
         try {
@@ -177,21 +175,23 @@ class BatchController extends Controller
             $batch->update([
                 'name' => $request->name,
                 'tuition_fee' => $request->tuition_fee,
-                'level_id' => $request->level
+                'level_id' => $request->level,
+                'status' => $request->status ?? $batch->status
             ]);
 
-            BatchDay::where('batch_id', $batch->id)->delete();
-
-            $days = json_decode($request->days);
+            $days = json_decode($request->days, true);
             foreach ($days as $day) {
-                BatchDay::create([
-                    'batch_id' => $batch->id,
-                    'day' => $day->day,
-                    'start_time' => $day->start_time,
-                    'end_time' => $day->end_time,
-                    'user_id' => $day->teacher,
-                    'subject_id' => $day->subject
-                ]);
+                $data = [
+                    'day' => $day['day'],
+                    'start_time' => $day['start_time'],
+                    'end_time' => $day['end_time'],
+                    'user_id' => $day['teacher'],
+                    'subject_id' => $day['subject']
+                ];
+
+                isset($day['id'])
+                    ? BatchDay::findOrFail($day['id'])->update($data)
+                    : BatchDay::create(array_merge($data, ['batch_id' => $batch->id]));
             }
 
             return response()->json([
@@ -199,7 +199,7 @@ class BatchController extends Controller
                 'message' => 'Batch updated successfully.',
             ]);
         } catch (\Throwable $th) {
-            Log::info($th->getMessage() . ' on line ' . $th->getLine() . ' in ' . $th->getFile());
+            Log::error($th->getMessage(), ['line' => $th->getLine(), 'file' => $th->getFile()]);
 
             return response()->json([
                 'status' => false,

@@ -16,6 +16,7 @@
                     />
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="class" class="form-label">Class</label>
@@ -30,10 +31,12 @@
                 </div>
             </div>
 
-             <div class="col-md-6">
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label for="class" class="form-label">Tuition Fee <sup class="text-danger">*</sup></label>
-                        <input
+                    <label for="class" class="form-label"
+                        >Tuition Fee <sup class="text-danger">*</sup></label
+                    >
+                    <input
                         type="number"
                         id="tuition_fee"
                         placeholder="Enter tuition fee"
@@ -42,7 +45,23 @@
                         readonly
                     />
                 </div>
-              </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="class" class="form-label"
+                        >Status</label
+                    >
+                    <input
+                        type="text"
+                        id="status"
+                        placeholder="Enter Status"
+                        class="form-control"
+                        v-model="status"
+                        readonly
+                    />
+                </div>
+            </div>
         </div>
 
         <hr />
@@ -59,7 +78,7 @@
                         <label for="day" class="form-label"
                             >Day<sup class="text-danger">*</sup></label
                         >
-                        <input 
+                        <input
                             type="text"
                             id="day"
                             placeholder="Day"
@@ -126,7 +145,8 @@
             </div>
 
             <div class="alert alert-primary text-center" v-else>
-                No days added. Click <a :href="props.edit_route">here</a> to add.
+                No days added. Click <a :href="props.edit_route">here</a> to
+                add.
             </div>
         </div>
     </form>
@@ -138,10 +158,19 @@ import { ref, watch } from "vue";
 
 const props = defineProps(["batch", "edit_route"]);
 
+const statusList = [
+    { id: 0, name: "Upcoming" },
+    { id: 1, name: "Running" },
+    { id: 2, name: "Completed" },
+];
+
 const name = ref(props?.batch?.name);
 const tuition_fee = ref(props?.batch?.tuition_fee);
 const level = ref(props?.batch?.level?.name);
 const days = ref([]);
+
+const status = ref(props?.batch?.status);
+status.value = statusList.find((item) => item.id == status.value).name;
 
 if (props?.batch?.batch_days?.length > 0) {
     props.batch.batch_days.forEach((day) => {

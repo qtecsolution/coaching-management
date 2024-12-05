@@ -307,15 +307,6 @@ watch(
 );
 
 const save = async () => {
-    // console.table({
-    //     name: name.value,
-    //     subject: subject.value,
-    //     class: level.value,
-    //     teacher: teacher.value,
-    // });
-
-    // console.table(days.value);
-
     if (!name.value || days.value.length < 1||!tuition_fee.value) {
         toaster("warning", "Please fill in all the required fields.");
         return false;
@@ -342,7 +333,7 @@ const save = async () => {
     await axios
         .post(props.route, form)
         .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
             toaster("success", response.data.message);
 
             name.value = "";

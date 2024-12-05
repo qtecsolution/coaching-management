@@ -10,6 +10,12 @@ class Batch extends Model
 {
     use HasFactory;
 
+    public static $statusList = [
+        0 => 'Upcoming',
+        1 => 'Running',
+        2 => 'Completed'
+    ];
+
     protected $guarded = [];
 
     public function batch_days()

@@ -19,6 +19,7 @@
                     }}</small>
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="class" class="form-label">Class</label>
@@ -36,29 +37,54 @@
                             {{ level.name }}
                         </option>
                     </select>
-                    <small
-                        class="text-danger"
-                        v-if="errors && errors.level"
-                        >{{ errors.level[0] }}</small
-                    >
+                    <small class="text-danger" v-if="errors && errors.level">{{
+                        errors.level[0]
+                    }}</small>
                 </div>
             </div>
 
-             <div class="col-md-6">
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label for="class" class="form-label">Tuition Fee <sup class="text-danger">*</sup></label>
-                        <input
+                    <label for="class" class="form-label"
+                        >Tuition Fee <sup class="text-danger">*</sup></label
+                    >
+                    <input
                         type="number"
                         id="tuition_fee"
                         placeholder="Enter tuition fee"
                         class="form-control"
                         v-model="tuition_fee"
                     />
-                    <small class="text-danger" v-if="errors && errors.tuition_fee">{{
-                        errors.tuition_fee[0]
+                    <small
+                        class="text-danger"
+                        v-if="errors && errors.tuition_fee"
+                        >{{ errors.tuition_fee[0] }}</small
+                    >
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="class" class="form-label">Status</label>
+                    <select
+                        id="class"
+                        class="form-control form-select"
+                        v-model="status"
+                    >
+                        <option value="" selected disabled>Select Status</option>
+                        <option
+                            v-for="status in statusList"
+                            :key="status.id"
+                            :value="status.id"
+                        >
+                            {{ status.name }}
+                        </option>
+                    </select>
+                    <small class="text-danger" v-if="errors && errors.status">{{
+                        errors.status[0]
                     }}</small>
                 </div>
-              </div>
+            </div>
         </div>
 
         <hr />
@@ -89,7 +115,9 @@
                             class="form-control form-select"
                             v-model="day.day"
                         >
-                            <option value="" selected disabled>Select Day</option>
+                            <option value="" selected disabled>
+                                Select Day
+                            </option>
                             <option value="1">Saturday</option>
                             <option value="2">Sunday</option>
                             <option value="3">Monday</option>
@@ -115,7 +143,9 @@
                             class="form-control form-select"
                             v-model="day.subject"
                         >
-                            <option value="" selected disabled>Select Subject</option>
+                            <option value="" selected disabled>
+                                Select Subject
+                            </option>
                             <option
                                 v-for="subject in subjects"
                                 :key="subject.id"
@@ -139,7 +169,9 @@
                             class="form-control form-select choices"
                             v-model="day.teacher"
                         >
-                            <option value="" selected disabled>Select Teacher</option>
+                            <option value="" selected disabled>
+                                Select Teacher
+                            </option>
                             <option
                                 v-for="teacher in teachers"
                                 :key="teacher.id"
@@ -226,9 +258,16 @@ const toaster = (type = "info", message = "Test notification.") => {
 
 const props = defineProps(["route", "teachers", "batch", "levels", "subjects"]);
 
+const statusList = [
+    { id: 0, name: "Upcoming" },
+    { id: 1, name: "Running" },
+    { id: 2, name: "Completed" },
+];
+
 const name = ref(props?.batch?.name);
 const tuition_fee = ref(props?.batch?.tuition_fee);
 const level = ref(props?.batch?.level_id || "");
+const status = ref(props?.batch?.status || 0);
 const days = ref([]);
 const errors = ref("");
 
@@ -240,6 +279,7 @@ if (props?.batch?.batch_days?.length > 0) {
             end_time: day.end_time,
             teacher: day.user_id,
             subject: day.subject_id,
+            id: day.id,
         });
     });
 } else {
@@ -317,15 +357,6 @@ watch(
 );
 
 const save = async () => {
-    // console.table({
-    //     name: name.value,
-    //     subject: subject.value,
-    //     class: level.value,
-    //     teacher: teacher.value,
-    // });
-
-    // console.table(days.value);
-
     if (!name.value || days.value.length < 1) {
         toaster("warning", "Please fill in all the required fields.");
         return false;
@@ -336,6 +367,7 @@ const save = async () => {
     form.append("name", name.value);
     form.append("tuition_fee", tuition_fee.value);
     form.append("level", level.value);
+    form.append("status", status.value);
 
     if (
         days.value.length > 1 ||
@@ -353,8 +385,12 @@ const save = async () => {
     await axios
         .post(props.route, form)
         .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
             toaster("success", response.data.message);
+
+            setTimeout(() => {
+                window.location.href = "/admin/batches";
+            }, 1000);
         })
         .catch((error) => {
             errors.value = error.response.data.errors;
