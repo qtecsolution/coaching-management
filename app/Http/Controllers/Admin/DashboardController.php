@@ -15,7 +15,11 @@ class DashboardController extends Controller
     public function index()
     {
         if (auth()->user()->user_type == 'teacher') {
-            $user = Teacher::with(['user', 'batch_days'])->where('user_id', auth()->id())->first();
+            $user = Teacher::with(['user', 'batch_days.batch'])
+                ->whereHas('batch_days.batch', function ($query) {
+                    $query->active();
+                })
+                ->where('user_id', auth()->id())->first();
             return view('teacher.dashboard', compact('user'));
         }
 

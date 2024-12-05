@@ -10,4 +10,9 @@ class Attendance extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function records()
+    {
+        return $this->hasMany(AttendanceRecord::class);
+    }
 }

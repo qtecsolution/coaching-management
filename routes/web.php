@@ -88,6 +88,7 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     
     // attendance routes
     Route::get('attendance/{batchDayId}', [AttendanceController::class, 'attendance'])->name('attendance');
+    Route::post('attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
 
     // lead routes
     Route::resource('leads', LeadController::class);

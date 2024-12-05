@@ -52,6 +52,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
+                                        <th>Batch</th>
                                         <th>Day</th>
                                         <th>Time</th>
                                         <th>Subject</th>
@@ -62,6 +63,7 @@
                                     @if (count($schedules) > 0)
                                         @foreach ($schedules as $schedule)
                                             <tr class="{{ $schedule->day_name === $nextClassDay ? 'highlighted-row' : '' }} border">
+                                                <td>{{ $schedule?->batch->name }}</td>
                                                 <td>{{ $schedule->day_name }}</td>
                                                 <td>
                                                     {{ Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -

@@ -27,35 +27,44 @@
                                     <th>Name</th>
                                     <th>History</th>
                                     <th>Attendance</th>
-                                    <th>Comment</th>
+                                    {{-- <th>Comment</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($students as $student)
+                                @forelse ($attendance->records as $record)
                                     <tr>
-                                        <td>{{ $student?->student->reg_id }}</td>
-                                        <td>{{ $student?->student->name }}</td>
+                                        <td>{{ $record?->student->reg_id }}</td>
+                                        <td>{{ $record?->student->name }}</td>
                                         <td>
-                                            <span class="text-sm d-block">Absent: {{ $student?->absent ?? 0 }}</span>
-                                            <span class="text-sm d-block">Present: {{ $student?->absent ?? 0 }}</span>
-                                            <span class="text-sm d-block">Late: {{ $student?->absent ?? 0 }}</span>
+                                            <span class="text-sm d-block">Absent: {{ $record?->student?->currentBatch?->total_absent() }}</span>
+                                            <span class="text-sm d-block">Present: {{ $record?->student?->currentBatch?->total_present() }}</span>
+                                            <span class="text-sm d-block">Late: {{ $record?->student?->currentBatch?->total_late() }}</span>
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <button class="btn btn-white border btn-sm btn-hover">Absent</button>
-                                                <button class="btn btn-white border btn-sm btn-hover">Present</button>
-                                                <button class="btn btn-white border btn-sm btn-hover">Late</button>
+                                                <button class="btn btn-white border btn-sm btn-hover {{ $record->status == 0 ? 'bg-primary text-white' : '' }}"
+                                                    data-reg-id="{{ $record?->student->reg_id }}"
+                                                    onclick="attendance(0, {{ $attendance->id }}, this)"
+                                                    id="absent-{{ $record?->student->reg_id }}">Absent</button>
+                                                <button class="btn btn-white border btn-sm btn-hover {{ $record->status == 1 ? 'bg-primary text-white' : '' }}"
+                                                    data-reg-id="{{ $record?->student->reg_id }}"
+                                                    onclick="attendance(1, {{ $attendance->id }}, this)"
+                                                    id="present-{{ $record?->student->reg_id }}">Present</button>
+                                                <button class="btn btn-white border btn-sm btn-hover {{ $record->status == 2 ? 'bg-primary text-white' : '' }}"
+                                                    data-reg-id="{{ $record?->student->reg_id }}"
+                                                    onclick="attendance(2, {{ $attendance->id }}, this)"
+                                                    id="late-{{ $record?->student->reg_id }}">Late</button>
                                             </div>
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             <a href="" class="btn btn-sm btn-light">
                                                 <i class="bi bi-chat-left-text"></i>
                                             </a>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="text-center">No student found.</td>
+                                        <td colspan="4" class="text-center">No student found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -69,5 +78,50 @@
 @endsection
 
 @push('js')
-    <script></script>
+    <script>
+        function attendance(status, attendanceId, element) {
+            let regId = element.dataset.regId;
+
+            // Ensure the statusText matches the button ID convention
+            let statusText;
+            switch (status) {
+                case 1:
+                    statusText = 'present';
+                    break;
+                case 2:
+                    statusText = 'late';
+                    break;
+                default:
+                    statusText = 'absent';
+                    break;
+            }
+
+            $.ajax({
+                url: "{{ route('admin.attendance.store') }}",
+                method: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    reg_id: regId,
+                    status: status,
+                    attendance_id: attendanceId,
+                },
+                success: function(response) {
+                    console.log(response);
+
+                    if (response.success) {
+                        // Remove `bg-primary` from all buttons in the same group
+                        $(`[data-reg-id="${regId}"]`).removeClass('bg-primary text-white');
+
+                        // Add `bg-primary` to the clicked button
+                        $(`#${statusText}-${regId}`).addClass('bg-primary text-white');
+                    } else {
+                        alert(response.message || "Something went wrong.");
+                    }
+                },
+                error: function() {
+                    alert("An error occurred while saving attendance.");
+                }
+            });
+        }
+    </script>
 @endpush

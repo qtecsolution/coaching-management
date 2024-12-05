@@ -33,6 +33,7 @@ class UserSeeder extends Seeder
         $students->each(function ($studentUser) {
             Student::factory()->create(['user_id' => $studentUser->id]);
         });
+        
         // Create fake teachers
         $teachers = User::factory(50)->create([
             'user_type' => 'teacher'
