@@ -11,6 +11,7 @@ export default defineConfig({
                 'public/assets/scss/app.scss',
                 'public/assets/scss/pages/auth.scss',
                 'public/assets/scss/pages/datatables.scss',
+                'public/assets/scss/pages/error.scss',
             ],
             refresh: true,
         }),

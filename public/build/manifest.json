@@ -18,6 +18,11 @@
     "src": "public/assets/scss/pages/datatables.scss",
     "isEntry": true
   },
+  "public/assets/scss/pages/error.scss": {
+    "file": "assets/error-BY6LWRTz.css",
+    "src": "public/assets/scss/pages/error.scss",
+    "isEntry": true
+  },
   "public/assets/static/fonts/nunito-latin-300-normal.woff": {
     "file": "assets/nunito-latin-300-normal--DpLxgpx.woff",
     "src": "public/assets/static/fonts/nunito-latin-300-normal.woff"
