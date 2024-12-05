@@ -168,8 +168,6 @@ class ReportController extends Controller
             abort(403, 'Unauthorized action.');
         }
         if (request()->ajax() && $request->payment_report == 1) {
-            Log::info("payment_report:");
-
             $month_from = null;
             $month_to = null;
             if ($request->filled('month_from')) {
@@ -208,7 +206,6 @@ class ReportController extends Controller
                 ->make(true);
         }
         if (request()->ajax() && $request->payments == 1) {
-            Log::info("payments:");
             $month_from = null;
             $month_to = null;
             if ($request->filled('month_from')) {
@@ -217,20 +214,20 @@ class ReportController extends Controller
             if ($request->filled('month_to')) {
                 $month_to = $request->month_to;
             }
-            $payments_due = Payment::query();
+            $payments = Payment::query();
             if ($month_from && $month_to) {
-                $payments_due = $payments_due->whereBetween('month', [$month_from, $month_to]);
+                $payments = $payments->whereBetween('month', [$month_from, $month_to]);
             } elseif ($month_from) {
-                $payments_due = $payments_due->where('month', $month_from);
+                $payments = $payments->where('month', $month_from);
             } elseif ($month_to) {
-                $payments_due = $payments_due->where('month', $month_to);
+                $payments = $payments->where('month', $month_to);
             }
-            $payments_due = $payments_due->with([
-                    'student_batch.student',
-                    'student_batch.batch'
-                ]);
-            $payments_due->get();
-            return DataTables::of($payments_due)
+            $payments = $payments->with([
+                'student_batch.student',
+                'student_batch.batch'
+            ]);
+            $payments->get();
+            return DataTables::of($payments)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('name', function ($row) {
