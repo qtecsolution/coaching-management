@@ -4,17 +4,17 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "public/assets/scss/app.scss": {
-    "file": "assets/app-D9nh5wdk.css",
+    "file": "assets/app-CKSmuhaM.css",
     "src": "public/assets/scss/app.scss",
     "isEntry": true
   },
   "public/assets/scss/pages/auth.scss": {
-    "file": "assets/auth-Bps-hRrj.css",
+    "file": "assets/auth-CXwJiVso.css",
     "src": "public/assets/scss/pages/auth.scss",
     "isEntry": true
   },
   "public/assets/scss/pages/datatables.scss": {
-    "file": "assets/datatables-B0HSOWLP.css",
+    "file": "assets/datatables-BCEYHbe0.css",
     "src": "public/assets/scss/pages/datatables.scss",
     "isEntry": true
   },
@@ -59,17 +59,17 @@
     "src": "public/assets/static/fonts/nunito-latin-800-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-mSB9p8TC.css",
+    "file": "assets/app-DWdU_2D1.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DWWLtiS1.js",
+    "file": "assets/app-DFWRAbBk.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-fzTawAL-.css"
+      "assets/app-CM0PU-wP.css"
     ]
   }
 }
