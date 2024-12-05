@@ -45,6 +45,6 @@ class RolePermissionSeeder extends Seeder
         Permission::insert($permissions->toArray());
 
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
-        $role->syncPermissions(Permission::all());
+        $adminRole->syncPermissions(Permission::all());
     }
 }
