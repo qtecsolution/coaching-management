@@ -3,6 +3,10 @@
         <i class="bi bi-eye"></i>
     </a>
 
+    <a href="{{ route('admin.batches.students', $row->id) }}" class="btn btn-sm btn-secondary">
+        <i class="bi bi-list-task"></i>
+    </a>
+
     @can('update_batch')
         <a href="{{ route('admin.batches.edit', $row->id) }}" class="btn btn-sm btn-primary">
             <i class="bi bi-pencil"></i>

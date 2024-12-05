@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\StudentBatchController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\User\PermissionController;
 use App\Http\Controllers\Admin\User\RoleController;
@@ -76,11 +77,12 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // batch routes
     Route::resource('batches', BatchController::class);
+    Route::get('/batch/{id}/students', [StudentBatchController::class, 'index'])->name('batches.students');
 
     // payment routes
     Route::resource('payments', PaymentController::class);
-    Route::get('payment/due', [PaymentController::class,'due'])->name('payments.due');
-    Route::match(['get', 'post'], '/payment/generate', [PaymentController::class, 'generatePaymentsForMonth'])->name('payments.generate');
+    Route::get('payments/due', [PaymentController::class,'due'])->name('payments.due');
+    Route::match(['get', 'post'], '/payments/generate', [PaymentController::class, 'generatePaymentsForMonth'])->name('payments.generate');
 
     // report routes
     Route::get('reports/daily-collection', [ReportController::class, 'dailyCollection'])->name('reports.daily.collection');
@@ -89,7 +91,7 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     
     // attendance routes
     Route::resource('attendance', AttendanceController::class);
-    Route::get('attendance/{id}/list', [AttendanceController::class, 'list'])->name('attendance.list');
+    Route::get('/attendance/{id}/list', [AttendanceController::class, 'list'])->name('attendance.list');
 
     // lead routes
     Route::resource('leads', LeadController::class);

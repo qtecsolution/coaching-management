@@ -72,7 +72,7 @@
                                                 <td>{{ $schedule->subject_name }}</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="#" class="btn btn-sm btn-light" title="Student List">
+                                                        <a href="{{ route('admin.batches.students', $schedule->batch_id) }}" class="btn btn-sm btn-light" title="Student List">
                                                             <i class="bi bi-list-task"></i>
                                                         </a>
                                                         <a href="{{ route('admin.attendance.show', $schedule->id) }}" class="btn btn-sm btn-light" title="Attendence">
