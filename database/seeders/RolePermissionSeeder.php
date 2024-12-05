@@ -31,6 +31,7 @@ class RolePermissionSeeder extends Seeder
             'view_batches', 'create_batch', 'update_batch', 'delete_batch',
             'view_leads', 'create_lead', 'update_lead', 'delete_lead',
             'view_payments','create_payment','update_payment','delete_payment',
+            'view_reports','paid_reports','due_reports','summary_reports',
             'view_settings', 'update_settings',
             'view_class_materials', 'create_class_material', 'update_class_material', 'delete_class_material',
             'view_attendance', 'create_attendance', 'update_attendance', 'delete_attendance'
