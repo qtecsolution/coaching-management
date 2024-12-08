@@ -62,7 +62,7 @@
                                 <tbody>
                                     @if (count($schedules) > 0)
                                         @foreach ($schedules as $schedule)
-                                            <tr class="{{ $schedule->day_name === $nextClassDay ? 'highlighted-row' : '' }} border">
+                                            <tr>
                                                 <td>{{ $schedule?->batch->name }}</td>
                                                 <td>{{ $schedule->day_name }}</td>
                                                 <td>

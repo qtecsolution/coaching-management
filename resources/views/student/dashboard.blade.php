@@ -69,7 +69,7 @@
                                 <tbody>
                                     @if (count($schedules) > 0)
                                         @foreach ($schedules as $schedule)
-                                            <tr @if ($schedule->day_name === $nextClassDay) class="highlighted-row" @endif>
+                                            <tr>
                                                 <td>{{ $schedule->day_name }}</td>
                                                 <td>
                                                     {{ Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -
