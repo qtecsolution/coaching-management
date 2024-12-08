@@ -24,9 +24,6 @@ class ClassMaterialController extends Controller
             return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
-                ->addColumn('action', function ($row) {
-                    return view('student.class-material.action', compact('row'));
-                })
                 ->addColumn('batch', function ($row) {
                     return $row->batch_day->batch->name;
                 })
