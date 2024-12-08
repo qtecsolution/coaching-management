@@ -174,6 +174,7 @@
         </ul>
     </li>
 @endcan
+
 @can('view_settings')
     <li class="sidebar-item has-sub {{ Route::is('admin.settings.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">

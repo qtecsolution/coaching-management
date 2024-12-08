@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\User\PermissionController;
 use App\Http\Controllers\Admin\User\RoleController;
 use App\Http\Controllers\Admin\User\UserController;
+use App\Http\Controllers\Student\ClassMaterialController as StudentClassMaterialController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\PaymentController as StudentPaymentController;
 use App\Http\Controllers\TestController;
@@ -110,6 +111,9 @@ Route::prefix('user')->as('user.')->middleware('isStudent')->group(function () {
     Route::get('payments', [StudentPaymentController::class, 'index'])->name('payments.index');
     Route::get('payments/{id}', [StudentPaymentController::class, 'show'])->name('payments.show');
     Route::get('payments/due/list', [StudentPaymentController::class, 'due'])->name('payments.due');
+
+    // class material
+    Route::get('class-materials', [StudentClassMaterialController::class, 'index'])->name('class-materials.index');
 });
 
 // test routes

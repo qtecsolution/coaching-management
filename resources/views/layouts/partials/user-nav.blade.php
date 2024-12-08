@@ -4,6 +4,14 @@
         <span>Dashboard</span>
     </a>
 </li>
+
+<li class="sidebar-item {{ Route::is('user.class-materials.index') ? 'active' : '' }}">
+    <a href="{{ route('user.class-materials.index') }}" class="sidebar-link">
+        <i class="bi bi-collection"></i>
+        <span>Class Materials</span>
+    </a>
+</li>
+
 <li class="sidebar-item has-sub {{ Route::is('user.payments.*') ? 'active' : '' }}">
     <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
         <i class="bi bi-cash-stack"></i>
