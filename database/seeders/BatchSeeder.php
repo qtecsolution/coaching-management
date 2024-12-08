@@ -35,14 +35,14 @@ class BatchSeeder extends Seeder
         $subjects = Subject::all();
         $teachers = User::where('user_type', 'teacher')->get();
         $teacher = User::where('user_type', 'teacher')->where('phone', '1234567891')->first();
-        $fixed_id = $teacher->id;
+
         // Define some batch days data
         $batchDays = [
             ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '1', 'start_time' => '09:00', 'end_time' => '12:00'],
             ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '2', 'start_time' => '09:00', 'end_time' => '12:00'],
             ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '3', 'start_time' => '01:00', 'end_time' => '04:00'],
             ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '4', 'start_time' => '01:00', 'end_time' => '04:00'],
-            ['batch_id' => $batches->random()->id, 'user_id' => $fixed_id??$teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '5', 'start_time' => '09:00', 'end_time' => '12:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'subject_id' => $subjects->random()->id, 'day' => '5', 'start_time' => '09:00', 'end_time' => '12:00'],
         ];
 
         // Insert the data into the batch_days table
