@@ -11,10 +11,6 @@ class StudentBatchController extends Controller
 {
     public function index($batchId)
     {
-        if (!auth()->user()->can('view_attendance')) {
-            abort(403, 'Unauthorized action.');
-        }
-
         if (request()->ajax()) {
             return DataTables::of(StudentBatch::where('batch_id', $batchId)->latest())
                 ->addIndexColumn()

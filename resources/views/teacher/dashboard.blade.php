@@ -78,9 +78,9 @@
                                                         <a href="{{ route('admin.attendance.list', $schedule->id) }}" class="btn btn-sm btn-light" title="Attendence">
                                                             <i class="bi bi-calendar3"></i>
                                                         </a>
-                                                        <a href="#" class="btn btn-sm btn-light" title="Grades">
+                                                        {{-- <a href="#" class="btn btn-sm btn-light" title="Grades">
                                                             <i class="bi bi-bookmark-fill"></i>
-                                                        </a>
+                                                        </a> --}}
                                                         {{-- <a href="#" class="btn btn-sm btn-light" title="Online Class">
                                                             <i class="bi bi-person-video"></i>
                                                         </a> --}}
