@@ -58,7 +58,10 @@
             <i class="bi bi-easel"></i>
             <span>Batches</span>
         </a>
-        <ul class="submenu {{ Route::is('admin.batches.*') ? 'submenu-open' : 'submenu-close' }}">
+        <ul class="submenu {{ Route::is('admin.levels.*') ? 'submenu-open' : 'submenu-close' }}">
+            <li class="submenu-item {{ Route::is('admin.levels.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.levels.index') }}">Level List</a>
+            </li>
             @can('view_batches')
                 <li class="submenu-item {{ Route::is('admin.batches.index') ? 'active' : '' }}">
                     <a href="{{ route('admin.batches.index') }}">Batch List</a>
@@ -131,9 +134,6 @@
             <span>Tuition Fee</span>
         </a>
         <ul class="submenu {{ Route::is('admin.payments.*') ? 'submenu-open' : 'submenu-close' }}">
-            <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
-                <a href="{{ route('admin.payments.index') }}">Payment List</a>
-            </li>
             @can('create_payment')
                 <li class="submenu-item {{ Route::is('admin.payments.generate') ? 'active' : '' }}">
                     <a href="{{ route('admin.payments.generate') }}">Generate Payments</a>
@@ -142,6 +142,9 @@
                     <a href="{{ route('admin.payments.create') }}">Add Payment</a>
                 </li>
             @endcan
+            <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.index') }}">Payment List</a>
+            </li>
             <li class="submenu-item {{ Route::is('admin.payments.due') ? 'active' : '' }}">
                 <a href="{{ route('admin.payments.due') }}">Due Payments</a>
             </li>

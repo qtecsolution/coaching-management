@@ -19,8 +19,11 @@ class RolePermissionSeeder extends Seeder
         $adminRole = Role::create(['name' => 'Admin']);
         $teacherRole = Role::create(['name' => 'Teacher']);
 
-        $user = User::find(1);
-        $user->syncRoles($adminRole);
+        $admin = User::find(1);
+        $admin->syncRoles($adminRole);
+        
+        $teacher = User::find(3);
+        $teacher->syncRoles($teacherRole);
 
         // create permissions
         $permissions = [
@@ -34,7 +37,8 @@ class RolePermissionSeeder extends Seeder
             'view_reports','paid_reports','due_reports','summary_reports',
             'view_settings', 'update_settings',
             'view_class_materials', 'create_class_material', 'update_class_material', 'delete_class_material',
-            'view_attendance', 'create_attendance', 'update_attendance', 'delete_attendance'
+            'view_attendance', 'create_attendance', 'update_attendance', 'delete_attendance',
+            'view_levels', 'create_level', 'update_level', 'delete_level',
         ];
 
         $permissions = collect($permissions)->map(function ($permission) {

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\ClassMaterialController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentBatchController;
@@ -100,6 +101,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     // class material routes
     Route::resource('class-materials', ClassMaterialController::class);
     Route::post('/class-materials/get-days', [ClassMaterialController::class, 'getDays'])->name('class-materials.get-days');
+
+    // level routes
+    Route::resource('levels', LevelController::class);
 });
 
 // user routes
