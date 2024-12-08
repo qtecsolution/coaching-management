@@ -1,19 +1,19 @@
 @extends('layouts.master')
 
-@section('title', 'Payment Due')
+@section('title', 'Due Payments')
 
 @section('content')
 <div class="page-heading">
-    <x-page-title title="Payment Due" subtitle="" pageTitle="Payment Due" />
+    <x-page-title title="Due Payments" subtitle="" pageTitle="Due Payments" />
 
     <!-- Basic Tables start -->
     <section class="section">
         <div class="card">
             <div class="card-body">
-                <div class="row">
+                <div class="row mb-4">
                     <!-- <div class="col-4">
                         <div class="form-group">
-                            <label><strong>Batch :</strong></label>
+                            <label class="form-label">Batch :</label>
                             <select id='batch' class="form-control" name="batch_id">
                                 <option value="">--Select Batch--</option>
                                 @foreach ($batches as $batch )
@@ -24,7 +24,7 @@
                     </div> -->
                     <div class="col-4">
                         <div class="form-group">
-                            <label><strong>Month :</strong></label>
+                            <label class="form-label">Month :</label>
                             <input type="month" class="form-control" name="month" id="month">
                         </div>
                     </div>
@@ -33,9 +33,7 @@
                     <table class="table" id="table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Student Id</th>
+                                <th>#</th>
                                 <th>Batch</th>
                                 <th>Amount</th>
                                 <th>Month</th>
@@ -59,9 +57,6 @@
         responsive: true,
         serverSide: true,
         processing: true,
-        language: {
-            "emptyTable": "No unpaid student found"
-        },
         ajax: {
             url: "{{ route('user.payments.due') }}",
             data: function(d) {
@@ -72,15 +67,6 @@
         columns: [{
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex'
-            },
-            {
-                data: 'name',
-                name: 'name'
-            },
-
-            {
-                data: 'reg_id',
-                name: 'reg_id'
             },
             {
                 data: 'batch',

@@ -14,7 +14,7 @@
             <a href="{{ route('user.payments.index') }}">Payment History</a>
         </li>
         <li class="submenu-item {{ Route::is('user.payments.due') ? 'active' : '' }}">
-            <a href="{{ route('user.payments.due') }}">Payment Due</a>
+            <a href="{{ route('user.payments.due') }}">Due Payments</a>
         </li>
     </ul>
 </li>

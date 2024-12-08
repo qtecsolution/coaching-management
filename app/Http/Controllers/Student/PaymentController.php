@@ -35,29 +35,27 @@ class PaymentController extends Controller
         $student = $this->getStudent();
         $student_batch_ids = StudentBatch::where('student_id', $student->id)->get()->pluck('id');
         $payments = Payment::where('status', 1)->whereIn('student_batch_id', $student_batch_ids)->with(['student_batch.batch'])->latest();
+        
         if (request()->ajax()) {
             return DataTables::of($payments)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
-                ->addColumn('student', function ($row) use ($student) {
-                    return $student->name . '<br>' . $student->reg_id;
-                })
                 ->addColumn('batch', function ($row) {
                     return $row->student_batch->batch->name;
                 })
                 ->addColumn('action', function ($row) {
                     return '<a href="' . route('user.payments.show', $row->id) . '" class="btn btn-sm btn-info">
-        <i class="bi bi-printer" title="Print Invoice"></i>
-    </a>';
+                        <i class="bi bi-printer" title="Print Invoice"></i>
+                    </a>';
                 })
                 ->editColumn('amount', function ($row) {
-                    return $row->amount;
+                    return number_format($row->amount, 2);
                 })
                 ->editColumn('transaction_id', function ($row) {
                     return $row->transaction_id;
                 })
                 ->editColumn('month', function ($row) {
-                    return $row->month;
+                    return Carbon::createFromFormat('Y-m', $row->month)->format('F, Y');
                 })
                 ->editColumn('date', function ($row) {
                     return $row->date;
@@ -71,6 +69,7 @@ class PaymentController extends Controller
 
         return view('student.payments.index');
     }
+
     /**
      * Display the specified resource.
      */
@@ -80,14 +79,30 @@ class PaymentController extends Controller
         $payment = Payment::with('student_batch.student', 'student_batch.batch')->find($id);
         return view('student.payments.invoice', compact('payment', 'settings'));
     }
+
+
+    /**
+     * The function retrieves and displays due payments for a student based on batch and month filters
+     * using DataTables in Laravel.
+     * 
+     * @param Request request The `due` function you provided is a controller method that handles AJAX
+     * requests for fetching due payments data. It retrieves the student, active batches, and processes
+     * the request parameters to filter payments due based on batch ID and month.
+     * 
+     * @return The function `due` is returning a view named 'student.payments.due' with the variable
+     * 'batches' compacted. If the request is an AJAX request, it will return the data in a DataTable
+     * format with specific columns and actions for each row.
+     */
     public function due(Request $request)
     {
         $student = $this->getStudent();
         $batches = Batch::active()->get();
+
         if (request()->ajax()) {
             $batchId = null;
             $month = null;
             $reg_id = $student->reg_id;
+
             if ($request->filled('batch_id')) {
                 $batchId = $request->batch_id;
             }
@@ -102,52 +117,32 @@ class PaymentController extends Controller
                     $query->when($batchId, fn($q) => $q->where('batch_id', $batchId));
                     $query->when($reg_id, fn($q) => $q->whereHas('student', fn($q) => $q->where('reg_id', $reg_id)));
                 })
-                ->with([
-                    'student_batch.student',
-                    'student_batch.batch'
-                ]);
+                ->with(['student_batch.batch']);
+
             if (!empty($month)) {
                 $payments_due = $payments_due->where('month', $month);
             }
-            $payments_due = $payments_due->get();
+
             return DataTables::of($payments_due)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
-                ->addColumn('name', function ($row) {
-                    return $row->student_batch->student->name;
-                })
-                ->addColumn('reg_id', function ($row) {
-                    return $row->student_batch->student->reg_id;
-                })
                 ->addColumn('batch', function ($row) {
                     return $row->student_batch->batch->name;
                 })
                 ->editColumn('amount', function ($row) {
-                    return $row->amount;
+                    return number_format($row->amount, 2);
                 })
                 ->editColumn('month', function ($row) {
-                    return Carbon::createFromFormat('Y-m', $row->month)->format('M-Y');
+                    return Carbon::createFromFormat('Y-m', $row->month)->format('F, Y');
                 })
                 ->editColumn('status', function ($row) {
                     return $row->status_badge;
                 })
                 ->addColumn('action', function ($row) {
                     return '<a href="' . route('user.payments.show', $row->id) . '" class="btn btn-sm btn-info">
-        <i class="bi bi-printer" title="Print Invoice"></i>
-    </a>';
+                        <i class="bi bi-printer" title="Print Invoice"></i>
+                    </a>';
                 })
-        //         ->addColumn('action', function ($row) {
-        //             return '
-        // <div class="btn-group">
-        //     <a href="' . route('admin.payments.create', [
-        //                 'student_batch_id' => $row->student_batch->id,
-        //                 'batch_id' => $row->student_batch->batch->id,
-        //                 'month' => $row->month
-        //             ]) . '" class="btn btn-sm btn-primary">
-        //         Collection
-        //     </a>
-        // </div>';
-        //         })
                 ->rawColumns(['name', 'reg_id', 'batch', 'amount', 'month', 'action', 'status'])
                 ->make(true);
         }

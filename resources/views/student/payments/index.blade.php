@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Payment history')
+@section('title', 'Payment History')
 
 @section('content')
 <div class="page-heading">
-    <x-page-title title="Payment history" subtitle="" pageTitle="Payment history" />
+    <x-page-title title="Payment History" subtitle="" pageTitle="Payment History" />
 
     <!-- Basic Tables start -->
     <section class="section">
@@ -16,10 +16,9 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Student</th>
                                 <th>Batch</th>
                                 <th>Amount</th>
-                                <th>TransactionId</th>
+                                <th>Transaction ID</th>
                                 <th>Month</th>
                                 <th>Date</th>
                                 <th>Status</th>
@@ -46,10 +45,6 @@
         columns: [{
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex'
-            },
-            {
-                data: 'student',
-                name: 'student'
             },
             {
                 data: 'batch',
