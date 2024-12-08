@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\BatchDay;
 use App\Models\ClassMaterial;
 use App\Models\Subject;
 use Illuminate\Http\Request;
@@ -23,7 +24,14 @@ class ClassMaterialController extends Controller
         }
 
         if ($request->ajax()) {
-            return DataTables::of(ClassMaterial::latest())
+            if (auth()->user()->user_type == 'teacher') {
+                $batchDayIds = BatchDay::where('user_id', auth()->id())->pluck('id');
+                $query = ClassMaterial::whereIn('batch_day_id', $batchDayIds)->latest();
+            } else {
+                $query = ClassMaterial::latest();
+            }
+
+            return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('action', function ($row) {
@@ -54,7 +62,13 @@ class ClassMaterialController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $batches = Batch::active()->latest()->get();
+        if (auth()->user()->user_type == 'teacher') {
+            $batchDayIds = BatchDay::where('user_id', auth()->id())->pluck('batch_id');
+            $batches = Batch::whereIn('id', $batchDayIds)->latest()->get();
+        } else {
+            $batches = Batch::active()->latest()->get();
+        }
+
         return view('admin.class-material.create', compact('batches'));
     }
 

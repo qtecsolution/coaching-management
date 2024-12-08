@@ -154,8 +154,15 @@ class AttendanceController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $batchIds = BatchDay::where('user_id', auth()->id())->pluck('batch_id');
+
         if ($request->ajax()) {
-            $query = Attendance::latest();
+            if (auth()->user()->user_type == 'teacher') {
+                $query = Attendance::whereIn('batch_id', $batchIds);
+            } else {
+                $query = Attendance::latest();
+            }
+
             
             if ($request->batch_id) {
                 $query = $query->where('batch_id', $request->batch_id);
@@ -193,7 +200,12 @@ class AttendanceController extends Controller
                 ->make(true);
         }
 
-        $batches = Batch::active()->latest()->get();
+        if (auth()->user()->user_type == 'teacher') {
+            $batches = Batch::whereIn('id', $batchIds)->get();
+        } else {
+            $batches = Batch::active()->latest()->get();
+        }
+
         return view('admin.attendance.index', compact('batches'));
     }
 
