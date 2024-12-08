@@ -120,13 +120,13 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center flex-column">
                                 <div class="avatar avatar-2xl">
-                                    <img src="{{ asset('assets/static/images/faces/2.jpg') }}" width="100%"
+                                    <img src="{{ asset('assets/static/images/faces/2.jpg') }}"
                                         alt="{{ auth()->user()->name }}" id="profile-photo">
 
-                                    {{-- <div class="avatar-upload-icon">
+                                    <div class="avatar-upload-icon">
                                         <i class="bi bi-image"></i>
                                         <input type="file" name="profile_photo" onchange="photoPreview(event, 'profile-photo')" id="profile-photo-input">
-                                    </div> --}}
+                                    </div>
                                 </div>
 
                                 <h3 class="mt-3">{{ auth()->user()->name }}</h3>
