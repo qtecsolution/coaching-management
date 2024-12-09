@@ -11,14 +11,9 @@ class TestController extends Controller
 {
     public function index(Request $request)
     {
-        // try {
-        //     $sms = new SmsController();
-        //     $response = $sms->test('Banglalink');
-
-        //     return $response;
-        // } catch (\Throwable $th) {
-        //     return $th->getMessage();
-        // }
+        // $sms = new SmsController();
+        // $response = $sms->testSms('Banglalink');
+        // return $response;
 
         return response()->json([
             'message' => 'Hello World!',

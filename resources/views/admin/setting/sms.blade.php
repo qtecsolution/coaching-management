@@ -12,7 +12,7 @@
         <section class="section">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.settings.providers.update') }}" method="POST">
+                    <form action="{{ route('admin.settings.sms.providers.update') }}" method="POST">
                         @csrf
 
                         <div class="col-md-12">
@@ -31,11 +31,16 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="row" id="provider-data">
-
-                        </div>
-                        <div class="col-12 text-end mt-2">
+                        
+                        <div class="row" id="provider-data"></div>
+                        
+                        <div class="col-12 text-end my-2">
+                            <button type="button" class="btn btn-warning" onclick="testProvider()">Test</button>
                             <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+
+                        <div class="col-12" id="test-response">
+                            
                         </div>
                     </form>
                 </div>
@@ -54,7 +59,7 @@
 
         function getProviderData(provider) {
             $.ajax({
-                url: "/admin/settings/providers/" + provider,
+                url: "/admin/settings/sms/providers/" + provider,
                 type: "GET",
                 success: function(response) {
                     $('#provider-data').empty();
@@ -82,6 +87,36 @@
                 },
                 error: function(error) {
                     console.log(error);
+                }
+            });
+        }
+
+        function testProvider() {
+            const provider = $('#provider').val();
+            // console.log(provider);
+            
+            $.ajax({
+                url: "/admin/settings/sms/providers/test/" + provider,
+                type: "GET",
+                success: function(response) {
+                    // console.log(response);
+
+                    $('#test-response').empty();
+                    $('#test-response').append(`
+                        <div class="alert alert-success" role="alert">
+                            ${response}
+                        </div>
+                    `);
+                },
+                error: function(error) {
+                    // console.error(error);
+
+                    $('#test-response').empty();
+                    $('#test-response').append(`
+                        <div class="alert alert-danger" role="alert">
+                            Something went wrong. Please check your credentials and try again.
+                        </div>
+                    `);
                 }
             });
         }

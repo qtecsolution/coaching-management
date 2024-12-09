@@ -1,5 +1,5 @@
 <?php return array (
-  'active_provider' => 'Banglalink',
+  'active_provider' => 'Alpha',
   'providers' => 
   array (
     'Banglalink' => 

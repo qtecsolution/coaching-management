@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\User\PermissionController;
 use App\Http\Controllers\Admin\User\RoleController;
 use App\Http\Controllers\Admin\User\UserController;
+use App\Http\Controllers\SmsController;
 use App\Http\Controllers\Student\ClassMaterialController as StudentClassMaterialController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\PaymentController as StudentPaymentController;
@@ -71,8 +72,11 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
         Route::get('/{type}/edit', 'edit')->name('edit');
         Route::post('/update', 'update')->name('update');
 
-        Route::get('/providers/{name}', 'smsProvider');
-        Route::post('/providers/update', 'updateSmsProviders')->name('providers.update');
+        Route::prefix('/sms/providers')->as('sms.')->group(function () {
+            Route::get('/{name}', 'smsProvider');
+            Route::post('/update', 'updateSmsProviders')->name('providers.update');
+            Route::get('/test/{provider}', [SmsController::class, 'testSms']);
+        });
     });
 
     // student routes
