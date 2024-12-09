@@ -75,12 +75,20 @@ class AuthController extends Controller
     // function to show profile page
     public function profileView()
     {
+        if (!auth()->check()) {
+            return redirect()->route('auth.login');
+        }
+
         return view('auth.profile');
     }
 
     //  function to update profile
     public function updateProfile(Request $request)
     {
+        if (!auth()->check()) {
+            return redirect()->route('auth.login');
+        }
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:users,phone,' . auth()->user()->id,
@@ -100,6 +108,42 @@ class AuthController extends Controller
             $user->save();
 
             alert('Success!', 'Profile updated successfully.', 'success');
+            return back();
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+
+            alert('Oops!', 'Something went wrong.', 'error');
+            return back();
+        }
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        if (!auth()->check()) {
+            return redirect()->route('auth.login');
+        }
+        
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        try {
+            $user = User::find(auth()->id());
+
+            if ($request->hasFile('avatar')) {
+                if ($user->avatar) {
+                    fileRemove($user->avatar);
+                }
+
+                $file = $request->file('avatar');
+                $avatar = fileUpload($file, 'avatars');
+
+                $user->update([
+                    'avatar' => $avatar
+                ]);
+            }
+
+            alert('Success!', 'Avatar updated successfully.', 'success');
             return back();
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());

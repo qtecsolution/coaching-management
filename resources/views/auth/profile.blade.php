@@ -8,6 +8,7 @@
             position: relative;
         }
 
+        .avatar-save-icon,
         .avatar-upload-icon {
             width: 30px;
             height: 30px;
@@ -32,6 +33,11 @@
             left: 0;
             opacity: 0;
             cursor: pointer !important;
+        }
+
+        .avatar-save-icon {
+            right: -35px;
+            border: none;
         }
     </style>
 @endpush
@@ -119,15 +125,30 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center flex-column">
-                                <div class="avatar avatar-2xl">
-                                    <img src="{{ asset('assets/static/images/faces/2.jpg') }}"
+                                <form action="{{ route('auth.avatar.update') }}" method="post"
+                                    enctype="multipart/form-data" class="avatar avatar-2xl">
+                                    @csrf
+
+                                    @php
+                                        if (auth()->user()->avatar) {
+                                            $avatar = asset('storage/' . auth()->user()->avatar);
+                                        } else {
+                                            $avatar = asset('assets/static/images/faces/2.jpg');
+                                        }
+                                    @endphp
+
+                                    <img src="{{ $avatar }}"
                                         alt="{{ auth()->user()->name }}" id="profile-photo">
 
                                     <div class="avatar-upload-icon">
                                         <i class="bi bi-image"></i>
-                                        <input type="file" name="profile_photo" onchange="photoPreview(event, 'profile-photo')" id="profile-photo-input">
+                                        <input type="file" name="avatar"
+                                            onchange="photoPreview(event, 'profile-photo')" id="avatar-input">
                                     </div>
-                                </div>
+                                    <button type="submit" class="avatar-save-icon d-none">
+                                        <i class="bi bi-check"></i>
+                                    </button>
+                                </form>
 
                                 <h3 class="mt-3">{{ auth()->user()->name }}</h3>
                                 <p class="badge bg-primary">
@@ -149,3 +170,20 @@
         </section>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const avatarInput = document.getElementById('avatar-input');
+            const avatarSaveIcon = document.querySelector('.avatar-save-icon');
+
+            avatarInput.addEventListener('change', function() {
+                if (avatarInput.files && avatarInput.files.length > 0) {
+                    avatarSaveIcon.classList.remove('d-none');
+                } else {
+                    avatarSaveIcon.classList.add('d-none');
+                }
+            });
+        });
+    </script>
+@endpush

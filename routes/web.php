@@ -42,6 +42,7 @@ Route::prefix('auth')->as('auth.')->group(function () {
     // profile
     Route::get('/profile', [AuthController::class, 'profileView'])->name('profile');
     Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/avatar', [AuthController::class, 'updateAvatar'])->name('avatar.update');
 
     // logout
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
