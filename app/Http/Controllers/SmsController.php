@@ -25,7 +25,7 @@ class SmsController extends Controller
         }
     }
 
-    private function sendSms($provider, $config, $mobile, $message)
+    public function sendSms($provider, $config, $mobile, $message)
     {
         try {
             $providerClass = "Xenon\LaravelBDSms\Provider\\" . $provider;

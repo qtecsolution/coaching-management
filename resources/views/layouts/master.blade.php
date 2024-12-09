@@ -19,8 +19,8 @@ $title = \App\Models\Setting::where('key', 'app_name')->value('value') ?? config
     <link rel="stylesheet" href="{{ asset('assets/extensions/filepond/filepond.css') }}">
     <link rel="stylesheet"
         href="{{ asset('assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css') }}">
-
     <link rel="stylesheet" href="{{ asset('assets/extensions/flatpickr/flatpickr.min.css') }}">
+    
     @vite('public/assets/scss/pages/datatables.scss')
     @vite('public/assets/scss/app.scss')
     @vite('resources/css/app.css')
@@ -69,6 +69,7 @@ $title = \App\Models\Setting::where('key', 'app_name')->value('value') ?? config
 
     <script src="{{ asset('assets/extensions/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('assets/static/js/pages/date-picker.js') }}"></script>
+    
     @include('sweetalert::alert')
 
     <script src="{{ asset('assets/js/app.js') }}"></script>

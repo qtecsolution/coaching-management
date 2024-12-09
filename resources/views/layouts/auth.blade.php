@@ -8,8 +8,9 @@
     <link rel="shortcut icon" href="{{ asset('assets/static/images/logo/favicon.svg') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('assets/static/images/logo/favicon.png') }}" type="image/png">
 
-    <link rel="stylesheet" href="{{ asset('assets/scss/app.scss') }}">
-    <link rel="stylesheet" href="{{ asset('assets/scss/pages/auth.scss') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('assets/scss/app.scss') }}"> --}}
+    {{-- <link rel="stylesheet" href="{{ asset('assets/scss/pages/auth.scss') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('assets/extensions/sweetalert2/sweetalert2.min.css') }}">
 
     @vite('public/assets/scss/app.scss')
     @vite('public/assets/scss/pages/auth.scss')
@@ -21,7 +22,10 @@
         @yield('content')
     </div>
 
+    <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script>
     @stack('js')
+    
+    @include('sweetalert::alert')
 </body>
 
 </html>

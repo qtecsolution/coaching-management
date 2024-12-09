@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Forgot Password')
+@section('title', 'Reset Password')
 
 @section('content')
     <div class="row h-100">
@@ -20,24 +20,26 @@
                     @endphp
                     <a href="index.html"><img src="{{ $logo }}" alt="Logo"></a>
                 </div>
-                <h1 class="auth-title">Forgot Password</h1>
-                <p class="auth-subtitle mb-5">Input your email and we will send you reset password link.</p>
+                <h1 class="auth-title">Reset Password</h1>
+                <p class="auth-subtitle mb-5">Input your new password to reset your password.</p>
 
-                <form action="{{ route('auth.forgot-password') }}" method="post">
+                <form action="{{ route('auth.reset-password') }}" method="post">
                     @csrf
 
                     <div class="form-group position-relative has-icon-left mb-4">
-                        <input type="email" class="form-control form-control-xl" name="email" placeholder="Enter your email">
+                        <input type="password" class="form-control form-control-xl" name="password" placeholder="Enter your new password">
                         <div class="form-control-icon">
-                            <i class="bi bi-envelope"></i>
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+                    </div>
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        <input type="password" class="form-control form-control-xl" name="password_confirmation" placeholder="Enter your confirm password">
+                        <div class="form-control-icon">
+                            <i class="bi bi-shield-lock"></i>
                         </div>
                     </div>
                     <button class="btn btn-primary btn-block btn-lg shadow-lg">Send</button>
                 </form>
-                <div class="text-center mt-3 text-lg fs-4">
-                    <p class='text-gray-600'>Remember your account? <a href="{{ route('auth.login.show') }}" class="font-bold">Log in</a>.
-                    </p>
-                </div>
             </div>
         </div>
     </div>

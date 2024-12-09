@@ -38,6 +38,14 @@ Route::prefix('auth')->as('auth.')->group(function () {
         // registration
         Route::get('/sign-up', [AuthController::class, 'signupView'])->name('signup.show');
         Route::post('/sign-up', [AuthController::class, 'signup'])->name('signup');
+
+        // forgot password
+        Route::get('/forgot-password', [AuthController::class, 'forgotPasswordView'])->name('forgot-password.show');
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+
+        // reset password
+        Route::get('/reset-password/{token}', [AuthController::class, 'resetPasswordView'])->name('reset-password.show');
+        Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
     });
 
     // profile
