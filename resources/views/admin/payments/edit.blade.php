@@ -154,6 +154,7 @@
                 $(document).ready(function() {
                     $('.select2').select2();
                 });
+                
                 document.addEventListener('DOMContentLoaded', function() {
                     const batchSelect = document.getElementById('batch_id');
                     const studentSelect = document.getElementById('student_batch_id');

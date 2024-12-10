@@ -85,6 +85,15 @@
     </li>
 @endcan
 
+@can('view_messages')
+    <li class="sidebar-item {{ Route::is('admin.messages.index') ? 'active' : '' }}">
+        <a href="{{ route('admin.messages.index') }}" class="sidebar-link">
+            <i class="bi bi-chat-left-text"></i>
+            <span>Messages</span>
+        </a>
+    </li>
+@endcan
+
 @can('view_class_materials')
     <li class="sidebar-item has-sub {{ Route::is('admin.class-materials.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">

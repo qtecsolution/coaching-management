@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ClassMaterialController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\LevelController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentBatchController;
@@ -117,6 +118,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // level routes
     Route::resource('levels', LevelController::class);
+
+    // message routes
+    Route::resource('messages', MessageController::class);
 });
 
 // user routes

@@ -42,4 +42,9 @@ class Student extends Model
     {
         return $this->user ? $this->user->phone : null;
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 }
