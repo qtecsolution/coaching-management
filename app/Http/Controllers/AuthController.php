@@ -165,44 +165,56 @@ class AuthController extends Controller
     public function forgotPassword(Request $request)
     {
         $request->validate([
-            'data' => 'required|exists:users,phone|email',
+            'data' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (!User::where('phone', $value)->orWhere('email', $value)->exists()) {
+                        $fail('The ' . $attribute . ' does not exist.');
+                    }
+                },
+            ],
         ]);
 
         try {
-            $user = User::where('phone', $request->data)->orWhere('email', $request->data)->first();
+            $user = User::where('phone', $request->data)
+                ->orWhere('email', $request->data)
+                ->first();
 
-            if ($user) {
-                $isTokenExist = PasswordResetToken::where('data', $user->phone)->exists();
-                if ($isTokenExist) {
-                    PasswordResetToken::where('data', $user->phone)->delete();
-                }
+            if (!$user) {
+                alert('Oops!', 'User not found.', 'error');
+                return back();
+            }
 
-                $token = PasswordResetToken::create([
-                    'data' => $user->phone,
-                    'token' => Str::random(6),
-                ]);
+            // Ensure only one token exists at a time
+            PasswordResetToken::where('data', $user->phone)->delete();
 
-                if ($user->phone == $request->data) {
-                    $provider = config('smsCredentials.active_provider');
-                    $config = config('smsCredentials.providers')[$provider];
+            $token = PasswordResetToken::create([
+                'data' => $user->phone,
+                'token' => Str::random(6),
+            ]);
 
-                    $message = "Your password reset token is " . $token->token;
+            $message = "Your password reset token is " . $token->token;
 
-                    $smsController = new SmsController();
-                    $smsController->sendSms($provider, $config, $user->phone, $message);
+            if ($user->phone == $request->data) {
+                // Send SMS
+                $provider = config('smsCredentials.active_provider');
+                $config = config('smsCredentials.providers')[$provider];
 
-                    alert('Success!', 'Password reset token sent to your phone.', 'success');
-                } else {
-                    alert('Success!', 'Password reset token sent to your email.', 'success');
-                    Mail::to($user->email)->send(new ForgotPasswordMail($user, $token->token));
-                }
+                $smsController = new SmsController();
+                $smsController->sendSms($provider, $config, $user->phone, $message);
+
+                alert('Success!', 'Password reset token sent to your phone.', 'success');
+            } else {
+                // Send Email
+                Mail::to($user->email)->send(new ForgotPasswordMail($user, $token->token));
+                alert('Success!', 'Password reset token sent to your email.', 'success');
             }
 
             return back();
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            Log::error("Error: {$th->getMessage()} at line {$th->getLine()} in {$th->getFile()}");
 
-            alert('Oops!', 'Something went wrong.', 'error');
+            alert('Oops!', 'Something went wrong. Please try again later.', 'error');
             return back();
         }
     }
@@ -216,7 +228,9 @@ class AuthController extends Controller
     public function resetPassword(Request $request)
     {
         $token = PasswordResetToken::where('token', $request->token)->firstOrFail();
-        $user = User::where('phone', $token->data)->firstOrFail();
+        $user = User::where('phone', $token->data)
+            ->orWhere('email', $token->data)
+            ->firstOrFail();
 
         $request->validate([
             'password' => 'required|confirmed',
