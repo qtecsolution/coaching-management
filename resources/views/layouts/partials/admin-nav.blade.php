@@ -53,12 +53,12 @@
 @endcan
 
 @can('view_batches')
-    <li class="sidebar-item has-sub {{ Route::is('admin.batches.*') ? 'active' : '' }}">
+    <li class="sidebar-item has-sub {{ Route::is('admin.batches.*') || Route::is('admin.levels.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
             <i class="bi bi-easel"></i>
             <span>Batches</span>
         </a>
-        <ul class="submenu {{ Route::is('admin.levels.*') ? 'submenu-open' : 'submenu-close' }}">
+        <ul class="submenu {{ Route::is('admin.batches.*') || Route::is('admin.levels.*') ? 'submenu-open' : 'submenu-close' }}">
             <li class="submenu-item {{ Route::is('admin.levels.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.levels.index') }}">Level List</a>
             </li>
