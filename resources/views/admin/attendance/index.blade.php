@@ -35,9 +35,8 @@
                     <table class="table" id="table">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Batch</th>
                                 <th>Date</th>
+                                <th>Batch</th>
                                 <th>Total Student</th>
                                 <th>Total Absent</th>
                                 <th>Total Present</th>
@@ -72,16 +71,12 @@
             }
         },
         columns: [{
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex'
+                data: 'date',
+                name: 'date'
             },
             {
                 data: 'batch_name',
                 name: 'batch_name'
-            },
-            {
-                data: 'date',
-                name: 'date'
             },
             {
                 data: 'total_student',

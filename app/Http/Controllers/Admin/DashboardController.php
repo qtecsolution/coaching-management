@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BatchDay;
 use App\Models\Payment;
 use App\Models\PaymentReport;
 use App\Models\Student;
@@ -15,12 +16,17 @@ class DashboardController extends Controller
     public function index()
     {
         if (auth()->user()->user_type == 'teacher') {
-            $user = Teacher::with(['user', 'batch_days.batch'])
-                ->whereHas('batch_days.batch', function ($query) {
+            $user = Teacher::with(['user'])
+                ->where('user_id', auth()->id())
+                ->first();
+
+            $batchDays = BatchDay::with('batch')
+                ->where('user_id', auth()->id())
+                ->whereHas('batch', function ($query) {
                     $query->active();
-                })
-                ->where('user_id', auth()->id())->first();
-            return view('teacher.dashboard', compact('user'));
+                })->get();
+
+            return view('teacher.dashboard', compact('user', 'batchDays'));
         }
 
         // Get all payments
@@ -47,7 +53,7 @@ class DashboardController extends Controller
         $message = '';
         // Prepare the data for the chart
         $chartData = $months->mapWithKeys(function ($month) use ($monthlyCollections, &$areaChartIsBlank) {
-            if($monthlyCollections->get($month)?->collected_amount > 0){
+            if ($monthlyCollections->get($month)?->collected_amount > 0) {
                 $areaChartIsBlank = false;
             }
             return [
@@ -58,7 +64,7 @@ class DashboardController extends Controller
             ];
         });
         $amounts = $chartData->pluck('collected_amount');
-        if($areaChartIsBlank){
+        if ($areaChartIsBlank) {
             $message = 'No data available';
         }
         return view('admin.dashboard', compact('data', 'amounts', 'message'));

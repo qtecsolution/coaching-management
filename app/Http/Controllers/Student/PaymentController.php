@@ -58,7 +58,7 @@ class PaymentController extends Controller
                     return Carbon::createFromFormat('Y-m', $row->month)->format('F, Y');
                 })
                 ->editColumn('date', function ($row) {
-                    return $row->date;
+                    return Carbon::parse($row->date)->format('d/m/Y');
                 })
                 ->editColumn('status', function ($row) {
                     return $row->status_badge;

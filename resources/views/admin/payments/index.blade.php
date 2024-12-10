@@ -15,13 +15,12 @@
                     <table class="table" id="table">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>Date</th>
                                 <th>Student</th>
                                 <th>Batch</th>
                                 <th>Amount</th>
                                 <th>Transaction ID</th>
                                 <th>Month</th>
-                                <th>Payment Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -44,8 +43,8 @@
         processing: true,
         ajax: "{{ route('admin.payments.index') }}",
         columns: [{
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex'
+                data: 'date',
+                name: 'date'
             },
             {
                 data: 'student',
@@ -66,10 +65,6 @@
             {
                 data: 'month',
                 name: 'month'
-            },
-            {
-                data: 'date',
-                name: 'date'
             },
             {
                 data: 'status',

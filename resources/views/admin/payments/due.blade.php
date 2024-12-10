@@ -41,12 +41,11 @@
                         <table class="table" id="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Month</th>
                                     <th>Name</th>
                                     <th>Student ID</th>
                                     <th>Batch</th>
                                     <th>Amount</th>
-                                    <th>Month</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -76,8 +75,8 @@
                 }
             },
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
+                    data: 'month',
+                    name: 'month'
                 },
                 {
                     data: 'name',
@@ -94,10 +93,6 @@
                 {
                     data: 'amount',
                     name: 'amount'
-                },
-                {
-                    data: 'month',
-                    name: 'month'
                 },
                 {
                     data: 'status',

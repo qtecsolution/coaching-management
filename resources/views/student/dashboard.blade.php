@@ -7,20 +7,20 @@
     $daysOfWeek = \App\Models\BatchDay::$daysOfWeek;
     $currentDayIndex = Carbon\Carbon::now()->dayOfWeek;
 
-    // Find the next class day
-    $nextClassDay = null;
-    foreach ($schedules as $schedule) {
-        $scheduleDayIndex = array_search($schedule->day_name, $daysOfWeek);
-        if ($scheduleDayIndex > $currentDayIndex) {
-            $nextClassDay = $schedule->day_name;
-            break;
-        }
-    }
+    // // Find the next class day
+    // $nextClassDay = null;
+    // foreach ($schedules as $schedule) {
+    //     $scheduleDayIndex = array_search($schedule->day_name, $daysOfWeek);
+    //     if ($scheduleDayIndex > $currentDayIndex) {
+    //         $nextClassDay = $schedule->day_name;
+    //         break;
+    //     }
+    // }
 
-    // If no next day is found, assume the first day of the next week
-    if (!$nextClassDay) {
-        $nextClassDay = $schedules->first()?->day_name;
-    }
+    // // If no next day is found, assume the first day of the next week
+    // if (!$nextClassDay) {
+    //     $nextClassDay = $schedules->first()?->day_name;
+    // }
 @endphp
 
 @push('css')

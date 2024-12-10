@@ -58,7 +58,8 @@
             <i class="bi bi-easel"></i>
             <span>Batches</span>
         </a>
-        <ul class="submenu {{ Route::is('admin.batches.*') || Route::is('admin.levels.*') ? 'submenu-open' : 'submenu-close' }}">
+        <ul
+            class="submenu {{ Route::is('admin.batches.*') || Route::is('admin.levels.*') ? 'submenu-open' : 'submenu-close' }}">
             <li class="submenu-item {{ Route::is('admin.levels.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.levels.index') }}">Level List</a>
             </li>
@@ -168,6 +169,11 @@
             <span>Reports</span>
         </a>
         <ul class="submenu {{ Route::is('admin.reports.*') ? 'submenu-open' : 'submenu-close' }}">
+            @can('summary_reports')
+                <li class="submenu-item {{ Route::is('admin.reports.payments.summary') ? 'active' : '' }}">
+                    <a href="{{ route('admin.reports.payments.summary') }}">Payment Summary</a>
+                </li>
+            @endcan
             @can('paid_reports')
                 <li class="submenu-item {{ Route::is('admin.reports.daily.collection') ? 'active' : '' }}">
                     <a href="{{ route('admin.reports.daily.collection') }}">Payments Paid</a>
@@ -176,11 +182,6 @@
             @can('due_reports')
                 <li class="submenu-item {{ Route::is('admin.reports.payments.due') ? 'active' : '' }}">
                     <a href="{{ route('admin.reports.payments.due') }}">Payments Due</a>
-                </li>
-            @endcan
-            @can('summary_reports')
-                <li class="submenu-item {{ Route::is('admin.reports.payments.summary') ? 'active' : '' }}">
-                    <a href="{{ route('admin.reports.payments.summary') }}">Payments Summary</a>
                 </li>
             @endcan
         </ul>
