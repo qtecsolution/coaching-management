@@ -151,7 +151,7 @@ class StudentController extends Controller
         }
 
         $student = Student::with('user')->find($id);
-        return $student;
+        return view('admin.student.id-card', compact('student'));
     }
 
     /**
@@ -308,5 +308,11 @@ class StudentController extends Controller
         }
 
         return false;
+    }
+
+    public function idCard($id)
+    {
+        $student = Student::findOrFail($id);
+        return view('admin.student.id-card', compact('student'));
     }
 }

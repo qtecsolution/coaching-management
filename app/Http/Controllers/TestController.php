@@ -11,9 +11,7 @@ class TestController extends Controller
 {
     public function index(Request $request)
     {
-        // $sms = new SmsController();
-        // $response = $sms->testSms('Banglalink');
-        // return $response;
+        // dd(`ls -la`);
 
         return response()->json([
             'message' => 'Hello World!',

@@ -90,6 +90,7 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // student routes
     Route::resource('students', StudentController::class);
+    Route::get('/students/{id}', [StudentController::class, 'idCard'])->name('students.id');
 
     // batch routes
     Route::resource('batches', BatchController::class);
