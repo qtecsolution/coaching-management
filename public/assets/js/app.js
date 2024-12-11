@@ -63,22 +63,6 @@ function deleteResource(url) {
     });
 }
 
-// initialize choices
-let choices = document.querySelectorAll(".choices")
-let initChoice
-for (let i = 0; i < choices.length; i++) {
-    if (choices[i].classList.contains("multiple-remove")) {
-        initChoice = new Choices(choices[i], {
-            delimiter: ",",
-            editItems: true,
-            maxItemCount: -1,
-            removeItemButton: true,
-        })
-    } else {
-        initChoice = new Choices(choices[i])
-    }
-}
-
 // photo preview
 function photoPreview(event, id) {
     var input = event.target;
@@ -87,10 +71,77 @@ function photoPreview(event, id) {
         var file = input.files[0];
         var reader = new FileReader();
 
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             image.src = e.target.result;
         };
 
         reader.readAsDataURL(file);
     }
 }
+
+function sidebarToggle() {
+    const sidebar = document.querySelector('.sidebar-wrapper'); // Sidebar element
+    const toggleButtons = document.querySelectorAll('.sidebar-toggler'); // Toggle buttons
+    const overlay = document.querySelector('.overlay'); // Overlay element
+
+    // Initialize sidebar state based on window size
+    const setSidebarState = () => {
+        if (window.innerWidth >= 992) {
+            sidebar.style.left = '0'; // Open sidebar for large screens
+            overlay.style.display = 'none'; // No overlay for large screens
+            document.body.style.overflow = ''; // Enable scrolling
+        } else {
+            sidebar.style.left = '-300px'; // Hide sidebar for small screens
+            overlay.style.display = 'none'; // Overlay remains hidden initially
+        }
+    };
+
+    // Function to disable scrolling
+    const disableScroll = () => document.body.style.overflow = 'hidden';
+
+    // Function to enable scrolling
+    const enableScroll = () => document.body.style.overflow = '';
+
+    // Function to open the sidebar
+    const openSidebar = () => {
+        sidebar.style.left = '0';
+        overlay.style.display = 'block'; // Show the overlay
+        disableScroll();
+    };
+
+    // Function to close the sidebar
+    const closeSidebar = () => {
+        sidebar.style.left = '-300px';
+        overlay.style.display = 'none'; // Hide the overlay
+        enableScroll();
+    };
+
+    // Attach click event to each toggle button
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (window.innerWidth < 992) { // Only toggle for small screens
+                if (sidebar.style.left === '0px') {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            }
+        });
+    });
+
+    // Close sidebar when overlay is clicked
+    overlay.addEventListener('click', () => {
+        if (window.innerWidth < 992) { // Only close for small screens
+            closeSidebar();
+        }
+    });
+
+    // Adjust sidebar state on window resize
+    window.addEventListener('resize', setSidebarState);
+
+    // Initial setup
+    setSidebarState();
+}
+
+// Initialize the sidebar toggle functionality
+sidebarToggle();

@@ -1,8 +1,9 @@
-<div class="sidebar-wrapper active">
+<div class="overlay"></div>
+<div class="sidebar-wrapper" style="z-index: 999999">
     <div class="sidebar-header position-relative">
         {{-- d-flex justify-content-between align-items-center --}}
         <div class="d-block text-center">
-            <div class="logo">
+            <div class="logo mt-3 mt-xl-0">
                 @php
                     $logo = asset('assets/static/images/logo/logo.svg');
                     $logoSetting = \App\Models\Setting::where('key', 'app_logo')->value('value');
@@ -12,6 +13,9 @@
                     }
                 @endphp
                 <a href="{{ url('/') }}"><img src="{{ $logo }}" alt="Logo"></a>
+            </div>
+            <div class="sidebar-toggler x">
+                <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
             </div>
         </div>
     </div>
