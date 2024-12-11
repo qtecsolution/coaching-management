@@ -20,7 +20,8 @@
                                     <select name="batch_id" class="form-control select2" id="batch_id" required>
                                         <option value="" selected disabled>--Select a Batch--</option>
                                         @foreach ($batches as $batch)
-                                            <option {{ old('batch_id', $request->batch_id) == $batch->id ? 'selected' : '' }}
+                                            <option
+                                                {{ old('batch_id', $request->batch_id) == $batch->id ? 'selected' : '' }}
                                                 value="{{ $batch->id }}" data-tuition-fee="{{ $batch->tuition_fee }}"
                                                 data-students="{{ optional($batch->students)->toJson() }}">
                                                 {{ $batch->name }}
@@ -85,10 +86,12 @@
                                 <div class="form-group">
                                     <label for="payment_method" class="form-label">--Payment Method--<sup
                                             class="text-danger">*</sup></label>
-                                    <select name="payment_method" class="form-control form-select" id="payment_method" required>
+                                    <select name="payment_method" class="form-control form-select" id="payment_method"
+                                        required>
                                         <option selected disabled>Select a Payment Method</option>
                                         @foreach ($paymentMethods as $paymentMethod)
-                                        <option {{ old('payment_method') == $paymentMethod ? 'selected' : '' }}>{{ $paymentMethod }}</option>
+                                            <option {{ old('payment_method') == $paymentMethod ? 'selected' : '' }}>
+                                                {{ $paymentMethod }}</option>
                                         @endforeach
                                     </select>
 
@@ -113,7 +116,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="note" class="form-label">Note</label>
-                                    <input type="text" name="note" placeholder="Enter Note" value="{{ old('note') }}" id="note" class="form-control">
+                                    <input type="text" name="note" placeholder="Enter Note"
+                                        value="{{ old('note') }}" id="note" class="form-control">
 
                                     @error('note')
                                         <small class="text-danger">{{ $message }}</small>
@@ -135,7 +139,18 @@
     <script>
         $(document).ready(function() {
             $('.select2').select2();
+
+            flatpickr('.flatpickr-date', {
+                enableTime: false,
+                dateFormat: "Y-m-d",
+            });
+
+            flatpickr('.flatpickr-range-Y-m-d', {
+                dateFormat: "Y-m-d",
+                mode: 'range'
+            });
         });
+
         document.addEventListener('DOMContentLoaded', function() {
             const batchSelect = document.getElementById('batch_id');
             const studentSelect = document.getElementById('student_batch_id');
