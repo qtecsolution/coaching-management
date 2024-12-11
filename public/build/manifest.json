@@ -64,12 +64,12 @@
     "src": "public/assets/static/fonts/nunito-latin-800-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-DWdU_2D1.css",
+    "file": "assets/app-CCveOqjO.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DFWRAbBk.js",
+    "file": "assets/app-CTtVrd1p.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
