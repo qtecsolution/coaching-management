@@ -64,6 +64,8 @@
     <script src="{{ asset('assets/static/js/pages/date-picker.js') }}"></script>
     @include('sweetalert::alert')
 
+    <script src="{{ asset('assets/js/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
     @stack('js')

@@ -12,6 +12,8 @@ export default defineConfig({
                 'public/assets/scss/pages/auth.scss',
                 'public/assets/scss/pages/datatables.scss',
                 'public/assets/scss/pages/error.scss',
+                'public/assets/js/bootstrap.min.js',
+                'public/assets/js/popper.min.js',
             ],
             refresh: true,
         }),
