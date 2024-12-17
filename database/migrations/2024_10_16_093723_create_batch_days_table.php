@@ -19,7 +19,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Batch::class)->constrained()->restrictOnDelete();
             $table->foreignIdFor(User::class)->constrained()->restrictOnDelete()->comment('Teacher ID');
-            $table->foreignIdFor(Subject::class)->constrained()->restrictOnDelete();
             $table->string('day');
             $table->string('start_time');
             $table->string('end_time');

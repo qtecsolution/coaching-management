@@ -55,11 +55,6 @@ class BatchDay extends Model
         return $this->user ? $this->user->name : '';
     }
 
-    public function subject()
-    {
-        return $this->belongsTo(Subject::class);
-    }
-
     public function getSubjectNameAttribute()
     {
         return $this->subject ? $this->subject->name : '';

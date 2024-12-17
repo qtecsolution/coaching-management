@@ -17,7 +17,7 @@ class TeacherFactory extends Factory
     public function definition(): array
     {
         return [
-            'teacher_id' => fake()->numberBetween(100000, 999999),
+            'teacher_id' => fake()->numberBetween(1000, 9999),
             'school_name' => fake()->company(),
             'nid_number' => fake()->numberBetween(10000000, 99999999),
             'address' => fake()->address(),
