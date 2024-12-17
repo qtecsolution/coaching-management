@@ -44,9 +44,6 @@ class BatchController extends Controller
                     $status = Batch::$statusList[$row->status];
                     return '<span class="badge bg-success">' . $status . '</span>';
                 })
-                ->editColumn('class', function ($row) {
-                    return $row->level->name ?? '--';
-                })
                 ->editColumn('tuition_fee', function ($row) {
                     return number_format($row->tuition_fee, 2);
                 })

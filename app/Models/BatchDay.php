@@ -21,7 +21,7 @@ class BatchDay extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['day_name', 'teacher_name', 'subject_name'];
+    protected $appends = ['day_name', 'teacher_name'];
 
     public function getDayNameAttribute()
     {
@@ -53,11 +53,6 @@ class BatchDay extends Model
     public function getTeacherNameAttribute()
     {
         return $this->user ? $this->user->name : '';
-    }
-
-    public function getSubjectNameAttribute()
-    {
-        return $this->subject ? $this->subject->name : '';
     }
 
     public function batch()

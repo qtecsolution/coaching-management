@@ -55,7 +55,6 @@
                                         <th>Batch</th>
                                         <th>Day</th>
                                         <th>Time</th>
-                                        <th>Subject</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -69,7 +68,6 @@
                                                     {{ Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -
                                                     {{ Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
                                                 </td>
-                                                <td>{{ $schedule->subject_name }}</td>
                                                 <td>
                                                     <div class="btn-group">
                                                         <a href="{{ route('admin.batches.students', $schedule->batch_id) }}" class="btn btn-sm btn-light" title="Student List">

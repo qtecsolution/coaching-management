@@ -19,7 +19,6 @@
                                     <th>Phone</th>
                                     <th>Email</th>
                                     <th>School Name</th>
-                                    <th>Class</th>
                                     <th>Note</th>
                                     <th>Status</th>
                                     <th>Action</th>

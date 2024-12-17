@@ -40,9 +40,6 @@ class LeadController extends Controller
                 ->editColumn('school_name', function ($row) {
                     return $row->school_name ? $row->school_name : '--';
                 })
-                ->editColumn('class', function ($row) {
-                    return $row->class ? $row->class : '--';
-                })
                 ->editColumn('note', function ($row) {
                     return $row->note ? $row->note : '--';
                 })

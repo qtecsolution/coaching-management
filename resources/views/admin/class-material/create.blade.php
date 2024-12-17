@@ -31,18 +31,6 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="subject" class="form-label">Subject<sup class="text-danger">*</sup></label>
-                                    <select name="subject" id="subject" class="form-control form-select choice" required>
-                                        <option value="" selected disabled>Select Subject</option>
-                                    </select>
-
-                                    @error('subject')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <label for="title" class="form-label">Title<sup class="text-danger">*</sup></label>
                                     <input type="text" name="title" id="title" placeholder="Title"
                                         class="form-control" value="{{ old('title') }}" required>
@@ -116,31 +104,5 @@
         });
 
         $('#resource_type').trigger('change');
-
-        $('#batch').on('change', function() {
-            const batchId = $(this).val();
-            if (batchId) {
-                $.ajax({
-                    url: "{{ route('admin.class-materials.get-days') }}",
-                    type: "POST",
-                    data: {
-                        batch: batchId,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        console.table(response.data);
-                        
-                        $('#subject').empty();
-                        $('#subject').append('<option value="" selected disabled>Select Subject</option>');
-                        $.each(response.data, function(key, value) {
-                            $('#subject').append('<option value="' + value.id + '">' + value.subject_name + '</option>');
-                        });
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            }
-        });
     </script>
 @endpush

@@ -17,7 +17,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Batch</th>
-                                    <th>Subject</th>
                                     <th>Title</th>
                                     <th>URL</th>
                                 </tr>
@@ -46,10 +45,6 @@
                 {
                     data: 'batch',
                     name: 'batch'
-                },
-                {
-                    data: 'subject',
-                    name: 'subject'
                 },
                 {
                     data: 'title',

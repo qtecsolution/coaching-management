@@ -61,21 +61,6 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="class" class="form-label">Class</label>
-                                    <select name="class" id="class" class="form-control form-select choice">
-                                        <option value="" selected disabled>Select Class</option>
-                                        @foreach ($levels as $level)
-                                            <option value="{{ $level->name }}" {{ $lead->class == $level->name ? 'selected' : '' }}>{{ $level->name }}</option>
-                                        @endforeach
-                                    </select>
-
-                                    @error('class')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <label for="status" class="form-label">Status</label>
                                     <select name="status" id="status" class="form-control form-select choice">
                                         <option value="" selected disabled>Select Status</option>

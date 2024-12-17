@@ -40,9 +40,6 @@ class ClassMaterialController extends Controller
                 ->addColumn('batch', function ($row) {
                     return $row->batch_day->batch->name;
                 })
-                ->addColumn('subject', function ($row) {
-                    return $row->batch_day->subject_name;
-                })
                 ->editColumn('url', function ($row) {
                     return '<a href="' . absolutePath($row->url) . '" target="_blank"><i class="bi bi-eye"></i> View</a>';
                 })

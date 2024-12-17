@@ -62,7 +62,6 @@
                                     <tr>
                                         <th>Day</th>
                                         <th>Time</th>
-                                        <th>Subject</th>
                                         <th>Teacher</th>
                                     </tr>
                                 </thead>
@@ -75,7 +74,6 @@
                                                     {{ Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -
                                                     {{ Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
                                                 </td>
-                                                <td>{{ $schedule->subject_name }}</td>
                                                 <td>{{ $schedule->teacher_name }}</td>
                                             </tr>
                                         @endforeach

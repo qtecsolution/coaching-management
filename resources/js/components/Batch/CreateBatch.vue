@@ -19,28 +19,6 @@
                     }}</small>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="class" class="form-label">Class</label>
-                    <select
-                        id="class"
-                        class="form-control form-select"
-                        v-model="level"
-                    >
-                        <option value="" selected disabled>Select Class</option>
-                        <option
-                            v-for="level in levels"
-                            :key="level.id"
-                            :value="level.id"
-                        >
-                            {{ level.name }}
-                        </option>
-                    </select>
-                    <small class="text-danger" v-if="errors && errors.level">{{
-                        errors.level[0]
-                    }}</small>
-                </div>
-            </div>
              <div class="col-md-6">
                 <div class="form-group">
                     <label for="class" class="form-label">Tuition Fee <sup class="text-danger">*</sup></label>
@@ -101,34 +79,6 @@
                         <small
                             class="text-danger"
                             v-if="errors && errors.days"
-                            >{{ errors.days[0] }}</small
-                        >
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="day" class="form-label"
-                            >Subject<sup class="text-danger">*</sup></label
-                        >
-                        <select
-                            id="day"
-                            class="form-control form-select"
-                            v-model="day.subject"
-                        >
-                            <option value="" selected disabled>
-                                Select Subject
-                            </option>
-                            <option
-                                v-for="subject in subjects"
-                                :key="subject.id"
-                                :value="subject.id"
-                            >
-                                {{ subject.name }}
-                            </option>
-                        </select>
-                        <small
-                            class="text-danger"
-                            v-if="errors && errors.subject"
                             >{{ errors.days[0] }}</small
                         >
                     </div>

@@ -19,20 +19,6 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="class" class="form-label">Class</label>
-                    <input
-                        type="class"
-                        id="class"
-                        placeholder="Class"
-                        class="form-control"
-                        v-model="level"
-                        readonly
-                    />
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
                     <label for="class" class="form-label"
                         >Tuition Fee <sup class="text-danger">*</sup></label
                     >
@@ -84,19 +70,6 @@
                             placeholder="Day"
                             class="form-control"
                             v-model="day.day"
-                            readonly
-                        />
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="subject" class="form-label">Subject</label>
-                        <input
-                            type="text"
-                            id="subject"
-                            placeholder="Subject"
-                            class="form-control"
-                            v-model="day.subject"
                             readonly
                         />
                     </div>
@@ -178,8 +151,7 @@ if (props?.batch?.batch_days?.length > 0) {
             day: day.day_name,
             start_time: day.start_time,
             end_time: day.end_time,
-            teacher: day.teacher_name,
-            subject: day.subject_name,
+            teacher: day.teacher_name
         });
     });
 }
