@@ -78,3 +78,9 @@ div#table_wrapper .row:nth-child(2)::-webkit-scrollbar-thumb:hover {
     display: none; /* Initially hidden */
     cursor: pointer;
 }
+
+legend {
+    float: none;
+    width: auto;
+    padding: 0 10px;
+}

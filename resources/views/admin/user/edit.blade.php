@@ -13,12 +13,12 @@
                     <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        <input type="hidden" name="is_admin" value="1">
+                        <input type="hidden" name="user_type" value="{{ $user->user_type }}">
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name" class="form-label">Name</label>
+                                    <label for="name" class="form-label">Name<sup class="text-danger">*</sup></label>
                                     <input type="text" name="name" id="name" placeholder="Name"
                                         class="form-control" value="{{ $user->name }}">
 
@@ -29,7 +29,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="phone" class="form-label">Phone</label>
+                                    <label for="phone" class="form-label">Phone<sup class="text-danger">*</sup></label>
                                     <input type="tel" name="phone" id="phone" placeholder="Phone"
                                         class="form-control" value="{{ old('phone', $user->phone) }}">
 
@@ -51,7 +51,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="password" class="form-label">Password</label>
+                                    <label for="password" class="form-label">Password<sup class="text-danger">*</sup></label>
                                     <input type="password" name="password" id="password" placeholder="Password"
                                         class="form-control" value="{{ old('password') }}">
 
@@ -62,7 +62,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="role" class="form-label">Role</label>
+                                    <label for="role" class="form-label">Role<sup class="text-danger">*</sup></label>
                                     <select name="role" id="role" class="form-select form-control">
                                         @foreach ($roles as $role)
                                             <option value="{{ $role->name }}"
@@ -79,7 +79,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="status" class="form-label">Status<sup class="text-danger">*</sup></label>
-                                    <select name="status" id="status" class="form-control" required>
+                                    <select name="status" id="status" class="form-control form-select">
                                         <option value="1" {{ old('status', $user->status) == 1 ? 'selected' : '' }}>
                                             Active</option>
                                         <option value="0" {{ old('status', $user->status) == 0 ? 'selected' : '' }}>
@@ -87,24 +87,6 @@
                                     </select>
 
                                     @error('status')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="user_type" class="form-label">User Type<sup
-                                            class="text-danger">*</sup></label>
-                                    <select name="user_type" id="user_type" class="form-select form-control" required>
-                                        <option value="admin"
-                                            {{ old('user_type', $user->user_type) == 'admin' ? 'selected' : '' }}>Admin
-                                        </option>
-                                        <option value="teacher"
-                                            {{ old('user_type', $user->user_type) == 'teacher' ? 'selected' : '' }}>Teacher
-                                        </option>
-                                    </select>
-
-                                    @error('user_type')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -159,31 +141,39 @@
                                     ];
                                 }
                             @endphp
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="contact_name" class="form-label">Emergency Contact Name<sup
-                                            class="text-danger">*</sup></label>
-                                    <input type="text" name="contact_name" id="contact_name"
-                                        value="{{ old('contact_name', $emergency_contact->name ?? '') }}"
-                                        placeholder="Emergency Contact Name" class="form-control">
+                            <div class="col-12">
+                                <fieldset class="border rounded p-3">
+                                    <legend>Emergency Contact</legend>
 
-                                    @error('contact_name')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="contact_phone" class="form-label">Emergency Contact Phone<sup
-                                            class="text-danger">*</sup></label>
-                                    <input type="tel" name="contact_phone" id="contact_phone"
-                                        value="{{ old('contact_phone', $emergency_contact->phone ?? '') }}"
-                                        placeholder="Emergency Contact Phone" class="form-control">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="contact_name" class="form-label">Name<sup
+                                                        class="text-danger">*</sup></label>
+                                                <input type="text" name="contact_name" id="contact_name"
+                                                    value="{{ old('contact_name', $emergency_contact->name) }}" placeholder="Name"
+                                                    class="form-control">
 
-                                    @error('contact_phone')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
+                                                @error('contact_name')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="contact_phone" class="form-label">Phone<sup
+                                                        class="text-danger">*</sup></label>
+                                                <input type="tel" name="contact_phone" id="contact_phone"
+                                                    value="{{ old('contact_phone', $emergency_contact->phone) }}" placeholder="Phone"
+                                                    class="form-control">
+
+                                                @error('contact_phone')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
 
@@ -199,16 +189,24 @@
 
 @push('js')
     <script>
-        $('#user_type').on('change', function() {
-            if ($(this).val() == 'teacher') {
-                $('#teacher_info').removeClass('d-none');
-            } else {
-                $('#teacher_info').addClass('d-none');
-            }
-        });
+        $(document).ready(function() {
+            // Attach event listener to radio buttons
+            $('#user_type_yes, #user_type_no').on('change', function() {
+                // Toggle visibility of #teacher_info based on the selected radio button
+                if ($('#user_type_yes').is(':checked')) {
+                    $('#teacher_info').removeClass('d-none');
+                } else {
+                    $('#teacher_info').addClass('d-none');
+                }
+            });
 
-        @if ($user->user_type == 'teacher')
-            $('#teacher_info').removeClass('d-none');
-        @endif
+            // Trigger the change event on page load to set the initial state
+            $('#user_type_yes, #user_type_no').trigger('change');
+
+            // Check the radio button based on the user_type
+            @if ($user->user_type == 'teacher')
+                $('#teacher_info').removeClass('d-none');
+            @endif
+        });
     </script>
 @endpush

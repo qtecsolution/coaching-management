@@ -38,7 +38,7 @@
                                                     @can('role_permissions')
                                                         <a href="{{ route('admin.users.roles.show', $role->id) }}"
                                                             class="btn btn-sm btn-primary">
-                                                            <i class="bi bi-eye"></i>
+                                                            <i class="bi bi-gear"></i>
                                                         </a>
                                                     @endcan
                                                     @can('delete_role')

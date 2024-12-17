@@ -75,7 +75,6 @@ class UserController extends Controller
             'password' => 'required',
             'role' => 'required',
             'user_type' => 'required|in:admin,teacher',
-            'school_name' => 'required_if:user_type,teacher',
             'nid_number' => 'required_if:user_type,teacher',
             'address' => 'required_if:user_type,teacher',
             'contact_name' => 'required_if:user_type,teacher',
@@ -145,7 +144,6 @@ class UserController extends Controller
             'role' => 'required',
             'status' => 'required|boolean',
             'user_type' => 'required|in:admin,teacher',
-            'school_name' => 'required_if:user_type,teacher',
             'nid_number' => 'required_if:user_type,teacher',
             'address' => 'required_if:user_type,teacher',
             'contact_name' => 'required_if:user_type,teacher',
@@ -214,7 +212,7 @@ class UserController extends Controller
         }
 
         if ($user->id == 1) {
-            return false;
+            throw new Exception('You cannot delete this user.');
         }
 
         try {
@@ -222,7 +220,7 @@ class UserController extends Controller
             return true;
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
-            return false;
+            throw new Exception($th->getMessage());
         }
     }
 }
