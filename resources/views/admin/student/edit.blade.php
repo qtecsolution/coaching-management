@@ -23,7 +23,8 @@
 
                                         @foreach ($batches as $batch)
                                             <option value="{{ $batch->id }}"
-                                                {{ old('batch', $student?->currentBatch?->batch?->id) == $batch->id ? 'selected' : '' }}>{{ $batch->name }}
+                                                {{ old('batch', $student?->currentBatch?->batch?->id) == $batch->id ? 'selected' : '' }}>
+                                                {{ $batch->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -79,22 +80,34 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="school" class="form-label">School Name</label>
-                                    <input type="text" name="educational_institute" id="school" placeholder="School Name"
-                                        class="form-control" value="{{ old('educational_institute', $student->educational_institute) }}">
+                                    <label for="qualification" class="form-label">Qualification</label>
+                                    <input type="text" name="qualification" id="qualification" placeholder="Qualification"
+                                        class="form-control" value="{{ old('qualification', $student->qualification) }}">
 
-                                    @error('school')
+                                    @error('qualification')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="class" class="form-label">Class</label>
-                                    <input type="text" name="class" id="class" placeholder="Class"
-                                        class="form-control" value="{{ old('class', $student->class) }}">
+                                    <label for="occupation" class="form-label">Occupation</label>
+                                    <input type="text" name="occupation" id="occupation" placeholder="Occupation"
+                                        class="form-control" value="{{ old('occupation', $student->occupation) }}">
 
-                                    @error('class')
+                                    @error('occupation')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="school" class="form-label">NID Number<sup
+                                            class="text-danger">*</sup></label>
+                                    <input type="number" name="nid_number" value="{{ old('nid_number', $student->nid_number) }}"
+                                        id="school" class="form-control" placeholder="NID Number">
+
+                                    @error('nid_number')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -143,8 +156,10 @@
                                     <label for="status" class="form-label">Status<sup
                                             class="text-danger">*</sup></label>
                                     <select name="status" id="status" class="form-control" required>
-                                        <option value="1" {{ old('status', $student->status) == 1 ? 'selected' : '' }}>Active</option>
-                                        <option value="0" {{ old('status', $student->status) == 0 ? 'selected' : '' }}>Inactive</option>
+                                        <option value="1"
+                                            {{ old('status', $student->status) == 1 ? 'selected' : '' }}>Active</option>
+                                        <option value="0"
+                                            {{ old('status', $student->status) == 0 ? 'selected' : '' }}>Inactive</option>
                                     </select>
 
                                     @error('status')
@@ -170,34 +185,48 @@
                             </div>
 
                             @php
-                                $emergency_contact = json_decode($student->emergency_contact, true);
+                                if (isset($user->teacher)) {
+                                    $emergency_contact = json_decode($student->emergency_contact);
+                                } else {
+                                    $emergency_contact = (object) [
+                                        'name' => '',
+                                        'phone' => '',
+                                    ];
+                                }
                             @endphp
+                            <div class="col-12">
+                                <fieldset class="border rounded p-3">
+                                    <legend>Emergency Contact</legend>
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="contact_name" class="form-label">Emergency Contact Name<sup
-                                            class="text-danger">*</sup></label>
-                                    <input type="text" name="contact_name" id="contact_name"
-                                        value="{{ old('contact_name', $emergency_contact['name'] ?? '') }}"
-                                        placeholder="Emergency Contact Name" class="form-control" required>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="contact_name" class="form-label">Name<sup
+                                                        class="text-danger">*</sup></label>
+                                                <input type="text" name="contact_name" id="contact_name"
+                                                    value="{{ old('contact_name', $emergency_contact->name) }}"
+                                                    placeholder="Name" class="form-control">
 
-                                    @error('contact_name')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="contact_phone" class="form-label">Emergency Contact Phone<sup
-                                            class="text-danger">*</sup></label>
-                                    <input type="tel" name="contact_phone" id="contact_phone"
-                                        value="{{ old('contact_phone', $emergency_contact['phone'] ?? '') }}"
-                                        placeholder="Emergency Contact Phone" class="form-control" required>
+                                                @error('contact_name')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="contact_phone" class="form-label">Phone<sup
+                                                        class="text-danger">*</sup></label>
+                                                <input type="tel" name="contact_phone" id="contact_phone"
+                                                    value="{{ old('contact_phone', $emergency_contact->phone) }}"
+                                                    placeholder="Phone" class="form-control">
 
-                                    @error('contact_phone')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
+                                                @error('contact_phone')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
 
