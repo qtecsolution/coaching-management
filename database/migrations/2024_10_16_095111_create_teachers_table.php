@@ -14,13 +14,17 @@ return new class extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->constrained()->restrictOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->string('teacher_id')->unique();
-            $table->string('school_name')->nullable();
+            $table->string('qualification')->nullable();
             $table->string('nid_number');
             $table->text('address');
             $table->json('emergency_contact');
             $table->tinyInteger('status')->default(1);
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict');
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

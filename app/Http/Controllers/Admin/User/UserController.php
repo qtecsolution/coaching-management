@@ -94,7 +94,7 @@ class UserController extends Controller
                 Teacher::create([
                     'user_id' => $user->id,
                     'teacher_id' => rand(1000, 9999) . $user->id,
-                    'school_name' => $request->school_name,
+                    'educational_institute' => $request->educational_institute,
                     'nid_number' => $request->nid_number,
                     'address' => $request->address,
                     'emergency_contact' => json_encode([
@@ -163,7 +163,7 @@ class UserController extends Controller
             if ($request->user_type == 'teacher') {
                 if ($user->teacher) {
                     $user->teacher->update([
-                        'school_name' => $request->school_name,
+                        'educational_institute' => $request->educational_institute,
                         'nid_number' => $request->nid_number,
                         'address' => $request->address,
                         'emergency_contact' => json_encode([
@@ -175,7 +175,7 @@ class UserController extends Controller
                     Teacher::create([
                         'user_id' => $user->id,
                         'teacher_id' => rand(1000, 9999) . $user->id,
-                        'school_name' => $request->school_name,
+                        'educational_institute' => $request->educational_institute,
                         'nid_number' => $request->nid_number,
                         'address' => $request->address,
                         'emergency_contact' => json_encode([

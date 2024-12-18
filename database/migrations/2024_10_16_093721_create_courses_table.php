@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->string('link')->nullable();
-            $table->longText('body');
+            $table->string('slug');
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->double('price')->default(0);
+            $table->enum('discount_type', ['fixed', 'percentage'])->default('fixed');
+            $table->double('discount')->default(0);
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('courses');
     }
 };

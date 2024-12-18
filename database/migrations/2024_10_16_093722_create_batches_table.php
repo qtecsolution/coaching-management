@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use App\Models\Level;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,10 +15,14 @@ return new class extends Migration
     {
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Course::class)->constrained()->restrictOnDelete();
             $table->string('name');
+            $table->bigInteger('total_students')->default(0);
             $table->tinyInteger('status')->default(1);
-            $table->integer('total_students')->default(0);
-            $table->double('tuition_fee');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict');
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

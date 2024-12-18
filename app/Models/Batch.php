@@ -32,12 +32,12 @@ class Batch extends Model
         return $this->hasMany(StudentBatch::class);
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        // Update PaymentReport on payment update
-        static::updated(function () {
-            updatePaymentReport(now()->format('Y-m'));
-        });
-    }
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     // Update PaymentReport on payment update
+    //     static::updated(function () {
+    //         updatePaymentReport(now()->format('Y-m'));
+    //     });
+    // }
 }

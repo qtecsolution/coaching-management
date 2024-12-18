@@ -15,10 +15,14 @@ return new class extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Batch::class)->constrained()->restrictOnDelete();
-            $table->foreignIdFor(BatchDay::class)->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Batch::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(BatchDay::class)->constrained()->cascadeOnDelete();
             $table->date('date');
             $table->tinyInteger('status')->default(1);
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict');
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

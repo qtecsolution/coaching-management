@@ -80,8 +80,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="school" class="form-label">School Name</label>
-                                    <input type="text" name="school_name" id="school" placeholder="School Name"
-                                        class="form-control" value="{{ old('school_name', $student->school_name) }}">
+                                    <input type="text" name="educational_institute" id="school" placeholder="School Name"
+                                        class="form-control" value="{{ old('educational_institute', $student->educational_institute) }}">
 
                                     @error('school')
                                         <small class="text-danger">{{ $message }}</small>

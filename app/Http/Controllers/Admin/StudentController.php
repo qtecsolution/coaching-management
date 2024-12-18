@@ -112,7 +112,7 @@ class StudentController extends Controller
             $student = Student::create([
                 'user_id' => $user->id,
                 'reg_id' => rand(1000, 9999) . $user->id,
-                'school_name' => $request->school_name,
+                'educational_institute' => $request->educational_institute,
                 'class' => $request->class,
                 'date_of_birth' => $request->date_of_birth,
                 'father_name' => $request->father_name,
@@ -204,7 +204,7 @@ class StudentController extends Controller
             ]);
 
             $student->update([
-                'school_name' => $request->school_name,
+                'educational_institute' => $request->educational_institute,
                 'class' => $request->class,
                 'date_of_birth' => $request->date_of_birth,
                 'father_name' => $request->father_name,

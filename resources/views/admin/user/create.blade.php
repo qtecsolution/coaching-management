@@ -112,10 +112,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="school" class="form-label">School Name</label>
-                                    <input type="text" name="school_name" value="{{ old('school_name') }}"
+                                    <input type="text" name="educational_institute" value="{{ old('educational_institute') }}"
                                         id="school" class="form-control" placeholder="School Name">
 
-                                    @error('school_name')
+                                    @error('educational_institute')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>

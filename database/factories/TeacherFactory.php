@@ -17,8 +17,7 @@ class TeacherFactory extends Factory
     public function definition(): array
     {
         return [
-            'teacher_id' => fake()->numberBetween(1000, 9999),
-            'school_name' => fake()->company(),
+            'teacher_id' => fake()->numberBetween(100, 999) . rand(0, 9),
             'nid_number' => fake()->numberBetween(10000000, 99999999),
             'address' => fake()->address(),
             'emergency_contact' => json_encode(
@@ -26,7 +25,9 @@ class TeacherFactory extends Factory
                     'name' => fake()->name(),
                     'phone' => fake()->phoneNumber()
                 ]
-            )
+            ),
+            'created_by' => 1,
+            'updated_by' => 1
         ];
     }
 }

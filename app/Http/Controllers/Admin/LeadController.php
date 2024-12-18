@@ -37,8 +37,8 @@ class LeadController extends Controller
                 ->editColumn('email', function ($row) {
                     return $row->email ? $row->email : '--';
                 })
-                ->editColumn('school_name', function ($row) {
-                    return $row->school_name ? $row->school_name : '--';
+                ->editColumn('educational_institute', function ($row) {
+                    return $row->educational_institute ? $row->educational_institute : '--';
                 })
                 ->editColumn('note', function ($row) {
                     return $row->note ? $row->note : '--';
@@ -83,7 +83,7 @@ class LeadController extends Controller
                 'phone' => $request->phone,
                 'email' => $request->email,
                 'class' => $request->class,
-                'school_name' => $request->school_name,
+                'educational_institute' => $request->educational_institute,
                 'note' => $request->note
             ]);
     
@@ -142,7 +142,7 @@ class LeadController extends Controller
                 'phone' => $request->phone,
                 'email' => $request->email,
                 'class' => $request->class,
-                'school_name' => $request->school_name,
+                'educational_institute' => $request->educational_institute,
                 'note' => $request->note,
                 'status' => $request->status
             ]);

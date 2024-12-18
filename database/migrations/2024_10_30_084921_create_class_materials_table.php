@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Batch;
 use App\Models\BatchDay;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,11 +15,16 @@ return new class extends Migration
     {
         Schema::create('class_materials', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Batch::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(BatchDay::class)->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->string('url');
             $table->boolean('is_file')->default(1);
             $table->tinyInteger('status')->default(1);
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict');
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

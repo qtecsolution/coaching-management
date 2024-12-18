@@ -16,10 +16,14 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone')->unique();
             $table->string('email')->unique()->nullable();
-            $table->string('school_name')->nullable();
-            $table->string('class')->nullable();
+            $table->string('occupation');
+            $table->string('qualification');
             $table->text('note')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict');
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

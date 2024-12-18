@@ -49,11 +49,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="school_name" class="form-label">School Name</label>
-                                    <input type="text" name="school_name" id="school_name" placeholder="School Name"
-                                        value="{{ old('school_name') }}" class="form-control">
+                                    <label for="educational_institute" class="form-label">School Name</label>
+                                    <input type="text" name="educational_institute" id="educational_institute" placeholder="School Name"
+                                        value="{{ old('educational_institute') }}" class="form-control">
 
-                                    @error('school_name')
+                                    @error('educational_institute')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>

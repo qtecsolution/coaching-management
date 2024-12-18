@@ -28,7 +28,7 @@ class StudentBatchController extends Controller
                     return $row?->student?->user->email;
                 })
                 ->addColumn('school', function ($row) {
-                    return $row?->student?->school_name;
+                    return $row?->student?->educational_institute;
                 })
                 ->editColumn('emergency_contact', function ($row) {
                     $emergencyContact = json_decode($row?->student->emergency_contact, true);

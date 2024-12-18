@@ -32,7 +32,7 @@
             <address>
               Name: {{$payment->student_batch->student->name??"N/A"}} ({{$payment->student_batch->student->reg_id??"N/A"}})<br>
               Batch: {{$payment->student_batch->batch->name??"N/A"}}<br>
-              Institution: {{$payment->student_batch->student->school_name??"N/A"}}
+              Institution: {{$payment->student_batch->student->educational_institute??"N/A"}}
             </address>
           </div>
           <div class="col-sm-4 invoice-col">

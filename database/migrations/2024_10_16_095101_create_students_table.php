@@ -17,14 +17,19 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->string('reg_id')->unique();
-            $table->string('school_name')->nullable();
-            $table->string('class')->nullable();
+            $table->string('occupation')->nullable();
+            $table->string('qualification')->nullable();
             $table->date('date_of_birth');
+            $table->string('nid_number');
             $table->text('address');
             $table->string('father_name');
             $table->string('mother_name');
             $table->json('emergency_contact');
             $table->tinyInteger('status')->default(1);
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict');
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

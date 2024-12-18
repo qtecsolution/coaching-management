@@ -65,8 +65,8 @@
                     name: 'email'
                 },
                 {
-                    data: 'school_name',
-                    name: 'school_name'
+                    data: 'educational_institute',
+                    name: 'educational_institute'
                 },
                 {
                     data: 'emergency_contact',

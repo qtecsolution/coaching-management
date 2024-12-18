@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('attendance_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Attendance::class)->constrained()->restrictOnDelete();
-            $table->foreignIdFor(Student::class)->constrained()->restrictOnDelete();
-            $table->integer('status')->default(0)->comment('0 = Absent, 1 = Present, 2 = Late');
+            $table->foreignIdFor(Attendance::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Student::class)->constrained()->cascadeOnDelete();
+            $table->integer('status')->default(1)->comment('0 = Absent, 1 = Present, 2 = Late');
             $table->text('note')->nullable();
             $table->timestamps();
         });

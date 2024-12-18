@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Batch;
 use App\Models\BatchDay;
+use App\Models\Course;
 use App\Models\Level;
 use App\Models\Subject;
 use App\Models\User;
@@ -17,11 +18,13 @@ class BatchSeeder extends Seeder
      */
     public function run(): void
     {
+        $courses = Course::all();
+
         $batches = [
-            ['name' => 'Batch 1', 'tuition_fee' => 1000, 'created_at' => now()->subDays(365)],
-            ['name' => 'Batch 2', 'tuition_fee' => 1200, 'created_at' => now()->subDays(40)],
-            ['name' => 'Batch 3', 'tuition_fee' => 1500, 'created_at' => now()->subDays(50)],
-            ['name' => 'Batch 4', 'tuition_fee' => 1300, 'created_at' => now()->subDays(60)],
+            ['name' => 'Batch 1', 'course_id' => $courses->random()->id, 'created_at' => now()->subDays(365)],
+            ['name' => 'Batch 2', 'course_id' => $courses->random()->id, 'created_at' => now()->subDays(40)],
+            ['name' => 'Batch 3', 'course_id' => $courses->random()->id, 'created_at' => now()->subDays(50)],
+            ['name' => 'Batch 4', 'course_id' => $courses->random()->id, 'created_at' => now()->subDays(60)],
         ];
 
         foreach ($batches as $batch) {
