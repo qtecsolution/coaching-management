@@ -59,8 +59,7 @@ class LeadController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $levels = Level::active()->latest()->get();
-        return view('admin.lead.create', compact('levels'));
+        return view('admin.lead.create');
     }
 
     /**
@@ -116,9 +115,7 @@ class LeadController extends Controller
         }
 
         $lead = Lead::findOrFail($id);
-        $levels = Level::active()->latest()->get();
-
-        return view('admin.lead.edit', compact('lead', 'levels'));
+        return view('admin.lead.edit', compact('lead'));
     }
 
     /**

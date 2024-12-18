@@ -64,10 +64,7 @@ class BatchController extends Controller
         }
 
         $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
-        $subjects = Subject::active()->latest()->get();
-        $levels = Level::active()->latest()->get();
-
-        return view('admin.batch.create', compact('teachers', 'subjects', 'levels'));
+        return view('admin.batch.create', compact('teachers'));
     }
 
     /**
@@ -82,8 +79,7 @@ class BatchController extends Controller
         $request->validate([
             'name' => 'required',
             'tuition_fee' => 'required|numeric',
-            'days' => 'required',
-            'level' => 'nullable|exists:levels,id'
+            'days' => 'required'
         ]);
 
         try {
@@ -128,7 +124,7 @@ class BatchController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $batch = Batch::with(['level', 'batch_days'])->findOrFail($id);
+        $batch = Batch::with('batch_days')->findOrFail($id);
         return view('admin.batch.show', compact('batch'));
     }
 
@@ -143,10 +139,8 @@ class BatchController extends Controller
 
         $batch = Batch::with('batch_days')->find($id);
         $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
-        $subjects = Subject::active()->latest()->get();
-        $levels = Level::active()->latest()->get();
 
-        return view('admin.batch.edit', compact('batch', 'teachers', 'subjects', 'levels'));
+        return view('admin.batch.edit', compact('batch', 'teachers'));
     }
 
     /**
@@ -162,7 +156,6 @@ class BatchController extends Controller
             'name' => 'required',
             'tuition_fee' => 'required|numeric',
             'days' => 'required',
-            'level' => 'nullable|exists:levels,id',
             'status' => 'nullable|in:0,1,2'
         ]);
 

@@ -58,10 +58,6 @@
                     name: 'school_name'
                 },
                 {
-                    data: 'class',
-                    name: 'class'
-                },
-                {
                     data: 'note',
                     name: 'note'
                 },
