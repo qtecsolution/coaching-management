@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Str;
+use App\Traits\ExceptionHandler;
 
 class PermissionController extends Controller
 {
+    use ExceptionHandler;
+
     public function index()
     {
-        if (!Auth::user()->can('view_permissions')) {
+        if (!auth()->user()->can('view_permissions')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -22,7 +25,7 @@ class PermissionController extends Controller
 
     public function store(Request $request)
     {
-        if (!Auth::user()->can('create_permission')) {
+        if (!auth()->user()->can('create_permission')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -38,14 +41,14 @@ class PermissionController extends Controller
                 'name' => $name
             ]);
 
-            toast('Permission added successfully.', 'success');
+            $this->getAlert('success', 'Permission added successfully.');
         } else {
             Permission::create(['name' => 'view_' . $name]);
             Permission::create(['name' => 'add_' . $name]);
             Permission::create(['name' => 'update_' . $name]);
             Permission::create(['name' => 'delete_' . $name]);
-            
-            toast('Permissions added successfully.', 'success');
+
+            $this->getAlert('success', 'Permissions added successfully.');
         }
 
         return back();
@@ -53,7 +56,7 @@ class PermissionController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (!Auth::user()->can('update_permission')) {
+        if (!auth()->user()->can('update_permission')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -66,19 +69,24 @@ class PermissionController extends Controller
             'name' => Str::slug($request->name, '_'),
         ]);
 
-        toast('Permission updated successfully.', 'success');
+        $this->getAlert('success', 'Permission updated successfully.');
         return back();
     }
 
     public function destroy($id)
     {
-        if (!Auth::user()->can('delete_permission')) {
+        if (!auth()->user()->can('delete_permission')) {
             abort(403, 'Unauthorized action.');
         }
 
-        $permission = Permission::findOrFail($id);
-        $permission->delete();
+        try {
+            $permission = Permission::findOrFail($id);
+            $permission->delete();
 
-        return true;
+            return true;
+        } catch (\Throwable $th) {
+            $this->logException($th);
+            throw new Exception($th->getMessage());
+        }
     }
 }

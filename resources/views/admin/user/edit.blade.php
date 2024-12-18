@@ -96,12 +96,15 @@
                         <div class="row d-none" id="teacher_info">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="school" class="form-label">School Name</label>
-                                    <input type="text" name="educational_institute"
-                                        value="{{ old('educational_institute', @$user->teacher->educational_institute) }}" id="school"
-                                        class="form-control" placeholder="School Name">
+                                    <label for="qualification" class="form-label">
+                                        Qualification<sup class="text-danger">*</sup>
+                                        <x-tooltips message="Enter user's educational qualification here." position="top" />
+                                    </label>
+                                    <input type="text" name="qualification"
+                                        value="{{ old('qualification', @$user->teacher->qualification) }}" id="qualification"
+                                        class="form-control" placeholder="Qualification">
 
-                                    @error('educational_institute')
+                                    @error('qualification')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>

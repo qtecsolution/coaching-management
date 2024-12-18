@@ -23,7 +23,7 @@
                 </li>
             @endcan
             @can('view_roles')
-                <li class="submenu-item {{ Route::is('admin.users.roles.index') ? 'active' : '' }}">
+                <li class="submenu-item {{ Route::is('admin.users.roles.index') || Route::is('admin.users.roles.show') ? 'active' : '' }}">
                     <a href="{{ route('admin.users.roles.index') }}">Role & Permission</a>
                 </li>
             @endcan

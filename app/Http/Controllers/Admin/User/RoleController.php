@@ -5,17 +5,18 @@ namespace App\Http\Controllers\Admin\User;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
+use App\Traits\ExceptionHandler;
 
 class RoleController extends Controller
 {
+    use ExceptionHandler;
+
     public function index()
     {
-        if (!Auth::user()->can('view_roles')) {
+        if (!auth()->user()->can('view_roles')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -25,7 +26,7 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
-        if (!Auth::user()->can('create_role')) {
+        if (!auth()->user()->can('create_role')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -34,17 +35,17 @@ class RoleController extends Controller
         ]);
 
         if (Role::create($request->only('name'))) {
-            alert('Success!', 'Role added successfully.', 'success');
-            return back();
+            $this->getAlert('success', 'Role created successfully.');
         } else {
-            alert('Oops!', 'Something went wrong.', 'error');
-            return back();
+            $this->getAlert('error', 'Something went wrong.');
         }
+
+        return back();
     }
 
     public function update(Request $request, $id)
     {
-        if (!Auth::user()->can('update_role')) {
+        if (!auth()->user()->can('update_role')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -55,7 +56,7 @@ class RoleController extends Controller
         $role = Role::findOrFail($id);
 
         if ($role->id == 1) {
-            alert('Oops!', 'Cannot update admin role.', 'error');
+            $this->getAlert('info', 'You cannot update admin role.');
             return back();
         }
 
@@ -63,13 +64,13 @@ class RoleController extends Controller
             'name' => $request->name
         ]);
 
-        alert('Success!', 'Role updated successfully.', 'success');
+        $this->getAlert('success', 'Role updated successfully.');
         return back();
     }
 
     public function show($id)
     {
-        if (!Auth::user()->can('role_permissions')) {
+        if (!auth()->user()->can('role_permissions')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -82,23 +83,28 @@ class RoleController extends Controller
 
     public function destroy($id)
     {
-        if (!Auth::user()->can('delete_role')) {
+        if (!auth()->user()->can('delete_role')) {
             abort(403, 'Unauthorized action.');
         }
 
-        if ($id != 1) {
-            $role = Role::findOrFail($id);
-            $role->delete();
+        try {
+            if ($id != 1) {
+                $role = Role::findOrFail($id);
+                $role->delete();
 
-            return true;
-        } else {
-            throw new Exception('You can not delete admin role.');
+                return true;
+            } else {
+                throw new Exception('You cannot delete admin role.');
+            }
+        } catch (\Throwable $th) {
+            $this->logException($th);
+            throw new Exception($th->getMessage());
         }
     }
 
     public function updatePermissions(Request $request, $id)
     {
-        if (!Auth::user()->can('update_permission')) {
+        if (!auth()->user()->can('update_permission')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -109,19 +115,19 @@ class RoleController extends Controller
             if ($role->id == 1) {
                 $role->syncPermissions(Permission::all());
 
-                alert('Hey!', $role->name . ' permissions are not editable.', 'info');
+                $this->getAlert('info', $role->name . ' permissions are not editable.');
                 return back();
             }
 
             $permissions = $request->get('permissions', []);
             $role->syncPermissions($permissions);
 
-            alert('Success!', 'Permissions has been updated.', 'success');
+            $this->getAlert('success', 'Permissions has been updated.');
             return back();
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            $this->logException($th);
+            $this->getAlert('error', 'Something went wrong.');
 
-            alert('Oops!', 'Something went wrong.', 'error');
             return back();
         }
     }

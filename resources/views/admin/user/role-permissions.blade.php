@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Users')
+@section('title', $role->name . ' Permissions')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Users" subtitle="" pageTitle="Users" />
+        <x-page-title title="{{ $role->name }} Permissions" subtitle="" pageTitle="{{ $role->name }} Permissions" />
 
         <!-- Basic Tables start -->
         <section class="section">

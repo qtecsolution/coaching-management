@@ -7,12 +7,14 @@ use App\Models\Teacher;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
+use App\Traits\ExceptionHandler;
 
 class UserController extends Controller
 {
+    use ExceptionHandler;
+
     // function to show users
     public function index()
     {
@@ -75,6 +77,7 @@ class UserController extends Controller
             'password' => 'required',
             'role' => 'required',
             'user_type' => 'required|in:admin,teacher',
+            'qualification' => 'required_if:user_type,teacher',
             'nid_number' => 'required_if:user_type,teacher',
             'address' => 'required_if:user_type,teacher',
             'contact_name' => 'required_if:user_type,teacher',
@@ -94,26 +97,28 @@ class UserController extends Controller
                 Teacher::create([
                     'user_id' => $user->id,
                     'teacher_id' => rand(1000, 9999) . $user->id,
-                    'educational_institute' => $request->educational_institute,
+                    'qualification' => $request->qualification,
                     'nid_number' => $request->nid_number,
                     'address' => $request->address,
                     'emergency_contact' => json_encode([
                         'name' => $request->contact_name,
                         'phone' => $request->contact_phone
-                    ])
+                    ]),
+                    'created_by' => auth()->id(),
+                    'updated_by' => auth()->id()
                 ]);
             }
 
-            if ($request->has('role')) {
+            if ($request->filled('role')) {
                 $user->assignRole($request->role);
             }
 
-            alert('Success!', 'User added successfully.', 'success');
+            $this->getAlert('success', 'User added successfully.');
             return to_route('admin.users.index');
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            $this->logException($th);
+            $this->getAlert('error', 'Something went wrong.');
 
-            alert('Oops!', 'Something went wrong.', 'error');
             return back();
         }
     }
@@ -136,14 +141,19 @@ class UserController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        if ($user->id == 1) {
+            $this->getAlert('info', 'You cannot update this user.');
+            return back();
+        }
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:users,phone,' . $user->id,
             'email' => 'nullable|unique:users,email,' . $user->id,
-            'password' => 'nullable',
             'role' => 'required',
             'status' => 'required|boolean',
             'user_type' => 'required|in:admin,teacher',
+            'qualification' => 'required_if:user_type,teacher',
             'nid_number' => 'required_if:user_type,teacher',
             'address' => 'required_if:user_type,teacher',
             'contact_name' => 'required_if:user_type,teacher',
@@ -163,25 +173,28 @@ class UserController extends Controller
             if ($request->user_type == 'teacher') {
                 if ($user->teacher) {
                     $user->teacher->update([
-                        'educational_institute' => $request->educational_institute,
+                        'qualification' => $request->qualification,
                         'nid_number' => $request->nid_number,
                         'address' => $request->address,
                         'emergency_contact' => json_encode([
                             'name' => $request->contact_name,
                             'phone' => $request->contact_phone
-                        ])
+                        ]),
+                        'updated_by' => auth()->id()
                     ]);
                 } else {
                     Teacher::create([
                         'user_id' => $user->id,
                         'teacher_id' => rand(1000, 9999) . $user->id,
-                        'educational_institute' => $request->educational_institute,
+                        'qualification' => $request->qualification,
                         'nid_number' => $request->nid_number,
                         'address' => $request->address,
                         'emergency_contact' => json_encode([
                             'name' => $request->contact_name,
                             'phone' => $request->contact_phone
-                        ])
+                        ]),
+                        'created_by' => auth()->id(),
+                        'updated_by' => auth()->id()
                     ]);
                 }
             } else {
@@ -194,12 +207,12 @@ class UserController extends Controller
                 $user->syncRoles($request->role);
             }
 
-            alert('Success!', 'User updated successfully.', 'success');
+            $this->getAlert('success', 'User updated successfully.');
             return to_route('admin.users.index');
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            $this->logException($th);
+            $this->getAlert('error', 'Something went wrong.');
 
-            alert('Oops!', 'Something went wrong.', 'error');
             return back();
         }
     }
@@ -219,7 +232,7 @@ class UserController extends Controller
             $user->delete();
             return true;
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            $this->logException($th);
             throw new Exception($th->getMessage());
         }
     }
