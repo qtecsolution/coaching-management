@@ -18,7 +18,7 @@ class MessageController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('view_levels')) {
+        if (!auth()->user()->can('view_messages')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -54,6 +54,10 @@ class MessageController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('create_message')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $students = Student::active()->get();
         $batches = Batch::active()->get();
 
@@ -65,6 +69,10 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->can('create_message')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'student' => 'required_without:batch',
             'batch' => 'required_without:student',
