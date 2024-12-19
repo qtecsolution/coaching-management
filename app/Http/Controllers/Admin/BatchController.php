@@ -44,10 +44,10 @@ class BatchController extends Controller
                     $status = Batch::$statusList[$row->status];
                     return '<span class="badge bg-success">' . $status . '</span>';
                 })
-                ->editColumn('tuition_fee', function ($row) {
-                    return number_format($row->tuition_fee, 2);
+                ->addColumn('course', function ($row) {
+                    return $row->course->title;
                 })
-                ->rawColumns(['action', 'weekly_classes', 'status'])
+                ->rawColumns(['action', 'weekly_classes', 'status', 'course'])
                 ->make(true);
         }
 

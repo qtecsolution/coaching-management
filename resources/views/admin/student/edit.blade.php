@@ -322,6 +322,12 @@
             // Remove field group
             fieldsContainer.addEventListener('click', (e) => {
                 if (e.target.closest('.remove-field')) {
+                    // let totalElements = document.querySelectorAll('.remove-field').length;
+                    // if (totalElements < 2) {
+                    //     alert('You cannot remove more fields.');
+                    //     return;
+                    // }
+                    
                     const fieldGroup = e.target.closest('.row');
                     fieldsContainer.removeChild(fieldGroup);
                 }

@@ -40,4 +40,9 @@ class Batch extends Model
     //         updatePaymentReport(now()->format('Y-m'));
     //     });
     // }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }

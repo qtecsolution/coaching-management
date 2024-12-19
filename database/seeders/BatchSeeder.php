@@ -5,10 +5,7 @@ namespace Database\Seeders;
 use App\Models\Batch;
 use App\Models\BatchDay;
 use App\Models\Course;
-use App\Models\Level;
-use App\Models\Subject;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class BatchSeeder extends Seeder
@@ -18,34 +15,45 @@ class BatchSeeder extends Seeder
      */
     public function run(): void
     {
+        // Fetch all courses
         $courses = Course::all();
 
+        if ($courses->isEmpty()) {
+            $this->command->warn("No courses found. Please seed the courses first.");
+            return;
+        }
+
+        // Create batches
         $batches = [
-            ['name' => 'Batch 1', 'course_id' => $courses->random()->id, 'created_at' => now()->subDays(365)],
-            ['name' => 'Batch 2', 'course_id' => $courses->random()->id, 'created_at' => now()->subDays(40)],
-            ['name' => 'Batch 3', 'course_id' => $courses->random()->id, 'created_at' => now()->subDays(50)],
-            ['name' => 'Batch 4', 'course_id' => $courses->random()->id, 'created_at' => now()->subDays(60)],
+            ['name' => 'Batch 1', 'course_id' => $courses->random()->id, 'status' => fake()->numberBetween(0, 2)],
+            ['name' => 'Batch 2', 'course_id' => $courses->random()->id, 'status' => fake()->numberBetween(0, 2)],
+            ['name' => 'Batch 3', 'course_id' => $courses->random()->id, 'status' => fake()->numberBetween(0, 2)],
+            ['name' => 'Batch 4', 'course_id' => $courses->random()->id, 'status' => fake()->numberBetween(0, 2)],
+            ['name' => 'Batch 5', 'course_id' => $courses->random()->id, 'status' => fake()->numberBetween(0, 2)],
         ];
 
         foreach ($batches as $batch) {
             Batch::create($batch);
         }
 
-        // Fetch some Batches, Teachers (Users), and Subjects from the database
+        // Fetch all batches and teachers
         $batches = Batch::all();
         $teachers = User::where('user_type', 'teacher')->get();
-        $teacher = User::where('user_type', 'teacher')->where('phone', '1234567891')->first();
 
-        // Define some batch days data
+        if ($teachers->isEmpty()) {
+            $this->command->warn("No teachers found. Please seed the users with 'teacher' user type.");
+            return;
+        }
+
+        // Create batch days
         $batchDays = [
-            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => '1', 'start_time' => '09:00', 'end_time' => '12:00'],
-            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => '2', 'start_time' => '09:00', 'end_time' => '12:00'],
-            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => '3', 'start_time' => '01:00', 'end_time' => '04:00'],
-            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => '4', 'start_time' => '01:00', 'end_time' => '04:00'],
-            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => '5', 'start_time' => '09:00', 'end_time' => '12:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => 1, 'start_time' => '09:00', 'end_time' => '12:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => 2, 'start_time' => '09:00', 'end_time' => '12:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => 3, 'start_time' => '13:00', 'end_time' => '16:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => 4, 'start_time' => '13:00', 'end_time' => '16:00'],
+            ['batch_id' => $batches->random()->id, 'user_id' => $teachers->random()->id, 'day' => 5, 'start_time' => '09:00', 'end_time' => '12:00'],
         ];
 
-        // Insert the data into the batch_days table
         foreach ($batchDays as $batchDay) {
             BatchDay::create($batchDay);
         }

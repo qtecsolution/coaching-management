@@ -17,7 +17,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Name</th>
-                                <th>Tuition Fee</th>
+                                <th>Course</th>
                                 <th>Weekly Classes</th>
                                 <th>Total Students</th>
                                 <th>Status</th>
@@ -50,8 +50,8 @@
                 name: 'name'
             },
             {
-                data: 'tuition_fee',
-                name: 'tuition_fee'
+                data: 'course',
+                name: 'course'
             },
             {
                 data: 'weekly_classes',
