@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Levels')
+@section('title', 'Courses')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Levels" subtitle="" pageTitle="Levels" />
+        <x-page-title title="Courses" subtitle="" pageTitle="Courses" />
 
         <!-- Basic Tables start -->
         <section class="section">
@@ -12,9 +12,9 @@
                 {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <div class="col-12 mb-4 text-end">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLevelModal">
-                            Add Level
-                        </button>
+                        <a href="{{ route('admin.courses.create') }}" class="btn btn-primary">
+                            Add Course
+                        </a>
                     </div>
 
                     <div class="table-responsive">
@@ -22,7 +22,10 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Name</th>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Price</th>
+                                    <th>Discount</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -74,14 +77,26 @@
             responsive: true,
             serverSide: true,
             processing: true,
-            ajax: "{{ route('admin.levels.index') }}",
+            ajax: "{{ route('admin.courses.index') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
                 {
-                    data: 'name',
-                    name: 'name'
+                    data: 'image',
+                    name: 'image'
+                },
+                {
+                    data: 'title',
+                    name: 'title'
+                },
+                {
+                    data: 'price',
+                    name: 'price'
+                },
+                {
+                    data: 'discount',
+                    name: 'discount'
                 },
                 {
                     data: 'status',

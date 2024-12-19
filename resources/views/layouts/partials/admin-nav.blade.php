@@ -58,7 +58,12 @@
             <i class="bi bi-easel"></i>
             <span>Batches</span>
         </a>
-        <ul class="submenu {{ Route::is('admin.batches.*') || Route::is('admin.levels.*') ? 'submenu-open' : 'submenu-close' }}">
+        <ul class="submenu {{ Route::is('admin.batches.*') || Route::is('admin.courses.*') ? 'submenu-open' : 'submenu-close' }}">
+            @can('view_courses')
+                <li class="submenu-item {{ Route::is('admin.courses.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.courses.index') }}">Course List</a>
+                </li>
+            @endcan
             @can('view_batches')
                 <li class="submenu-item {{ Route::is('admin.batches.index') ? 'active' : '' }}">
                     <a href="{{ route('admin.batches.index') }}">Batch List</a>

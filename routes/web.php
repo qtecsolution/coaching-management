@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\ClassMaterialController;
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\LevelController;
@@ -91,6 +92,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     // student routes
     Route::resource('students', StudentController::class);
     Route::get('/students/{id}', [StudentController::class, 'idCard'])->name('students.id');
+
+    // course routes
+    Route::resource('courses', CourseController::class);
 
     // batch routes
     Route::resource('batches', BatchController::class);

@@ -31,6 +31,7 @@ class RolePermissionSeeder extends Seeder
             'view_roles', 'create_role', 'update_role', 'delete_role', 'role_permissions',
             'view_permissions', 'create_permission', 'update_permission', 'delete_permission',
             'view_students', 'create_student', 'update_student', 'delete_student',
+            'view_courses', 'create_course', 'update_course', 'delete_course',
             'view_batches', 'create_batch', 'update_batch', 'delete_batch',
             'view_leads', 'create_lead', 'update_lead', 'delete_lead',
             'view_payments','create_payment','update_payment','delete_payment',
@@ -38,10 +39,7 @@ class RolePermissionSeeder extends Seeder
             'view_settings', 'update_settings',
             'view_class_materials', 'create_class_material', 'update_class_material', 'delete_class_material',
             'view_attendance', 'create_attendance', 'update_attendance', 'delete_attendance',
-            'view_levels', 'create_level', 'update_level', 'delete_level',
-            'view_subjects', 'create_subject', 'update_subject', 'delete_subject',
             'view_messages', 'create_message', 'update_message', 'delete_message',
-            'view_results', 'create_result', 'update_result', 'delete_result',
         ];
 
         $permissions = collect($permissions)->map(function ($permission) {
