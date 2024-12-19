@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Student;
 use App\Models\StudentBatch;
+use App\Models\StudentDynamicField;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -98,7 +99,8 @@ class StudentController extends Controller
             'address' => 'required',
             'contact_name' => 'required',
             'contact_phone' => 'required',
-            'batch' => 'required|exists:batches,id'
+            'batch' => 'required|exists:batches,id',
+            'nid_number' => 'required|unique:students,nid_number',
         ]);
 
         try {
@@ -112,8 +114,9 @@ class StudentController extends Controller
             $student = Student::create([
                 'user_id' => $user->id,
                 'reg_id' => rand(1000, 9999) . $user->id,
-                'educational_institute' => $request->educational_institute,
-                'class' => $request->class,
+                'qualification' => $request->qualification,
+                'occupation' => $request->occupation,
+                'nid_number' => $request->nid_number,
                 'date_of_birth' => $request->date_of_birth,
                 'father_name' => $request->father_name,
                 'mother_name' => $request->mother_name,
@@ -123,6 +126,21 @@ class StudentController extends Controller
                     'phone' => $request->contact_phone
                 ])
             ]);
+
+            // Filter fields
+            $fields = [];
+            foreach ($request->field_name as $index => $name) {
+                $fields[] = [
+                    'student_id' => $student->id,
+                    'name' => $name,
+                    'value' => $request->field_value[$index],
+                ];
+            }
+
+            // Save fields
+            foreach ($fields as $field) {
+                StudentDynamicField::create($field);
+            }
 
             StudentBatch::create([
                 'student_id' => $student->id,
@@ -192,7 +210,8 @@ class StudentController extends Controller
             'contact_name' => 'required',
             'contact_phone' => 'required',
             'status' => 'required|boolean',
-            'batch' => 'required|exists:batches,id'
+            'batch' => 'required|exists:batches,id',
+            'nid_number' => 'required|unique:students,nid_number,' . $student->id,
         ]);
 
         try {
@@ -204,8 +223,9 @@ class StudentController extends Controller
             ]);
 
             $student->update([
-                'educational_institute' => $request->educational_institute,
-                'class' => $request->class,
+                'qualification' => $request->qualification,
+                'occupation' => $request->occupation,
+                'nid_number' => $request->nid_number,
                 'date_of_birth' => $request->date_of_birth,
                 'father_name' => $request->father_name,
                 'mother_name' => $request->mother_name,
@@ -216,6 +236,26 @@ class StudentController extends Controller
                 ]),
                 'status' => $request->status
             ]);
+
+            // Fetch existing fields
+            $existingFields = $student->dynamicFields;
+
+            // Update or create new fields
+            foreach ($request->field_name as $index => $name) {
+                $field = $existingFields[$index] ?? new StudentDynamicField();
+                $field->student_id = $student->id;
+                $field->name = $name;
+                $field->value = $request->field_value[$index];
+                $field->save();
+            }
+
+            // Remove extra fields (if any)
+            if (count($request->field_name) < $existingFields->count()) {
+                $extraFields = $existingFields->slice(count($request->field_name));
+                foreach ($extraFields as $extraField) {
+                    $extraField->delete();
+                }
+            }
 
             $currentBatch = $student?->currentBatch;
             if ($currentBatch && $currentBatch?->batch?->status == 1) {
@@ -251,14 +291,14 @@ class StudentController extends Controller
 
             $student = Student::find($id);
 
-            if($student->batch_id) $this->countBatchStudents($student->batch_id);
+            if ($student->batch_id) $this->countBatchStudents($student->batch_id);
 
             $student->user->delete();
 
             return true;
         } catch (\Throwable $th) {
             Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
-            
+
             return false;
         }
     }

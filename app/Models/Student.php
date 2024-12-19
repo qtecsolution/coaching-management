@@ -47,4 +47,9 @@ class Student extends Model
     {
         return $query->where('status', 1);
     }
+
+    public function dynamicFields()
+    {
+        return $this->hasMany(StudentDynamicField::class);
+    }
 }

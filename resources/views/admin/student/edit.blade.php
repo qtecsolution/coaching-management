@@ -81,8 +81,9 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="qualification" class="form-label">Qualification</label>
-                                    <input type="text" name="qualification" id="qualification" placeholder="Qualification"
-                                        class="form-control" value="{{ old('qualification', $student->qualification) }}">
+                                    <input type="text" name="qualification" id="qualification"
+                                        placeholder="Qualification" class="form-control"
+                                        value="{{ old('qualification', $student->qualification) }}">
 
                                     @error('qualification')
                                         <small class="text-danger">{{ $message }}</small>
@@ -104,8 +105,9 @@
                                 <div class="form-group">
                                     <label for="school" class="form-label">NID Number<sup
                                             class="text-danger">*</sup></label>
-                                    <input type="number" name="nid_number" value="{{ old('nid_number', $student->nid_number) }}"
-                                        id="school" class="form-control" placeholder="NID Number">
+                                    <input type="number" name="nid_number"
+                                        value="{{ old('nid_number', $student->nid_number) }}" id="school"
+                                        class="form-control" placeholder="NID Number">
 
                                     @error('nid_number')
                                         <small class="text-danger">{{ $message }}</small>
@@ -155,7 +157,7 @@
                                 <div class="form-group">
                                     <label for="status" class="form-label">Status<sup
                                             class="text-danger">*</sup></label>
-                                    <select name="status" id="status" class="form-control" required>
+                                    <select name="status" id="status" class="form-control form-select" required>
                                         <option value="1"
                                             {{ old('status', $student->status) == 1 ? 'selected' : '' }}>Active</option>
                                         <option value="0"
@@ -185,14 +187,7 @@
                             </div>
 
                             @php
-                                if (isset($user->teacher)) {
-                                    $emergency_contact = json_decode($student->emergency_contact);
-                                } else {
-                                    $emergency_contact = (object) [
-                                        'name' => '',
-                                        'phone' => '',
-                                    ];
-                                }
+                                $emergency_contact = json_decode($student->emergency_contact);
                             @endphp
                             <div class="col-12">
                                 <fieldset class="border rounded p-3">
@@ -230,6 +225,51 @@
                             </div>
                         </div>
 
+                        <div class="col-12 mt-3">
+                            <fieldset class="border rounded p-3" id="dynamic-fields">
+                                <legend>Dynamic Fields</legend>
+
+                                <div class="col-12 text-end mb-3">
+                                    <button class="btn btn-primary" type="button" id="add-field">
+                                        <i class="bi bi-plus"></i> Add
+                                    </button>
+                                </div>
+
+                                <!-- Dynamic Fields Container -->
+                                <div id="fields-container">
+                                    @foreach ($student->dynamicFields as $field)
+                                        <div class="row align-items-end mb-3">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label class="form-label">Field Name<sup
+                                                            class="text-danger">*</sup></label>
+                                                    <input type="text" name="field_name[]"
+                                                        value="{{ $field->name }}" placeholder="Field Name"
+                                                        class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label class="form-label">Field Value<sup
+                                                            class="text-danger">*</sup></label>
+                                                    <input type="text" name="field_value[]"
+                                                        value="{{ $field->value }}" placeholder="Field Value"
+                                                        class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-danger remove-field">
+                                                        <i class="bi bi-dash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </fieldset>
+                        </div>
+
                         <div class="col-12 text-end mt-2">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
@@ -244,6 +284,48 @@
     <script>
         $(document).ready(function() {
             $('.select2').select2();
+
+            const addFieldButton = document.getElementById('add-field');
+            const fieldsContainer = document.getElementById('fields-container');
+
+            // Add new field group
+            addFieldButton.addEventListener('click', () => {
+                const fieldGroup = document.createElement('div');
+                fieldGroup.classList.add('row', 'align-items-end', 'mb-3');
+                fieldGroup.innerHTML = `
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="form-label">Field Name<sup class="text-danger">*</sup></label>
+                            <input type="text" name="field_name[]" placeholder="Field Name"
+                                class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="form-label">Field Value<sup class="text-danger">*</sup></label>
+                            <input type="text" name="field_value[]" placeholder="Field Value"
+                                class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-danger remove-field">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                fieldsContainer.appendChild(fieldGroup);
+            });
+
+            // Remove field group
+            fieldsContainer.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-field')) {
+                    const fieldGroup = e.target.closest('.row');
+                    fieldsContainer.removeChild(fieldGroup);
+                }
+            });
         });
     </script>
 @endpush

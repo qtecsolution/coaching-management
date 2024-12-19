@@ -20,7 +20,8 @@
                                     <th>Name</th>
                                     <th>Phone</th>
                                     <th>Email</th>
-                                    <th>School</th>
+                                    <th>Qualification</th>
+                                    <th>Occupation</th>
                                     <th>Emergency Contact</th>
                                     <th>Address</th>
                                     <th>Status</th>
@@ -65,8 +66,12 @@
                     name: 'email'
                 },
                 {
-                    data: 'educational_institute',
-                    name: 'educational_institute'
+                    data: 'qualification',
+                    name: 'qualification'
+                },
+                {
+                    data: 'occupation',
+                    name: 'occupation'
                 },
                 {
                     data: 'emergency_contact',

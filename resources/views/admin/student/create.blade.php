@@ -80,8 +80,9 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="qualification" class="form-label">Qualification</label>
-                                    <input type="text" name="qualification" id="qualification" placeholder="Qualification"
-                                        class="form-control" value="{{ old('qualification') }}">
+                                    <input type="text" name="qualification" id="qualification"
+                                        placeholder="Qualification" class="form-control"
+                                        value="{{ old('qualification') }}">
 
                                     @error('qualification')
                                         <small class="text-danger">{{ $message }}</small>
@@ -103,8 +104,8 @@
                                 <div class="form-group">
                                     <label for="school" class="form-label">NID Number<sup
                                             class="text-danger">*</sup></label>
-                                    <input type="number" name="nid_number" value="{{ old('nid_number') }}"
-                                        id="school" class="form-control" placeholder="NID Number">
+                                    <input type="number" name="nid_number" value="{{ old('nid_number') }}" id="school"
+                                        class="form-control" placeholder="NID Number">
 
                                     @error('nid_number')
                                         <small class="text-danger">{{ $message }}</small>
@@ -116,8 +117,8 @@
                                     <label for="date_of_birth" class="form-label">Date of Birth<sup
                                             class="text-danger">*</sup></label>
                                     <input type="date" name="date_of_birth" id="date_of_birth"
-                                        placeholder="Date of Birth" class="form-control" value="{{ old('date_of_birth') }}"
-                                        required>
+                                        placeholder="Date of Birth" class="form-control"
+                                        value="{{ old('date_of_birth') }}" required>
 
                                     @error('date_of_birth')
                                         <small class="text-danger">{{ $message }}</small>
@@ -198,6 +199,47 @@
                             </div>
                         </div>
 
+                        <div class="col-12 mt-3">
+                            <fieldset class="border rounded p-3" id="dynamic-fields">
+                                <legend>Dynamic Fields</legend>
+
+                                <div class="col-12 text-end mb-3">
+                                    <button class="btn btn-primary" type="button" id="add-field">
+                                        <i class="bi bi-plus"></i> Add
+                                    </button>
+                                </div>
+
+                                <!-- Dynamic Fields Container -->
+                                <div id="fields-container">
+                                    <div class="row align-items-end mb-3">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label for="" class="form-label">Field Name<sup
+                                                        class="text-danger">*</sup></label>
+                                                <input type="text" name="field_name[]" placeholder="Field Name"
+                                                    class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label for="" class="form-label">Field Value<sup
+                                                        class="text-danger">*</sup></label>
+                                                <input type="text" name="field_value[]" placeholder="Field Value"
+                                                    class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-danger remove-field">
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
                         <div class="col-12 text-end mt-2">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
@@ -212,6 +254,54 @@
     <script>
         $(document).ready(function() {
             $('.select2').select2();
+
+            const addFieldButton = document.getElementById('add-field');
+            const fieldsContainer = document.getElementById('fields-container');
+
+            // Add new field group
+            addFieldButton.addEventListener('click', () => {
+                const fieldGroup = document.createElement('div');
+                fieldGroup.classList.add('row', 'align-items-end', 'mb-3');
+                fieldGroup.innerHTML = `
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="form-label">Field Name<sup class="text-danger">*</sup></label>
+                            <input type="text" name="field_name[]" placeholder="Field Name"
+                                class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="form-label">Field Value<sup class="text-danger">*</sup></label>
+                            <input type="text" name="field_value[]" placeholder="Field Value"
+                                class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-danger remove-field">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                fieldsContainer.appendChild(fieldGroup);
+            });
+
+            // Remove field group
+            fieldsContainer.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-field')) {
+                    let totalElements = document.querySelectorAll('.remove-field').length;
+                    if (totalElements < 2) {
+                        alert('You cannot remove more fields.');
+                        return;
+                    }
+
+                    const fieldGroup = e.target.closest('.row');
+                    fieldsContainer.removeChild(fieldGroup);
+                }
+            });
         });
     </script>
 @endpush
