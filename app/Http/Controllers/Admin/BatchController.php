@@ -5,15 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\BatchDay;
-use App\Models\Level;
-use App\Models\Subject;
+use App\Models\Course;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
+use App\Traits\ExceptionHandler;
+use Exception;
 
 class BatchController extends Controller
 {
+    use ExceptionHandler;
+
     /**
      * Display a listing of the resource.
      */
@@ -28,7 +30,7 @@ class BatchController extends Controller
                 $batchIds = BatchDay::where('user_id', auth()->id())->pluck('batch_id');
                 $query = Batch::whereIn('id', $batchIds);
             } else {
-                $query = Batch::latest();
+                $query = Batch::query();
             }
 
             return DataTables::of($query)
@@ -64,7 +66,9 @@ class BatchController extends Controller
         }
 
         $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
-        return view('admin.batch.create', compact('teachers'));
+        $courses = Course::active()->latest()->get();
+
+        return view('admin.batch.create', compact('teachers', 'courses'));
     }
 
     /**
@@ -78,15 +82,16 @@ class BatchController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'tuition_fee' => 'required|numeric',
+            'course' => 'required|exists:courses,id',
             'days' => 'required'
         ]);
 
         try {
             $batch = Batch::create([
                 'name' => $request->name,
-                'tuition_fee' => $request->tuition_fee,
-                'level_id' => $request->level
+                'course_id' => $request->course,
+                'created_by' => auth()->id(),
+                'updated_by' => auth()->id()
             ]);
 
             $days = json_decode($request->days);
@@ -96,8 +101,7 @@ class BatchController extends Controller
                     'day' => $day->day,
                     'start_time' => $day->start_time,
                     'end_time' => $day->end_time,
-                    'user_id' => $day->teacher,
-                    'subject_id' => $day->subject
+                    'user_id' => $day->teacher
                 ]);
             }
 
@@ -106,7 +110,7 @@ class BatchController extends Controller
                 'message' => 'Batch added successfully.',
             ]);
         } catch (\Throwable $th) {
-            Log::info($th->getMessage() . ' on line ' . $th->getLine() . ' in ' . $th->getFile());
+            $this->logException($th);
 
             return response()->json([
                 'status' => false,
@@ -139,8 +143,9 @@ class BatchController extends Controller
 
         $batch = Batch::with('batch_days')->find($id);
         $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
+        $courses = Course::active()->latest()->get();
 
-        return view('admin.batch.edit', compact('batch', 'teachers'));
+        return view('admin.batch.edit', compact('batch', 'teachers', 'courses'));
     }
 
     /**
@@ -154,7 +159,7 @@ class BatchController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'tuition_fee' => 'required|numeric',
+            'course' => 'required|exists:courses,id',
             'days' => 'required',
             'status' => 'nullable|in:0,1,2'
         ]);
@@ -164,9 +169,9 @@ class BatchController extends Controller
 
             $batch->update([
                 'name' => $request->name,
-                'tuition_fee' => $request->tuition_fee,
-                'level_id' => $request->level,
-                'status' => $request->status ?? $batch->status
+                'course_id' => $request->course,
+                'status' => $request->status ?? $batch->status,
+                'updated_by' => auth()->id()
             ]);
 
             $days = json_decode($request->days, true);
@@ -175,8 +180,7 @@ class BatchController extends Controller
                     'day' => $day['day'],
                     'start_time' => $day['start_time'],
                     'end_time' => $day['end_time'],
-                    'user_id' => $day['teacher'],
-                    'subject_id' => $day['subject']
+                    'user_id' => $day['teacher']
                 ];
 
                 isset($day['id'])
@@ -189,7 +193,7 @@ class BatchController extends Controller
                 'message' => 'Batch updated successfully.',
             ]);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage(), ['line' => $th->getLine(), 'file' => $th->getFile()]);
+            $this->logException($th);
 
             return response()->json([
                 'status' => false,
@@ -215,8 +219,8 @@ class BatchController extends Controller
 
             return true;
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in ' . $th->getFile());
-            return false;
+            $this->logException($th);
+            throw new Exception($th->getMessage());
         }
     }
 }

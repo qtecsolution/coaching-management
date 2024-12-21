@@ -19,19 +19,28 @@
                     }}</small>
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="class" class="form-label"
-                        >Tuition Fee <sup class="text-danger">*</sup></label
+                    <label for="name" class="form-label"
+                        >Course<sup class="text-danger">*</sup></label
                     >
-                    <input
-                        type="number"
-                        id="tuition_fee"
-                        placeholder="Enter tuition fee"
-                        class="form-control"
-                        v-model="tuition_fee"
-                    />
+                    <select
+                        v-model="course"
+                        id="course"
+                        class="form-control form-select"
+                    >
+                        <option value="" selected disabled>
+                            Select Course
+                        </option>
+                        <option
+                            v-for="course in courses"
+                            :key="course.id"
+                            :value="course.id"
+                            :selected="course.id == course"
+                        >
+                            {{ course.title }}
+                        </option>
+                    </select>
                     <small
                         class="text-danger"
                         v-if="errors && errors.tuition_fee"
@@ -39,7 +48,6 @@
                     >
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="class" class="form-label">Status</label>
@@ -205,7 +213,7 @@ const toaster = (type = "info", message = "Test notification.") => {
     });
 };
 
-const props = defineProps(["route", "teachers", "batch", "levels", "subjects"]);
+const props = defineProps(["route", "teachers", "batch", "courses"]);
 
 const statusList = [
     { id: 0, name: "Upcoming" },
@@ -214,8 +222,7 @@ const statusList = [
 ];
 
 const name = ref(props?.batch?.name);
-const tuition_fee = ref(props?.batch?.tuition_fee);
-const level = ref(props?.batch?.level_id || "");
+const course = ref(props?.batch?.course_id);
 const status = ref(props?.batch?.status || 0);
 const days = ref([]);
 const errors = ref("");
@@ -227,8 +234,7 @@ if (props?.batch?.batch_days?.length > 0) {
             start_time: day.start_time,
             end_time: day.end_time,
             teacher: day.user_id,
-            subject: day.subject_id,
-            id: day.id,
+            id: day.id
         });
     });
 } else {
@@ -237,8 +243,7 @@ if (props?.batch?.batch_days?.length > 0) {
             day: "",
             start_time: "",
             end_time: "",
-            teacher: "",
-            subject: "",
+            teacher: ""
         },
     ];
 }
@@ -248,8 +253,7 @@ const addDay = () => {
         day: "",
         start_time: "",
         end_time: "",
-        teacher: "",
-        subject: "",
+        teacher: ""
     });
 };
 
@@ -314,8 +318,7 @@ const save = async () => {
     const form = new FormData();
     form.append("_method", "PUT");
     form.append("name", name.value);
-    form.append("tuition_fee", tuition_fee.value);
-    form.append("level", level.value);
+    form.append("course", course.value);
     form.append("status", status.value);
 
     if (
@@ -323,8 +326,7 @@ const save = async () => {
         (days.value[0]?.day &&
             days.value[0]?.start_time &&
             days.value[0]?.end_time &&
-            days.value[0]?.teacher &&
-            days.value[0]?.subject)
+            days.value[0]?.teacher)
     ) {
         form.append("days", JSON.stringify(days.value));
     } else {

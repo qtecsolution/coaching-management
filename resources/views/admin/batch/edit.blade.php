@@ -11,7 +11,8 @@
                 {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body" id="app">
                     <edit-batch :route="{{ json_encode(route('admin.batches.update', $batch->id)) }}"
-                        :teachers="{{ json_encode($teachers) }}" :batch="{{ json_encode($batch) }}" />
+                        :teachers="{{ json_encode($teachers) }}" :batch="{{ json_encode($batch) }}"
+                        :courses="{{ json_encode($courses) }}" />
                 </div>
             </div>
         </section>

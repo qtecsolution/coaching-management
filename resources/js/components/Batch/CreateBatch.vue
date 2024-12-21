@@ -19,22 +19,34 @@
                     }}</small>
                 </div>
             </div>
-             <div class="col-md-6">
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label for="class" class="form-label">Tuition Fee <sup class="text-danger">*</sup></label>
-                        <input
-                        type="number"
-                        id="tuition_fee"
-                        placeholder="Enter tuition fee"
-                        class="form-control"
-                        v-model="tuition_fee"
-                        required
-                    />
-                    <small class="text-danger" v-if="errors && errors.tuition_fee">{{
-                        errors.tuition_fee[0]
-                    }}</small>
+                    <label for="name" class="form-label"
+                        >Course<sup class="text-danger">*</sup></label
+                    >
+                    <select
+                        v-model="course"
+                        id="course"
+                        class="form-control form-select"
+                    >
+                        <option value="" selected disabled>
+                            Select Course
+                        </option>
+                        <option
+                            v-for="course in courses"
+                            :key="course.id"
+                            :value="course.id"
+                        >
+                            {{ course.title }}
+                        </option>
+                    </select>
+                    <small
+                        class="text-danger"
+                        v-if="errors && errors.tuition_fee"
+                        >{{ errors.tuition_fee[0] }}</small
+                    >
                 </div>
-              </div>
+            </div>
         </div>
 
         <hr />
@@ -178,10 +190,10 @@ const toaster = (type = "info", message = "Test notification.") => {
     });
 };
 
-const props = defineProps(["route", "teachers", "subjects", "levels"]);
+const props = defineProps(["route", "teachers", "courses"]);
 
 const name = ref("");
-const level = ref("");
+const course = ref("");
 const errors = ref("");
 
 const days = ref([
@@ -190,7 +202,6 @@ const days = ref([
         start_time: "",
         end_time: "",
         teacher: "",
-        subject: "",
     },
 ]);
 
@@ -200,7 +211,6 @@ const addDay = () => {
         start_time: "",
         end_time: "",
         teacher: "",
-        subject: "",
     });
 };
 
@@ -257,23 +267,21 @@ watch(
 );
 
 const save = async () => {
-    if (!name.value || days.value.length < 1||!tuition_fee.value) {
+    if (!name.value || days.value.length < 1) {
         toaster("warning", "Please fill in all the required fields.");
         return false;
     }
 
     const form = new FormData();
     form.append("name", name.value);
-    form.append("tuition_fee", tuition_fee.value);
-    form.append("level", level.value);
+    form.append("course", course.value);
 
     if (
         days.value.length > 1 ||
         (days.value[0]?.day &&
             days.value[0]?.start_time &&
             days.value[0]?.end_time &&
-            days.value[0]?.teacher &&
-            days.value[0]?.subject)
+            days.value[0]?.teacher)
     ) {
         form.append("days", JSON.stringify(days.value));
     } else {
@@ -286,18 +294,9 @@ const save = async () => {
             // console.log(response.data);
             toaster("success", response.data.message);
 
-            name.value = "";
-            tuition_fee.value = "";
-            level.value = "";
-            days.value = [
-                {
-                    day: "",
-                    start_time: "",
-                    end_time: "",
-                    teacher: "",
-                    subject: "",
-                },
-            ];
+            setTimeout(() => {
+                window.location.href = "/admin/batches";
+            }, 1000);
         })
         .catch((error) => {
             errors.value = error.response.data.errors;
