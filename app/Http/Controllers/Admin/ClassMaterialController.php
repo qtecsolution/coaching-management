@@ -6,14 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\BatchDay;
 use App\Models\ClassMaterial;
-use App\Models\Subject;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Str;
+use App\Traits\ExceptionHandler;
+use Exception;
 
 class ClassMaterialController extends Controller
 {
+    use ExceptionHandler;
+
     /**
      * Display a listing of the resource.
      */
@@ -26,9 +27,9 @@ class ClassMaterialController extends Controller
         if ($request->ajax()) {
             if (auth()->user()->user_type == 'teacher') {
                 $batchDayIds = BatchDay::where('user_id', auth()->id())->pluck('id');
-                $query = ClassMaterial::whereIn('batch_day_id', $batchDayIds)->latest();
+                $query = ClassMaterial::whereIn('batch_day_id', $batchDayIds);
             } else {
-                $query = ClassMaterial::latest();
+                $query = ClassMaterial::query();
             }
 
             return DataTables::of($query)
@@ -80,31 +81,35 @@ class ClassMaterialController extends Controller
 
         $request->validate([
             'title' => 'required',
-            'file' => 'nullable|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png|max:2048|file|required_if:url,null',
-            'url' => 'nullable|url|required_if:file,null',
-            'batch' => 'required|exists:batches,id',
-            'subject' => 'required|integer',
+            'file' => 'mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png|max:2048|file|required_if:url,null',
+            'url' => 'url|required_if:file,null',
+            'batch' => 'required|exists:batches,id'
         ]);
 
-        if ($request->hasFile('file')) {
-            $url = fileUpload($request->file('file'), 'media/class_materials');
-            $isFile = true;
-        } else {
-            $url = $request->url;
-            $isFile = false;
+        try {
+            if ($request->hasFile('file')) {
+                $url = fileUpload($request->file('file'), 'media/class_materials');
+                $isFile = true;
+            } else {
+                $url = $request->url;
+                $isFile = false;
+            }
+
+            // NOTE: request subject is the batch day ID.
+
+            ClassMaterial::create([
+                'batch_day_id' => $request->subject,
+                'title' => $request->title,
+                'url' => $url,
+                'is_file' => $isFile
+            ]);
+
+            $this->getAlert('success', 'Class material added successfully.');
+            return to_route('admin.class-materials.index', ['batch' => $request->batch]);
+        } catch (\Throwable $th) {
+            $this->logException($th);
+            return back()->withInput();
         }
-
-        // NOTE: request subject is the batch day ID.
-
-        ClassMaterial::create([
-            'batch_day_id' => $request->subject,
-            'title' => $request->title,
-            'url' => $url,
-            'is_file' => $isFile
-        ]);
-
-        alert('Success!', 'Class material added successfully.', 'success');
-        return to_route('admin.class-materials.index', ['batch' => $request->batch]);
     }
 
     /**
@@ -141,34 +146,38 @@ class ClassMaterialController extends Controller
 
         $request->validate([
             'title' => 'required',
-            'file' => 'nullable|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png|max:2048|file|required_if:url,null',
-            'url' => 'nullable|url|required_if:file,null',
-            'batch' => 'required|exists:batches,id',
-            'subject' => 'required|integer',
+            'file' => 'mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png|max:2048|file|required_if:url,null',
+            'url' => 'url|required_if:file,null',
+            'batch' => 'required|exists:batches,id'
         ]);
 
-        $classMaterial = ClassMaterial::findOrFail($id);
+        try {
+            $classMaterial = ClassMaterial::findOrFail($id);
 
-        if ($request->hasFile('file')) {
-            $classMaterial->is_file && fileRemove($classMaterial->url);
-            $url = fileUpload($request->file('file'), 'media/class_materials');
-            $isFile = true;
-        } else {
-            $url = $request->url;
-            $isFile = false;
+            if ($request->hasFile('file')) {
+                $classMaterial->is_file && fileRemove($classMaterial->url);
+                $url = fileUpload($request->file('file'), 'media/class_materials');
+                $isFile = true;
+            } else {
+                $url = $request->url;
+                $isFile = false;
+            }
+
+            // NOTE: request subject is the batch day ID.
+
+            $classMaterial->update([
+                'batch_day_id' => $request->subject,
+                'title' => $request->title,
+                'url' => $url,
+                'is_file' => $isFile
+            ]);
+
+            $this->getAlert('success', 'Class material updated successfully.');
+            return to_route('admin.class-materials.index', ['batch' => $request->batch]);
+        } catch (\Throwable $th) {
+            $this->logException($th);
+            return back()->withInput();
         }
-
-        // NOTE: request subject is the batch day ID.
-
-        $classMaterial->update([
-            'batch_day_id' => $request->subject,
-            'title' => $request->title,
-            'url' => $url,
-            'is_file' => $isFile
-        ]);
-
-        alert('Success!', 'Class material updated successfully.', 'success');
-        return to_route('admin.class-materials.index', ['batch' => $request->batch]);
     }
 
     /**
@@ -191,9 +200,8 @@ class ClassMaterialController extends Controller
 
             return true;
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
-
-            return false;
+            $this->logException($th);
+            throw new Exception($th->getMessage());
         }
     }
 
@@ -204,7 +212,7 @@ class ClassMaterialController extends Controller
         ]);
 
         $batch = Batch::with('batch_days')->findOrFail($request->batch);
-        
+
         return response()->json([
             'data' => $batch->batch_days
         ]);
