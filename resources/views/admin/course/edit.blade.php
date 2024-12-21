@@ -19,6 +19,7 @@
                                 <div class="form-group">
                                     <label for="file" class="form-label">Image<sup class="text-danger">*</sup></label>
                                     <!-- File uploader with image preview -->
+                                    {{-- TODO: How to validate if image field is empty. --}}
                                     <input type="image" name="image" accept="image/*" class="basic-filepond" data-source="{{ asset('storage/' . $course->image) }}">
 
                                     @error('image')
@@ -54,7 +55,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="discount_type" class="form-label">Discount Type<sup class="text-danger">*</sup></label>
-                                    <select name="discount_type" id="discount_type" class="form-control form-select">
+                                    <select name="discount_type" id="discount_type" class="form-control form-select" required>
                                         <option value="fixed" {{ old('fixed', $course->discount_type) == 'fixed' ? 'selected' : '' }}>Fixed</option>
                                         <option value="percentage" {{ old('percentage', $course->discount_type) == 'percentage' ? 'selected' : '' }}>Percentage</option>
                                     </select>

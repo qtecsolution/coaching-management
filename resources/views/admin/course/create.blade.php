@@ -18,7 +18,7 @@
                                 <div class="form-group">
                                     <label for="file" class="form-label">Image<sup class="text-danger">*</sup></label>
                                     <!-- File uploader with image preview -->
-                                    <input type="image" name="image" accept="image/*" class="basic-filepond">
+                                    <input type="image" name="image" accept="image/*" class="basic-filepond" required>
 
                                     @error('image')
                                         <small class="text-danger">{{ $message }}</small>
@@ -53,7 +53,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="discount_type" class="form-label">Discount Type<sup class="text-danger">*</sup></label>
-                                    <select name="discount_type" id="discount_type" class="form-control form-select">
+                                    <select name="discount_type" id="discount_type" class="form-control form-select" required>
                                         <option value="fixed" {{ old('fixed') == 'fixed' ? 'selected' : '' }}>Fixed</option>
                                         <option value="percentage" {{ old('percentage') == 'percentage' ? 'selected' : '' }}>Percentage</option>
                                     </select>
