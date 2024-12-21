@@ -33,7 +33,13 @@ class StudentController extends Controller
                     return $row->user->phone;
                 })
                 ->addColumn('email', function ($row) {
-                    return $row->user->email;
+                    return $row->user->email ?? '--';
+                })
+                ->editColumn('qualification', function ($row) {
+                    return $row->qualification ?? '--';
+                })
+                ->editColumn('occupation', function ($row) {
+                    return $row->occupation ?? '--';
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->status) {
