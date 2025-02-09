@@ -29,8 +29,8 @@ class SettingController extends Controller
             case 'sms-settings':
                 $providers = smsProviders();
                 $activeProvider = [
-                    'name' => config('smsCredentials.active_provider'),
-                    'data' => smsProviderData(config('smsCredentials.active_provider'))
+                    'name' => config('SmsCredentials.active_provider'),
+                    'data' => smsProviderData(config('SmsCredentials.active_provider'))
                 ];
 
                 return view('admin.setting.sms', compact('type', 'settings', 'providers', 'activeProvider'));
@@ -74,7 +74,7 @@ class SettingController extends Controller
     private function updateSmsCredentials($activeProvider, $smsProviders)
     {
         // Path to the config file
-        $configFilePath = config_path('smsCredentials.php');
+        $configFilePath = config_path('SmsCredentials.php');
 
         // Generate the updated content for the config file
         $content = '<?php return ' . var_export([
@@ -110,7 +110,7 @@ class SettingController extends Controller
 
         $activeProvider = $request->provider;
 
-        $smsProviders = config('smsCredentials.providers');
+        $smsProviders = config('SmsCredentials.providers');
         $smsProviders[$activeProvider] = $request->except(['_token', 'provider']);
 
         $this->updateSmsCredentials($activeProvider, $smsProviders);

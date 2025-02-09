@@ -14,7 +14,7 @@ class SmsController extends Controller
             $providerData = smsProviderData($provider);
 
             if (!is_null($providerData)) {
-                $config = config('smsCredentials.providers')[$provider];
+                $config = config('SmsCredentials.providers')[$provider];
                 $response = $this->sendSms($provider, $config, '1234567890', 'Test SMS');
                 return response()->json($response, 200);
             } else {

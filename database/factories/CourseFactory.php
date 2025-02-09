@@ -20,8 +20,8 @@ class CourseFactory extends Factory
             'title' => fake()->jobTitle(),
             'slug' => fake()->slug(),
             'description' => fake()->text(),
-            'image' => fake()->imageUrl(),
-            'price' => fake()->randomFloat(2, 0, 1000),
+            'image' => 'https://placehold.co/600x400/png',
+            'price' => fake()->randomFloat(2, 0, 8000),
             'discount_type' => fake()->randomElement(['fixed', 'percentage']),
             'discount' => fake()->randomFloat(2, 0, 100),
             'status' => fake()->randomElement([1, 0])

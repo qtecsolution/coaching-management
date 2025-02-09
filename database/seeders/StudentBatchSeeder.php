@@ -15,16 +15,21 @@ class StudentBatchSeeder extends Seeder
      */
     public function run(): void
     {
+        // Fetch all active batches and students
         $batches = Batch::active()->get();
-        $students = Student::all();
+        $students = Student::active()->get();
 
         foreach ($students as $student) {
+            // Assign a random batch to the student
             $batch = $batches->random();
+
+            // Create a student-batch relationship
             StudentBatch::create([
                 'student_id' => $student->id,
                 'batch_id' => $batch->id,
             ]);
             
+            // Update the total students count for the batch
             $batch->update(['total_students' => StudentBatch::where('batch_id', $batch->id)->count()]);
         }
     }

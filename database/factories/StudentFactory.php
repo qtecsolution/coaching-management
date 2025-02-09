@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Student>
@@ -17,7 +18,7 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'reg_id' => fake()->numberBetween(100, 999) . rand(0, 9),
+            'reg_id' => Str::random(8) . rand(1, 9),
             'occupation' => fake()->jobTitle(),
             'qualification' => fake()->jobTitle(),
             'date_of_birth' => fake()->date(),

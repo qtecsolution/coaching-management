@@ -80,8 +80,8 @@ class MessageController extends Controller
         ]);
 
         // Get SMS provider configuration
-        $provider = config('smsCredentials.active_provider');
-        $config = config('smsCredentials.providers')[$provider];
+        $provider = config('SmsCredentials.active_provider');
+        $config = config('SmsCredentials.providers')[$provider];
 
         $smsController = new SmsController();
 

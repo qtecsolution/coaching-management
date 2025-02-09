@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -16,14 +15,18 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
+        // create roles
         $adminRole = Role::create(['name' => 'Admin']);
         $teacherRole = Role::create(['name' => 'Teacher']);
 
+        // assign roles to users
         $admin = User::find(1);
         $admin->syncRoles($adminRole);
-        
-        $teacher = User::find(3);
-        $teacher->syncRoles($teacherRole);
+
+        $teachers = User::where('user_type', 'teacher')->get();
+        $teachers->each(function ($teacher) use ($teacherRole) {
+            $teacher->syncRoles($teacherRole);
+        });
 
         // create permissions
         $permissions = [
@@ -42,14 +45,26 @@ class RolePermissionSeeder extends Seeder
             'view_messages', 'create_message', 'update_message', 'delete_message',
         ];
 
+        $teacherPermissions = [
+            'view_students', 'create_student', 'update_student', 'delete_student',
+            'view_courses', 'create_course', 'update_course', 'delete_course',
+            'view_batches', 'create_batch', 'update_batch', 'delete_batch',
+            'view_attendance', 'create_attendance', 'update_attendance', 'delete_attendance',
+            'view_messages', 'create_message', 'update_message', 'delete_message',
+        ];
+
         $permissions = collect($permissions)->map(function ($permission) {
             return ['name' => $permission, 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()];
         });
 
+        // forget cached permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        
+        // create permissions
         Permission::insert($permissions->toArray());
-
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        
+        // sync permissions
         $adminRole->syncPermissions(Permission::all());
+        $teacherRole->syncPermissions($teacherPermissions);
     }
 }

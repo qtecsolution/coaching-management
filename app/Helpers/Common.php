@@ -89,7 +89,7 @@ if (!function_exists('smsProviderData')) {
             if (class_basename($key) === $providerName) {
                 return [
                     'fields' => $value,
-                    'credentials' => config("smsCredentials.providers.{$providerName}", null)
+                    'credentials' => config("SmsCredentials.providers.{$providerName}", null)
                 ];
             }
         }

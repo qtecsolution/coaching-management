@@ -28,5 +28,8 @@ class SettingSeeder extends Seeder
         foreach ($settings as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
+
+        // copy SmsCredentials-example.php to config/SmsCredentials.php
+        copy(base_path('SmsCredentials-example.php'), base_path('config/SmsCredentials.php'));
     }
 }

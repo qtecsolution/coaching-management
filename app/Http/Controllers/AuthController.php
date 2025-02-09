@@ -197,8 +197,8 @@ class AuthController extends Controller
 
             if ($user->phone == $request->data) {
                 // Send SMS
-                $provider = config('smsCredentials.active_provider');
-                $config = config('smsCredentials.providers')[$provider];
+                $provider = config('SmsCredentials.active_provider');
+                $config = config('SmsCredentials.providers')[$provider];
 
                 $smsController = new SmsController();
                 $smsController->sendSms($provider, $config, $user->phone, $message);
