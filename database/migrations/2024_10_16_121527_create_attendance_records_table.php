@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Attendance;
+use App\Models\BatchDayDate;
 use App\Models\Student;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,9 +16,9 @@ return new class extends Migration
     {
         Schema::create('attendance_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Attendance::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(BatchDayDate::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Student::class)->constrained()->cascadeOnDelete();
-            $table->integer('status')->default(1)->comment('0 = Absent, 1 = Present, 2 = Late');
+            $table->integer('status')->default(1)->comment('0 = Absent, 1 = Present, 2 = Late', '3 = Leave');
             $table->text('note')->nullable();
             $table->timestamps();
         });

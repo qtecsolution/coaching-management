@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Batch;
 use App\Models\BatchDay;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,12 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('batch_day_dates', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Batch::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(BatchDay::class)->constrained()->cascadeOnDelete();
             $table->date('date');
-            $table->tinyInteger('status')->default(1);
+            $table->string('day');
+            $table->enum('status', ['completed', 'pending'])->default('pending');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict');
             $table->unsignedBigInteger('updated_by')->nullable();
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('batch_day_dates');
     }
 };

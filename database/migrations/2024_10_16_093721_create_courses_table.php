@@ -17,9 +17,6 @@ return new class extends Migration
             $table->string('slug');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->double('price')->default(0);
-            $table->enum('discount_type', ['fixed', 'percentage'])->default('fixed');
-            $table->double('discount')->default(0);
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

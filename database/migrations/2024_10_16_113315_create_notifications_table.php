@@ -16,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->string('link')->nullable();
-            $table->longText('body');
+            $table->string('url')->nullable();
+            $table->longText('content');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

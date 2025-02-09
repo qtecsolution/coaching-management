@@ -46,8 +46,8 @@
                 name: 'DT_RowIndex'
             },
             {
-                data: 'name',
-                name: 'name'
+                data: 'title',
+                name: 'title'
             },
             {
                 data: 'course',

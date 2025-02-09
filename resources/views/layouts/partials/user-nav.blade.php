@@ -11,18 +11,3 @@
         <span>Class Materials</span>
     </a>
 </li>
-
-<li class="sidebar-item has-sub {{ Route::is('user.payments.*') ? 'active' : '' }}">
-    <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
-        <i class="bi bi-cash-stack"></i>
-        <span>Tuition Fee</span>
-    </a>
-    <ul class="submenu {{ Route::is('user.payments.*') ? 'submenu-open' : 'submenu-close' }}">
-        <li class="submenu-item {{ Route::is('user.payments.index') ? 'active' : '' }}">
-            <a href="{{ route('user.payments.index') }}">Payment History</a>
-        </li>
-        <li class="submenu-item {{ Route::is('user.payments.due') ? 'active' : '' }}">
-            <a href="{{ route('user.payments.due') }}">Due Payments</a>
-        </li>
-    </ul>
-</li>

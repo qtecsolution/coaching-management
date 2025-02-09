@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('batch_days', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Batch::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete()->comment('Teacher ID');
+            $table->foreignIdFor(User::class)->constrained()->restrictOnDelete()->comment('Teacher ID');
             $table->string('day');
             $table->string('start_time');
             $table->string('end_time');

@@ -25,9 +25,12 @@ class BatchSeeder extends Seeder
         // Create batches
         foreach ($courses as $course) {
             Batch::create([
-                'name' => 'Batch ' . $course->id,
+                'title' => 'Batch ' . $course->id,
                 'course_id' => $course->id,
                 'status' => fake()->numberBetween(0, 2),
+                'price' => fake()->randomFloat(2, 0, 8000),
+                'discount_type' => fake()->randomElement(['fixed', 'percentage']),
+                'discount' => fake()->randomFloat(2, 0, 60),
             ]);
         }
 

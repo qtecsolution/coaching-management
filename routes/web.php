@@ -1,17 +1,13 @@
 <?php
 
 use App\Http\Controllers\Admin\AttendanceController;
-use App\Http\Controllers\Admin\AttendanceRecordController;
-use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\ClassMaterialController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LeadController;
-use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\MessageController;
-use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentBatchController;
 use App\Http\Controllers\Admin\StudentController;
@@ -21,7 +17,6 @@ use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\SmsController;
 use App\Http\Controllers\Student\ClassMaterialController as StudentClassMaterialController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
-use App\Http\Controllers\Student\PaymentController as StudentPaymentController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -100,29 +95,12 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::resource('batches', BatchController::class);
     Route::get('/batch/{id}/students', [StudentBatchController::class, 'index'])->name('batches.students');
 
-    // payment routes
-    Route::resource('payments', PaymentController::class);
-    Route::get('payments/dues/list', [PaymentController::class, 'due'])->name('payments.due');
-    Route::match(['get', 'post'], '/payments/generate/list', [PaymentController::class, 'generatePayments'])->name('payments.generate');
-
-    // report routes
-    Route::get('reports/daily-collection', [ReportController::class, 'dailyCollection'])->name('reports.daily.collection');
-    Route::get('reports/payments-due', [ReportController::class, 'duePayments'])->name('reports.payments.due');
-    Route::get('reports/payments-summary', [ReportController::class, 'paymentsSummary'])->name('reports.payments.summary');
-
-    // attendance routes
-    Route::resource('attendance', AttendanceController::class);
-    Route::get('/attendance/{batchDayId}/list', [AttendanceController::class, 'attendance'])->name('attendance.list');
-
     // lead routes
     Route::resource('leads', LeadController::class);
 
     // class material routes
     Route::resource('class-materials', ClassMaterialController::class);
     Route::post('/class-materials/get-days', [ClassMaterialController::class, 'getDays'])->name('class-materials.get-days');
-
-    // level routes
-    Route::resource('levels', LevelController::class);
 
     // message routes
     Route::resource('messages', MessageController::class);
@@ -132,11 +110,6 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 Route::prefix('user')->as('user.')->middleware('isStudent')->group(function () {
     // dashboard
     Route::get('/', [StudentDashboardController::class, 'index'])->name('dashboard');
-
-    // payment routes
-    Route::get('payments', [StudentPaymentController::class, 'index'])->name('payments.index');
-    Route::get('payments/{id}', [StudentPaymentController::class, 'show'])->name('payments.show');
-    Route::get('payments/due/list', [StudentPaymentController::class, 'due'])->name('payments.due');
 
     // class material
     Route::get('class-materials', [StudentClassMaterialController::class, 'index'])->name('class-materials.index');

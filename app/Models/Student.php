@@ -28,11 +28,6 @@ class Student extends Model
         return $this->hasOne(StudentBatch::class)->latest();
     }
 
-    public function payments()
-    {
-        return $this->hasMany(Payment::class);
-    }
-
     public function getNameAttribute()
     {
         return $this->user ? $this->user->name : null;

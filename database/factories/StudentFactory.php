@@ -17,10 +17,12 @@ class StudentFactory extends Factory
      */
     public function definition(): array
     {
+        $deegrees = ['JSC', 'SSC', 'HSC', 'DIPLOMA', 'BSC', 'MSC'];
+
         return [
             'reg_id' => Str::random(8) . rand(1, 9),
             'occupation' => fake()->jobTitle(),
-            'qualification' => fake()->jobTitle(),
+            'qualification' => fake()->randomElement($deegrees),
             'date_of_birth' => fake()->date(),
             'nid_number' => fake()->numberBetween(10000000, 99999999),
             'address' => fake()->address(),

@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone')->unique();
             $table->string('email')->unique()->nullable();
-            $table->string('occupation');
-            $table->string('qualification');
             $table->text('note')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->unsignedBigInteger('created_by')->nullable();

@@ -16,7 +16,10 @@ return new class extends Migration
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Course::class)->constrained()->restrictOnDelete();
-            $table->string('name');
+            $table->string('title');
+            $table->double('price')->default(0);
+            $table->enum('discount_type', ['fixed', 'percentage'])->default('fixed');
+            $table->double('discount')->default(0);
             $table->bigInteger('total_students')->default(0);
             $table->tinyInteger('status')->default(1);
             $table->unsignedBigInteger('created_by')->nullable();

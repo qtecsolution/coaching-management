@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('class_materials', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Batch::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(BatchDay::class)->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->string('url');
             $table->boolean('is_file')->default(1);

@@ -38,37 +38,6 @@
         </section>
         <!-- Basic Tables end -->
     </div>
-
-    <!-- Add Level Modal -->
-    <div class="modal fade" id="addLevelModal" tabindex="-1" aria-labelledby="addLevelModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addLevelModalLabel">Add Level</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('admin.levels.store') }}" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <label for="name" class="form-label">Name<sup class="text-danger">*</sup></label>
-                            <input type="text" name="name" id="name" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="status" class="form-label">Status<sup class="text-danger">*</sup></label>
-                            <select name="status" id="status" class="form-control">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @push('js')

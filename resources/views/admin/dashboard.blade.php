@@ -26,7 +26,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-8">
                                         <h6 class="text-muted font-semibold">Total Students</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $data['total_student'] }}</h6>
+                                        <h6 class="font-extrabold mb-0">{{ @$data['total_student'] }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -48,7 +48,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-8">
                                         <h6 class="text-muted font-semibold">Total Collectable</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $data['total_estimated_collection'] }}</h6>
+                                        <h6 class="font-extrabold mb-0">{{ @$data['total_estimated_collection'] }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-8">
                                         <h6 class="text-muted font-semibold">Total Collected</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $data['total_collection'] }}</h6>
+                                        <h6 class="font-extrabold mb-0">{{ @$data['total_collection'] }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -92,37 +92,8 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-8">
                                         <h6 class="text-muted font-semibold">Total Due</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $data['total_due'] }}</h6>
+                                        <h6 class="font-extrabold mb-0">{{ @$data['total_due'] }}</h6>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row d-none">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Monthly Payment Collection {{ now()->year }}</h4>
-                            </div>
-                            <div class="card-body">
-                                <div id="chart-collection"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Monthly Payment Collection {{ now()->year }}</h4>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="col-12">
-                                    <h5 class="mb-0">{{ $message }}</h5>
-                                </div>
-                                <div class="col-12">
-                                    <div id="chart-america1"></div>
                                 </div>
                             </div>
                         </div>
@@ -137,120 +108,4 @@
     <!-- Need: Apexcharts -->
     <script src="{{ asset('assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/static/js/pages/dashboard.js') }}"></script>
-    <script>
-        var optionsCollection = {
-            annotations: {
-                position: "back",
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            chart: {
-                type: "bar",
-                height: 300,
-            },
-            fill: {
-                opacity: 1,
-            },
-            plotOptions: {},
-            series: [{
-                name: "collection",
-                data: @json($amounts),
-            }, ],
-            colors: "#435ebe",
-            xaxis: {
-                categories: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
-            },
-        }
-        var collection = new ApexCharts(
-            document.querySelector("#chart-collection"),
-            optionsCollection
-        )
-        collection.render();
-
-        var optionsEurope1 = {
-            series: [{
-                name: "Collection",
-                data: @json($amounts),
-            }, ],
-            chart: {
-                height: 300,
-                type: "area",
-                toolbar: {
-                    show: false,
-                },
-            },
-            colors: ["#5350e9"],
-            stroke: {
-                width: 2,
-            },
-            grid: {
-                show: false,
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            xaxis: {
-                // type: "text",
-                categories: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
-                axisBorder: {
-                    show: false,
-                },
-                axisTicks: {
-                    show: false,
-                },
-                labels: {
-                    show: false,
-                },
-            },
-            show: false,
-            yaxis: {
-                labels: {
-                    show: false,
-                },
-            },
-            tooltip: {
-                x: {
-                    // format: "dd/MM/yy HH:mm",
-                },
-            },
-        }
-
-        let optionsAmerica1 = {
-            ...optionsEurope1,
-            colors: ["#008b75"],
-        }
-
-        var chartAmerica1 = new ApexCharts(
-            document.querySelector("#chart-america1"),
-            optionsAmerica1,
-        )
-        chartAmerica1.render()
-    </script>
 @endpush

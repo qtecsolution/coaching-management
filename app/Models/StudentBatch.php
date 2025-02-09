@@ -17,11 +17,6 @@ class StudentBatch extends Model
     {
         return $this->belongsTo(Student::class);
     }
-    
-    public function payments()
-    {
-        return $this->hasMany(Payment::class, 'student_batch_id');
-    }
 
     public function attendance()
     {
