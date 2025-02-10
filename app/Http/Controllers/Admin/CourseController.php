@@ -23,16 +23,6 @@ class CourseController extends Controller
                 ->addColumn('action', function ($row) {
                     return view('admin.course.action', compact('row'));
                 })
-                ->editColumn('price', function ($row) {
-                    return number_format($row->price, 2);
-                })
-                ->editColumn('discount', function ($row) {
-                    if ($row->discount_type == 'percentage') {
-                        return $row->discount . '%';
-                    } else {
-                        return number_format($row->discount, 2) . 'Tk';
-                    }
-                })
                 ->editColumn('status', function ($row) {
                     if ($row->status == 1) {
                         return '<span class="badge bg-success">Active</span>';
@@ -41,7 +31,7 @@ class CourseController extends Controller
                     }
                 })
                 ->editColumn('image', function ($row) {
-                    return '<img src="' . asset('storage/' . $row->image) . '" width="50" alt="' . $row->title . '" class="rounded">';
+                    return '<img src="' . absolutePath($row->image) . '" width="80" alt="' . $row->title . '" class="rounded">';
                 })
                 ->rawColumns(['action', 'status', 'image'])
                 ->make(true);
@@ -60,9 +50,6 @@ class CourseController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'price' => 'required|numeric',
-            'discount_type' => 'required|in:fixed,percentage',
-            'discount' => 'required|numeric|min:0',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -81,9 +68,6 @@ class CourseController extends Controller
                 'title' => $request->title,
                 'slug' => $slug,
                 'description' => $request->description,
-                'price' => $request->price,
-                'discount_type' => $request->discount_type,
-                'discount' => $request->discount,
                 'image' => $image,
             ]);
 
@@ -108,9 +92,6 @@ class CourseController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'price' => 'required|numeric',
-            'discount_type' => 'required|in:fixed,percentage',
-            'discount' => 'required|numeric|min:0',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'nullable|in:0,1',
         ]);
@@ -133,9 +114,6 @@ class CourseController extends Controller
                 'title' => $request->title,
                 'slug' => $slug,
                 'description' => $request->description,
-                'price' => $request->price,
-                'discount_type' => $request->discount_type,
-                'discount' => $request->discount,
                 'image' => $image,
                 'status' => $request->status ?? $course->status,
             ]);

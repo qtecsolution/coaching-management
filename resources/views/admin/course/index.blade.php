@@ -24,8 +24,6 @@
                                     <th>#</th>
                                     <th>Image</th>
                                     <th>Title</th>
-                                    <th>Price</th>
-                                    <th>Discount</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -58,14 +56,6 @@
                 {
                     data: 'title',
                     name: 'title'
-                },
-                {
-                    data: 'price',
-                    name: 'price'
-                },
-                {
-                    data: 'discount',
-                    name: 'discount'
                 },
                 {
                     data: 'status',

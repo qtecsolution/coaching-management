@@ -41,41 +41,6 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="price" class="form-label">Price<sup class="text-danger">*</sup></label>
-                                    <input type="number" name="price" id="price" placeholder="Price"
-                                        class="form-control" value="{{ old('price', $course->price) }}" required>
-
-                                    @error('price')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="discount_type" class="form-label">Discount Type<sup class="text-danger">*</sup></label>
-                                    <select name="discount_type" id="discount_type" class="form-control form-select" required>
-                                        <option value="fixed" {{ old('fixed', $course->discount_type) == 'fixed' ? 'selected' : '' }}>Fixed</option>
-                                        <option value="percentage" {{ old('percentage', $course->discount_type) == 'percentage' ? 'selected' : '' }}>Percentage</option>
-                                    </select>
-
-                                    @error('discount_type')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="discount" class="form-label">Discount<sup class="text-danger">*</sup></label>
-                                    <input type="number" name="discount" id="discount" placeholder="Discount"
-                                        class="form-control" value="{{ old('discount', $course->discount) }}" required>
-
-                                    @error('discount')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="description" class="form-label">Description<sup class="text-danger">*</sup></label>
