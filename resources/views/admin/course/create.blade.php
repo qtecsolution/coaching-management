@@ -39,9 +39,11 @@
                                     @enderror
                                 </div>
                             </div>
+
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="description" class="form-label">Description<sup class="text-danger">*</sup></label>
+                                    <label for="description" class="form-label">Description<sup
+                                            class="text-danger">*</sup></label>
                                     <textarea name="description" id="description" rows="5" class="form-control" placeholder="Description" required>{{ old('description') }}</textarea>
 
                                     @error('description')

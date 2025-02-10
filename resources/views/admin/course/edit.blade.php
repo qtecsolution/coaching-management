@@ -41,6 +41,7 @@
                                     @enderror
                                 </div>
                             </div>
+
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="description" class="form-label">Description<sup class="text-danger">*</sup></label>
@@ -53,8 +54,16 @@
                             </div>
                         </div>
 
-                        <div class="col-12 text-end mt-2">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                        <div class="d-flex align-items-center mt-2">
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" name="status" type="checkbox" @checked($course->status) value="1" role="switch" id="status">
+                                    <label class="form-check-label" for="status">Active</label>
+                                </div>
+                            </div>
+                            <div class="col-6 text-end">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
                         </div>
                     </form>
                 </div>

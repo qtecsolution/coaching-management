@@ -115,7 +115,7 @@ class CourseController extends Controller
                 'slug' => $slug,
                 'description' => $request->description,
                 'image' => $image,
-                'status' => $request->status ?? $course->status,
+                'status' => $request->status ? 1 : 0,
             ]);
 
             $this->getAlert('success', 'Course updated successfully.');
