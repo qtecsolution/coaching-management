@@ -3,19 +3,19 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="name" class="form-label"
-                        >Name<sup class="text-danger">*</sup></label
+                    <label for="title" class="form-label"
+                        >Title<sup class="text-danger">*</sup></label
                     >
                     <input
                         type="text"
-                        id="name"
-                        placeholder="Name"
+                        id="title"
+                        placeholder="Title"
                         class="form-control"
-                        v-model="name"
+                        v-model="title"
                         required
                     />
-                    <small class="text-danger" v-if="errors && errors.name">{{
-                        errors.name[0]
+                    <small class="text-danger" v-if="errors && errors.title">{{
+                        errors.title[0]
                     }}</small>
                 </div>
             </div>
@@ -24,50 +24,93 @@
                     <label for="name" class="form-label"
                         >Course<sup class="text-danger">*</sup></label
                     >
-                    <select
+                    <multiselect
                         v-model="course"
-                        id="course"
+                        :options="courses"
+                        :multiple="false"
+                        :close-on-select="true"
+                        :clear-on-select="false"
+                        :preserve-search="false"
+                        placeholder="Select Course"
+                        label="title"
+                        track-by="id"
+                        :preselect-first="false"
+                    >
+                        <template #selection="{ values, search, isOpen }">
+                            <span
+                                class="multiselect__single"
+                                v-if="values.length"
+                                v-show="!isOpen"
+                            >
+                                {{ values.length }} options selected
+                            </span>
+                        </template>
+                    </multiselect>
+                    <small class="text-danger" v-if="errors && errors.course">{{
+                        errors.course[0]
+                    }}</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="price" class="form-label"
+                        >Price<sup class="text-danger">*</sup></label
+                    >
+                    <input
+                        type="number"
+                        id="price"
+                        placeholder="Price"
+                        class="form-control"
+                        v-model="price"
+                        required
+                    />
+                    <small class="text-danger" v-if="errors && errors.price">{{
+                        errors.price[0]
+                    }}</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="price" class="form-label"
+                        >Discount Type<sup class="text-danger">*</sup></label
+                    >
+                    <select
+                        v-model="discount_type"
+                        id="discount_type"
                         class="form-control form-select"
                     >
-                        <option value="" selected disabled>
-                            Select Course
-                        </option>
-                        <option
-                            v-for="course in courses"
-                            :key="course.id"
-                            :value="course.id"
-                            :selected="course.id == course"
-                        >
-                            {{ course.title }}
-                        </option>
+                        <option value="flat">Flat</option>
+                        <option value="percentage">Percentage</option>
                     </select>
                     <small
                         class="text-danger"
-                        v-if="errors && errors.tuition_fee"
-                        >{{ errors.tuition_fee[0] }}</small
+                        v-if="errors && errors.discount_type"
+                        >{{ errors.discount_type[0] }}</small
                     >
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="class" class="form-label">Status</label>
-                    <select
-                        id="class"
-                        class="form-control form-select"
-                        v-model="status"
+                    <label for="price" class="form-label"
+                        >Discount<sup class="text-danger">*</sup></label
                     >
-                        <option value="" selected disabled>Select Status</option>
-                        <option
-                            v-for="status in statusList"
-                            :key="status.id"
-                            :value="status.id"
-                        >
-                            {{ status.name }}
-                        </option>
-                    </select>
-                    <small class="text-danger" v-if="errors && errors.status">{{
-                        errors.status[0]
-                    }}</small>
+                    <Tooltip
+                        position="top"
+                        message="If discount type is flat, enter the amount. If discount type is percentage, enter the percentage value."
+                    />
+                    <input
+                        type="number"
+                        id="discount"
+                        placeholder="Discount"
+                        class="form-control"
+                        v-model="discount"
+                        required
+                    />
+                    <small
+                        class="text-danger"
+                        v-if="errors && errors.discount"
+                        >{{ errors.discount[0] }}</small
+                    >
                 </div>
             </div>
         </div>
@@ -95,22 +138,28 @@
                         <label for="day" class="form-label"
                             >Day<sup class="text-danger">*</sup></label
                         >
-                        <select
-                            id="day"
-                            class="form-control form-select"
+                        <multiselect
                             v-model="day.day"
+                            :options="dayNames"
+                            :multiple="false"
+                            :close-on-select="true"
+                            :clear-on-select="false"
+                            :preserve-search="false"
+                            placeholder="Select Day"
+                            label="label"
+                            track-by="id"
+                            :preselect-first="false"
                         >
-                            <option value="" selected disabled>
-                                Select Day
-                            </option>
-                            <option value="1">Saturday</option>
-                            <option value="2">Sunday</option>
-                            <option value="3">Monday</option>
-                            <option value="4">Tuesday</option>
-                            <option value="5">Wednesday</option>
-                            <option value="6">Thursday</option>
-                            <option value="7">Friday</option>
-                        </select>
+                            <template #selection="{ values, search, isOpen }">
+                                <span
+                                    class="multiselect__single"
+                                    v-if="values.length"
+                                    v-show="!isOpen"
+                                >
+                                    {{ values.length }} options selected
+                                </span>
+                            </template>
+                        </multiselect>
                         <small
                             class="text-danger"
                             v-if="errors && errors.days"
@@ -121,22 +170,28 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="teacher" class="form-label">Teacher</label>
-                        <select
-                            id="teacher"
-                            class="form-control form-select choices"
+                        <multiselect
                             v-model="day.teacher"
+                            :options="teachers"
+                            :multiple="false"
+                            :close-on-select="true"
+                            :clear-on-select="false"
+                            :preserve-search="false"
+                            placeholder="Select "
+                            label="label"
+                            track-by="id"
+                            :preselect-first="false"
                         >
-                            <option value="" selected disabled>
-                                Select Teacher
-                            </option>
-                            <option
-                                v-for="teacher in teachers"
-                                :key="teacher.id"
-                                :value="teacher.id"
-                            >
-                                {{ teacher.name }} ({{ teacher.phone }})
-                            </option>
-                        </select>
+                            <template #selection="{ values, search, isOpen }">
+                                <span
+                                    class="multiselect__single"
+                                    v-if="values.length"
+                                    v-show="!isOpen"
+                                >
+                                    {{ values.length }} options selected
+                                </span>
+                            </template>
+                        </multiselect>
                         <small
                             class="text-danger"
                             v-if="errors && errors.teacher"
@@ -197,8 +252,13 @@
 <script setup>
 import axios from "axios";
 import { ref, watch } from "vue";
+import Tooltip from "../Tooltip.vue";
+
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
+
+import Multiselect from "vue-multiselect";
+import "vue-multiselect/dist/vue-multiselect.min.css";
 
 const toaster = (type = "info", message = "Test notification.") => {
     const $toast = useToast();
@@ -221,20 +281,36 @@ const statusList = [
     { id: 2, name: "Completed" },
 ];
 
-const name = ref(props?.batch?.name);
-const course = ref(props?.batch?.course_id);
+const title = ref(props?.batch?.title);
+const course = ref(props?.batch?.course);
 const status = ref(props?.batch?.status || 0);
-const days = ref([]);
+const price = ref(props?.batch?.price);
+const discount_type = ref(props?.batch?.discount_type || "flat");
+const discount = ref(props?.batch?.discount);
 const errors = ref("");
 
+const dayNames = ref([
+    { id: 1, label: "Saturday" },
+    { id: 2, label: "Sunday" },
+    { id: 3, label: "Monday" },
+    { id: 4, label: "Tuesday" },
+    { id: 5, label: "Wednesday" },
+    { id: 6, label: "Thursday" },
+    { id: 7, label: "Friday" },
+]);
+
+const days = ref([]);
 if (props?.batch?.batch_days?.length > 0) {
     props.batch.batch_days.forEach((day) => {
+        const selectedDay = dayNames.value.find((item) => item.id == day.day);
+        const selectedTeacher = props.teachers.find((item) => item.id == day.user_id);
+        
         days.value.push({
-            day: day.day,
+            day: selectedDay,
             start_time: day.start_time,
             end_time: day.end_time,
-            teacher: day.user_id,
-            id: day.id
+            teacher: selectedTeacher,
+            id: day.id,
         });
     });
 } else {
@@ -243,7 +319,7 @@ if (props?.batch?.batch_days?.length > 0) {
             day: "",
             start_time: "",
             end_time: "",
-            teacher: ""
+            teacher: "",
         },
     ];
 }
@@ -253,7 +329,7 @@ const addDay = () => {
         day: "",
         start_time: "",
         end_time: "",
-        teacher: ""
+        teacher: "",
     });
 };
 
@@ -310,15 +386,25 @@ watch(
 );
 
 const save = async () => {
-    if (!name.value || days.value.length < 1) {
+    if (
+        !title.value ||
+        !course.value ||
+        !price.value ||
+        !discount_type.value ||
+        !discount.value ||
+        days.value.length < 1
+    ) {
         toaster("warning", "Please fill in all the required fields.");
         return false;
     }
 
     const form = new FormData();
     form.append("_method", "PUT");
-    form.append("name", name.value);
-    form.append("course", course.value);
+    form.append("title", title.value);
+    form.append("course", course.value.id);
+    form.append("price", price.value);
+    form.append("discount_type", discount_type.value);
+    form.append("discount", discount.value);
     form.append("status", status.value);
 
     if (
@@ -328,7 +414,16 @@ const save = async () => {
             days.value[0]?.end_time &&
             days.value[0]?.teacher)
     ) {
-        form.append("days", JSON.stringify(days.value));
+        const finalDays = days.value.map((day) => {
+            return {
+                day: day.day.label,
+                start_time: day.start_time,
+                end_time: day.end_time,
+                teacher: day.teacher.id,
+            };
+        });
+
+        form.append("days", JSON.stringify(finalDays));
     } else {
         form.append("days", JSON.stringify([]));
     }
@@ -344,10 +439,16 @@ const save = async () => {
             }, 1000);
         })
         .catch((error) => {
-            errors.value = error.response.data.errors;
-            console.table(errors.value);
-
+            console.table(error.response.data.errors);
             toaster("error", "Something went wrong. Please try again.");
         });
 };
 </script>
+
+<style>
+.multiselect__tags {
+    padding-top: 6px;
+    min-height: auto !important;
+    max-height: 38px !important;
+}
+</style>

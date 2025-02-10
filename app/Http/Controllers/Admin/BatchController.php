@@ -66,6 +66,11 @@ class BatchController extends Controller
         }
 
         $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
+        $teachers->each(function ($teacher) {
+            $label = $teacher->name .  ' (' . $teacher->phone . ')';
+            return $teacher->setAttribute('label', $label);
+        });
+
         $courses = Course::active()->latest()->get();
 
         return view('admin.batch.create', compact('teachers', 'courses'));
@@ -81,17 +86,23 @@ class BatchController extends Controller
         }
 
         $request->validate([
-            'name' => 'required',
+            'title' => 'required',
             'course' => 'required|exists:courses,id',
-            'days' => 'required'
+            'days' => 'required',
+            'price' => 'required|numeric|min:0',
+            'discount_type' => 'required|in:flat,percentage',
+            'discount' => 'required|numeric|min:0',
         ]);
 
         try {
             $batch = Batch::create([
-                'name' => $request->name,
+                'title' => $request->title,
                 'course_id' => $request->course,
                 'created_by' => auth()->id(),
-                'updated_by' => auth()->id()
+                'updated_by' => auth()->id(),
+                'price' => $request->price,
+                'discount_type' => $request->discount_type,
+                'discount' => $request->discount
             ]);
 
             $days = json_decode($request->days);
@@ -141,9 +152,14 @@ class BatchController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $batch = Batch::with('batch_days')->find($id);
-        $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
+        $batch = Batch::with(['batch_days', 'course'])->find($id);
         $courses = Course::active()->latest()->get();
+
+        $teachers = User::active()->where('user_type', 'teacher')->latest()->get();
+        $teachers->each(function ($teacher) {
+            $label = $teacher->name .  ' (' . $teacher->phone . ')';
+            return $teacher->setAttribute('label', $label);
+        });
 
         return view('admin.batch.edit', compact('batch', 'teachers', 'courses'));
     }
@@ -158,20 +174,26 @@ class BatchController extends Controller
         }
 
         $request->validate([
-            'name' => 'required',
+            'title' => 'required',
             'course' => 'required|exists:courses,id',
             'days' => 'required',
-            'status' => 'nullable|in:0,1,2'
+            'status' => 'nullable|in:0,1,2',
+            'price' => 'required|numeric|min:0',
+            'discount_type' => 'required|in:flat,percentage',
+            'discount' => 'required|numeric|min:0'
         ]);
 
         try {
             $batch = Batch::findOrFail($id);
 
             $batch->update([
-                'name' => $request->name,
+                'title' => $request->title,
                 'course_id' => $request->course,
                 'status' => $request->status ?? $batch->status,
-                'updated_by' => auth()->id()
+                'updated_by' => auth()->id(),
+                'price' => $request->price,
+                'discount_type' => $request->discount_type,
+                'discount' => $request->discount
             ]);
 
             $days = json_decode($request->days, true);
@@ -212,9 +234,7 @@ class BatchController extends Controller
                 abort(403, 'Unauthorized action.');
             }
 
-            $batch = Batch::find($id);
-
-            BatchDay::where('batch_id', $batch->id)->delete();
+            $batch = Batch::findOrFail($id);
             $batch->delete();
 
             return true;

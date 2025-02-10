@@ -16,8 +16,13 @@ class CourseFactory extends Factory
      */
     public function definition(): array
     {
+        $courses = [
+            'Web Design', 'Web Development', 'MERN Development', 'iOS Development', 'Flutter Development',
+            'Laravel Development', 'Mastering Digital Marketing', 'Local SEO', 'Social Media Marketing',
+        ];
+
         return [
-            'title' => fake()->jobTitle(),
+            'title' => fake()->randomElement($courses),
             'slug' => fake()->slug(),
             'description' => fake()->text(),
             'image' => 'https://placehold.co/600x400/png',
