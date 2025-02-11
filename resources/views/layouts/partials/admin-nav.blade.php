@@ -88,7 +88,7 @@
 @endcan --}}
 
 @can('view_messages')
-    <li class="sidebar-item {{ Route::is('admin.messages.index') ? 'active' : '' }}">
+    <li class="sidebar-item {{ in_array(Route::currentRouteName(), ['admin.messages.index', 'admin.messages.create']) ? 'active' : '' }}">
         <a href="{{ route('admin.messages.index') }}" class="sidebar-link">
             <i class="bi bi-chat-left-text"></i>
             <span>Messages</span>

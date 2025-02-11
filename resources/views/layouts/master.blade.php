@@ -1,5 +1,5 @@
 @php
-    $title = \App\Models\Setting::where('key', 'app_name')->value('value') ?? config('app.name');
+    $appName = \App\Models\Setting::where('key', 'app_name')->value('value') ?? config('app.name');
 @endphp
 
 <!DOCTYPE html>
@@ -9,13 +9,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', '') :: {{ $title }}</title>
+    <title>@yield('title', '') :: {{ $appName }}</title>
     <link rel="shortcut icon" href="{{ asset('assets/static/images/logo/favicon.svg') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('assets/static/images/logo/favicon.png') }}" type="image/png">
 
+    <link rel="stylesheet" href="{{ asset('assets/extensions/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/sweetalert2/sweetalert2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/extensions/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/filepond/filepond.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/flatpickr/flatpickr.min.css') }}">
@@ -51,8 +51,6 @@
     <script src="{{ asset('assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script>
-    <script src="{{ asset('assets/js/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js') }}"></script>
