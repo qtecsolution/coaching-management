@@ -139,7 +139,7 @@ class BatchController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $batch = Batch::with('batch_days')->findOrFail($id);
+        $batch = Batch::with(['batch_days', 'course'])->findOrFail($id);
         return view('admin.batch.show', compact('batch'));
     }
 

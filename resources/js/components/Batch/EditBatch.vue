@@ -253,51 +253,20 @@
 import axios from "axios";
 import { ref, watch } from "vue";
 import Tooltip from "../Tooltip.vue";
-
-import { useToast } from "vue-toast-notification";
-import "vue-toast-notification/dist/theme-sugar.css";
+import { statusList, dayNames, toaster } from "./Common.js";
 
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 
-const toaster = (type = "info", message = "Test notification.") => {
-    const $toast = useToast();
-
-    $toast.open({
-        message: message,
-        type: type,
-        position: "top-right",
-        duration: 4000,
-        dismissible: true,
-        pauseOnHover: true,
-    });
-};
-
 const props = defineProps(["route", "teachers", "batch", "courses"]);
-
-const statusList = [
-    { id: 0, name: "Upcoming" },
-    { id: 1, name: "Running" },
-    { id: 2, name: "Completed" },
-];
 
 const title = ref(props?.batch?.title);
 const course = ref(props?.batch?.course);
 const status = ref(props?.batch?.status || 0);
 const price = ref(props?.batch?.price);
 const discount_type = ref(props?.batch?.discount_type || "flat");
-const discount = ref(props?.batch?.discount);
+const discount = ref(String(props?.batch?.discount));
 const errors = ref("");
-
-const dayNames = ref([
-    { id: 1, label: "Saturday" },
-    { id: 2, label: "Sunday" },
-    { id: 3, label: "Monday" },
-    { id: 4, label: "Tuesday" },
-    { id: 5, label: "Wednesday" },
-    { id: 6, label: "Thursday" },
-    { id: 7, label: "Friday" },
-]);
 
 const days = ref([]);
 if (props?.batch?.batch_days?.length > 0) {
@@ -416,10 +385,11 @@ const save = async () => {
     ) {
         const finalDays = days.value.map((day) => {
             return {
-                day: day.day.label,
+                day: day.day.id,
                 start_time: day.start_time,
                 end_time: day.end_time,
                 teacher: day.teacher.id,
+                id: day.id ? day.id : null,
             };
         });
 

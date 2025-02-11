@@ -253,25 +253,10 @@
 import axios from "axios";
 import { ref, watch } from "vue";
 import Tooltip from "../Tooltip.vue";
-
-import { useToast } from "vue-toast-notification";
-import "vue-toast-notification/dist/theme-sugar.css";
+import { statusList, dayNames, toaster } from "./Common.js";
 
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
-
-const toaster = (type = "info", message = "Test notification.") => {
-    const $toast = useToast();
-
-    $toast.open({
-        message: message,
-        type: type,
-        position: "top-right",
-        duration: 4000,
-        dismissible: true,
-        pauseOnHover: true,
-    });
-};
 
 const props = defineProps(["route", "teachers", "courses"]);
 
@@ -279,18 +264,8 @@ const title = ref("");
 const course = ref("");
 const price = ref("");
 const discount_type = ref("flat");
-const discount = ref(0);
+const discount = ref("0");
 const errors = ref("");
-
-const dayNames = ref([
-    { id: 1, label: "Saturday" },
-    { id: 2, label: "Sunday" },
-    { id: 3, label: "Monday" },
-    { id: 4, label: "Tuesday" },
-    { id: 5, label: "Wednesday" },
-    { id: 6, label: "Thursday" },
-    { id: 7, label: "Friday" },
-]);
 
 const days = ref([
     {

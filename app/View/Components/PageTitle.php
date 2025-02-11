@@ -13,14 +13,12 @@ class PageTitle extends Component
      */
 
     public $title;
-    public $subtitle;
-    public $pageTitle;
+    public $url;
 
-    public function __construct($title, $subtitle = null, $pageTitle)
+    public function __construct($title, $url = null)
     {
         $this->title = $title;
-        $this->subtitle = $subtitle;
-        $this->pageTitle = $pageTitle;
+        $this->url = $url;
     }
 
     /**

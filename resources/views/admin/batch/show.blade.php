@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Show Batch" subtitle="" pageTitle="Show Batch" />
+        <x-page-title title="Show Batch" :url="route('admin.batches.index')" />
 
         <section class="section">
             <div class="card">

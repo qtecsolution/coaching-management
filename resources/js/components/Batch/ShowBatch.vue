@@ -3,46 +3,81 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="name" class="form-label"
-                        >Name<sup class="text-danger">*</sup></label
-                    >
+                    <label for="title" class="form-label">Title</label>
                     <input
                         type="text"
-                        id="name"
-                        placeholder="Name"
+                        id="title"
+                        placeholder="Title"
                         class="form-control"
-                        v-model="name"
+                        v-model="title"
                         readonly
                     />
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="class" class="form-label"
-                        >Tuition Fee <sup class="text-danger">*</sup></label
-                    >
+                    <label for="course" class="form-label">Course</label>
+                    <input
+                        type="text"
+                        id="course"
+                        placeholder="Course"
+                        class="form-control"
+                        v-model="course"
+                        readonly
+                    />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="price" class="form-label">Price</label>
                     <input
                         type="number"
-                        id="tuition_fee"
-                        placeholder="Enter tuition fee"
+                        id="price"
+                        placeholder="Price"
                         class="form-control"
-                        v-model="tuition_fee"
+                        v-model="price"
                         readonly
                     />
                 </div>
             </div>
-            
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="class" class="form-label"
-                        >Status</label
-                    >
+                    <label for="price" class="form-label">Discount Type</label>
+                    <input
+                        type="text"
+                        id="discount_type"
+                        placeholder="Discount Type"
+                        class="form-control text-capitalize"
+                        v-model="discount_type"
+                        readonly
+                    />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="price" class="form-label">Discount</label>
+                    <Tooltip
+                        position="top"
+                        message="If discount type is flat, it'll be the amount. If discount type is percentage, it'll be the percentage value."
+                    />
+                    <input
+                        type="number"
+                        id="discount"
+                        placeholder="Discount"
+                        class="form-control"
+                        v-model="discount"
+                        readonly
+                    />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="status" class="form-label">Status</label>
                     <input
                         type="text"
                         id="status"
-                        placeholder="Enter Status"
-                        class="form-control"
+                        placeholder="Status"
+                        class="form-control text-capitalize"
                         v-model="status"
                         readonly
                     />
@@ -54,16 +89,14 @@
 
         <div class="col-12">
             <div
-                class="row align-items-end my-4"
+                class="row align-items-end"
                 v-for="(day, index) in days"
                 :key="index"
                 v-if="days.length > 0"
             >
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label for="day" class="form-label"
-                            >Day<sup class="text-danger">*</sup></label
-                        >
+                        <label for="day" class="form-label mb-0">Day</label>
                         <input
                             type="text"
                             id="day"
@@ -74,9 +107,9 @@
                         />
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label for="teacher" class="form-label">Teacher</label>
+                        <label for="teacher" class="form-label mb-0">Teacher</label>
                         <input
                             type="text"
                             id="teacher"
@@ -87,10 +120,10 @@
                         />
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label for="start_time" class="form-label"
-                            >Start Time<sup class="text-danger">*</sup></label
+                        <label for="start_time" class="form-label mb-0"
+                            >Start Time</label
                         >
                         <input
                             type="time"
@@ -101,10 +134,10 @@
                         />
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label for="end_time" class="form-label"
-                            >End Time<sup class="text-danger">*</sup></label
+                        <label for="end_time" class="form-label mb-0"
+                            >End Time</label
                         >
                         <input
                             type="time"
@@ -126,32 +159,28 @@
 </template>
 
 <script setup>
-import axios from "axios";
 import { ref, watch } from "vue";
+import { statusList } from "./Common.js";
 
 const props = defineProps(["batch", "edit_route"]);
 
-const statusList = [
-    { id: 0, name: "Upcoming" },
-    { id: 1, name: "Running" },
-    { id: 2, name: "Completed" },
-];
+const title = ref(props?.batch?.title);
+const course = ref(props?.batch?.course?.title);
+const price = ref(props?.batch?.price);
+const discount_type = ref(props?.batch?.discount_type || "flat");
+const discount = ref(props?.batch?.discount);
 
-const name = ref(props?.batch?.name);
-const tuition_fee = ref(props?.batch?.tuition_fee);
-const level = ref(props?.batch?.level?.name);
-const days = ref([]);
-
-const status = ref(props?.batch?.status);
+const status = ref(props?.batch?.status || 0);
 status.value = statusList.find((item) => item.id == status.value).name;
 
+const days = ref([]);
 if (props?.batch?.batch_days?.length > 0) {
     props.batch.batch_days.forEach((day) => {
         days.value.push({
             day: day.day_name,
             start_time: day.start_time,
             end_time: day.end_time,
-            teacher: day.teacher_name
+            teacher: day.teacher_name,
         });
     });
 }
