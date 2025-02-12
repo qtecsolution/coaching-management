@@ -52,7 +52,7 @@ class StudentController extends Controller
                     $currentBatch = $row?->currentBatch?->batch;
 
                     if ($currentBatch && $currentBatch->status == 1) {
-                        return $row?->currentBatch?->batch?->name ?? '--';
+                        return $row?->currentBatch?->batch?->title ?? '--';
                     } else {
                         return '--';
                     }

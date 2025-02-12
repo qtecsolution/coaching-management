@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Batch;
 use App\Models\StudentBatch;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -24,12 +25,6 @@ class StudentBatchController extends Controller
                 ->addColumn('phone', function ($row) {
                     return $row?->student?->user->phone;
                 })
-                ->addColumn('email', function ($row) {
-                    return $row?->student?->user->email;
-                })
-                ->addColumn('school', function ($row) {
-                    return $row?->student?->educational_institute;
-                })
                 ->editColumn('emergency_contact', function ($row) {
                     $emergencyContact = json_decode($row?->student->emergency_contact, true);
                     return $emergencyContact['name'] . ' (' . $emergencyContact['phone'] . ')';
@@ -44,10 +39,14 @@ class StudentBatchController extends Controller
                         return '<span class="badge bg-danger">Inactive</span>';
                     }
                 })
-                ->rawColumns(['status'])
+                ->addColumn('action', function ($row) {
+                    return view('admin.student.action', compact('row'));
+                })
+                ->rawColumns(['status', 'action'])
                 ->make(true);
         }
 
-        return view('admin.batch.students');
+        $batch = Batch::findOrFail($batchId);
+        return view('admin.batch.students', compact('batch'));
     }
 }

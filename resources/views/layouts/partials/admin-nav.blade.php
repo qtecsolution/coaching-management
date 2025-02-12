@@ -105,12 +105,12 @@
         <ul class="submenu {{ Route::is('admin.class-materials.*') ? 'submenu-open' : 'submenu-close' }}">
             @can('view_class_materials')
                 <li class="submenu-item {{ Route::is('admin.class-materials.index') ? 'active' : '' }}">
-                    <a href="{{ route('admin.class-materials.index') }}">Material List</a>
+                    <a href="{{ route('admin.class-materials.index') }}">Resource List</a>
                 </li>
             @endcan
             @can('create_class_material')
                 <li class="submenu-item {{ Route::is('admin.class-materials.create') ? 'active' : '' }}">
-                    <a href="{{ route('admin.class-materials.create') }}">Add Material</a>
+                    <a href="{{ route('admin.class-materials.create') }}">Add Resource</a>
                 </li>
             @endcan
         </ul>

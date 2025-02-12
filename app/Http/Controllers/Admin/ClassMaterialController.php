@@ -39,7 +39,7 @@ class ClassMaterialController extends Controller
                     return view('admin.class-material.action', compact('row'));
                 })
                 ->addColumn('batch', function ($row) {
-                    return $row->batch_day->batch->name;
+                    return $row->batch->title;
                 })
                 ->editColumn('url', function ($row) {
                     return '<a href="' . absolutePath($row->url) . '" target="_blank"><i class="bi bi-eye"></i> View</a>';
@@ -95,10 +95,8 @@ class ClassMaterialController extends Controller
                 $isFile = false;
             }
 
-            // NOTE: request subject is the batch day ID.
-
             ClassMaterial::create([
-                'batch_day_id' => $request->subject,
+                'batch_id' => $request->batch,
                 'title' => $request->title,
                 'url' => $url,
                 'is_file' => $isFile
@@ -163,10 +161,8 @@ class ClassMaterialController extends Controller
                 $isFile = false;
             }
 
-            // NOTE: request subject is the batch day ID.
-
             $classMaterial->update([
-                'batch_day_id' => $request->subject,
+                'batch_id' => $request->batch,
                 'title' => $request->title,
                 'url' => $url,
                 'is_file' => $isFile

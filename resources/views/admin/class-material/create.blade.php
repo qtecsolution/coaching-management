@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Add Material')
+@section('title', 'Add Resource')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Add Material" subtitle="" pageTitle="Add Material" />
+        <x-page-title title="Add Resource" />
 
         <section class="section">
             <div class="card">
@@ -17,10 +17,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="batch" class="form-label">Batch<sup class="text-danger">*</sup></label>
-                                    <select name="batch" id="batch" class="form-control form-select choice" required>
+                                    <select name="batch" id="batch" class="form-control select2" required>
                                         <option value="" selected disabled>Select Batch</option>
                                         @foreach ($batches as $batch)
-                                            <option value="{{ $batch->id }}">{{ $batch->name }}</option>
+                                            <option value="{{ $batch->id }}">{{ $batch->title }}</option>
                                         @endforeach
                                     </select>
 
@@ -89,6 +89,12 @@
 
 @push('js')
     <script>
+        $(document).ready(function() {
+            // Initialize Select2
+            $('.select2').select2();
+        });
+
+        // change resource type
         $('#resource_type').on('change', function() {
             if ($(this).val() == 'URL') {
                 $('#url').removeClass('d-none');

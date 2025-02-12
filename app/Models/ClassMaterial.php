@@ -11,8 +11,8 @@ class ClassMaterial extends Model
 
     protected $guarded = [];
 
-    public function batch_day()
+    public function batch()
     {
-        return $this->belongsTo(BatchDay::class);
+        return $this->belongsTo(Batch::class);
     }
 }

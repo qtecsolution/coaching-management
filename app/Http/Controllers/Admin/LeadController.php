@@ -4,13 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
+use App\Models\LeadDynamicField;
 use App\Models\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
+use App\Traits\ExceptionHandler;
 
 class LeadController extends Controller
 {
+    use ExceptionHandler;
+
     /**
      * Display a listing of the resource.
      */
@@ -36,9 +40,6 @@ class LeadController extends Controller
                 })
                 ->editColumn('email', function ($row) {
                     return $row->email ? $row->email : '--';
-                })
-                ->editColumn('educational_institute', function ($row) {
-                    return $row->educational_institute ? $row->educational_institute : '--';
                 })
                 ->editColumn('note', function ($row) {
                     return $row->note ? $row->note : '--';
@@ -78,22 +79,33 @@ class LeadController extends Controller
         ]);
 
         try {
-            Lead::create([
+            $lead = Lead::create([
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'email' => $request->email,
-                'class' => $request->class,
-                'educational_institute' => $request->educational_institute,
                 'note' => $request->note
             ]);
+
+            // Filter fields
+            $fields = [];
+            foreach ($request->field_name as $index => $name) {
+                $fields[] = [
+                    'lead_id' => $lead->id,
+                    'name' => $name,
+                    'value' => $request->field_value[$index],
+                ];
+            }
+
+            // Save fields
+            foreach ($fields as $field) {
+                LeadDynamicField::create($field);
+            }
     
-            alert('Success!', 'Lead added successfully.', 'success');
+            $this->getAlert('success', 'Lead created successfully.');
             return to_route('admin.leads.index');
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
-
-            alert('Oops!', $th->getMessage(), 'error');
-            return back();
+            $this->logException($th);
+            return back()->withInput($request->all());
         }
     }
 
@@ -141,19 +153,35 @@ class LeadController extends Controller
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'email' => $request->email,
-                'class' => $request->class,
-                'educational_institute' => $request->educational_institute,
                 'note' => $request->note,
                 'status' => $request->status
             ]);
+
+            // Fetch existing fields
+            $existingFields = $lead->dynamicFields;
+
+            // Update or create new fields
+            foreach ($request->field_name as $index => $name) {
+                $field = $existingFields[$index] ?? new LeadDynamicField();
+                $field->lead_id = $lead->id;
+                $field->name = $name;
+                $field->value = $request->field_value[$index];
+                $field->save();
+            }
+
+            // Remove extra fields (if any)
+            if (count($request->field_name) < $existingFields->count()) {
+                $extraFields = $existingFields->slice(count($request->field_name));
+                foreach ($extraFields as $extraField) {
+                    $extraField->delete();
+                }
+            }
     
-            alert('Success!', 'Lead updated successfully.', 'success');
+            $this->getAlert('success', 'Lead updated successfully.');
             return to_route('admin.leads.index');
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
-
-            alert('Oops!', $th->getMessage(), 'error');
-            return back();
+            $this->logException($th);
+            return back()->withInput($request->all());
         }
     }
 
@@ -172,8 +200,7 @@ class LeadController extends Controller
 
             return true;
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
-            
+            $this->logException($th);
             return false;
         }
     }

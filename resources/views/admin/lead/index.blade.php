@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Leads" subtitle="" pageTitle="Leads" />
+        <x-page-title title="Leads" />
 
         <!-- Basic Tables start -->
         <section class="section">
@@ -18,7 +18,6 @@
                                     <th>Name</th>
                                     <th>Phone</th>
                                     <th>Email</th>
-                                    <th>School Name</th>
                                     <th>Note</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -52,10 +51,6 @@
                 {
                     data: 'email',
                     name: 'email'
-                },
-                {
-                    data: 'educational_institute',
-                    name: 'educational_institute'
                 },
                 {
                     data: 'note',

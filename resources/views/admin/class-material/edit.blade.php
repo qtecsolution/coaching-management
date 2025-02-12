@@ -1,18 +1,12 @@
 @extends('layouts.master')
 
-@section('title', 'Edit Material')
+@section('title', 'Edit Resource')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit Material" subtitle="" pageTitle="Edit Material" />
+        <x-page-title title="Edit Resource" />
 
         <section class="section">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-
             <div class="card">
                 {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
@@ -25,13 +19,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="batch" class="form-label">Batch<sup class="text-danger">*</sup></label>
-                                    <select name="batch" id="batch" class="form-control form-select choice"
-                                        data-selected-batch="{{ $classMaterial->batch_day->batch_id ?? '' }}" required>
+                                    <select name="batch" id="batch" class="form-control select2" required>
                                         <option value="" selected disabled>Select Batch</option>
                                         @foreach ($batches as $batch)
                                             <option value="{{ $batch->id }}"
-                                                {{ $batch->id == ($classMaterial->batch_day->batch_id ?? '') ? 'selected' : '' }}>
-                                                {{ $batch->name }}
+                                                {{ $batch->id == ($classMaterial->batch_id ?? '') ? 'selected' : '' }}>
+                                                {{ $batch->title }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -66,7 +59,7 @@
                                         </option>
                                     </select>
 
-                                    @error('subject')
+                                    @error('resource_type')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -115,6 +108,10 @@
 
 @push('js')
     <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+
         // change resource type
         $('#resource_type').on('change', function() {
             if ($(this).val() == 'URL') {

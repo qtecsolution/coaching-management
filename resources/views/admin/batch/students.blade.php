@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Student List')
+@section('title', 'Student List of ' . $batch->title)
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Student List" subtitle="" pageTitle="Student List" />
+        <x-page-title title="Student List of {{ $batch->title }}" :url="route('admin.batches.index')" />
 
         <!-- Basic Tables start -->
         <section class="section">
@@ -15,15 +15,13 @@
                         <table class="table" id="table">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Student ID</th>
+                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>School</th>
                                     <th>Emergency Contact</th>
                                     <th>Address</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -44,10 +42,6 @@
             processing: true,
             ajax: "",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
                     data: 'reg_id',
                     name: 'reg_id'
                 },
@@ -60,14 +54,6 @@
                     name: 'phone'
                 },
                 {
-                    data: 'email',
-                    name: 'email'
-                },
-                {
-                    data: 'school',
-                    name: 'school'
-                },
-                {
                     data: 'emergency_contact',
                     name: 'emergency_contact'
                 },
@@ -78,6 +64,10 @@
                 {
                     data: 'status',
                     name: 'status'
+                },
+                {
+                    data: 'action',
+                    name: 'action'
                 },
             ],
         })

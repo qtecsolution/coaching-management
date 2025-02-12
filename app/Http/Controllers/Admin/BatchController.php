@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\Traits\ExceptionHandler;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class BatchController extends Controller
 {
@@ -196,7 +197,17 @@ class BatchController extends Controller
                 'discount' => $request->discount
             ]);
 
-            $days = json_decode($request->days, true);
+            $days = json_decode($request->days, true) ?? [];
+            $existingDayIds = $batch->batch_days->pluck('id')->toArray();
+            $submittedDayIds = collect($days)->pluck('id')->filter()->toArray();
+
+            foreach ($existingDayIds as $existingDayId) {
+                if (!in_array($existingDayId, $submittedDayIds)) {
+                    Log::info("Deleting batch day with ID: $existingDayId");
+                    BatchDay::where('id', $existingDayId)->delete();
+                }
+            }
+
             foreach ($days as $day) {
                 $data = [
                     'day' => $day['day'],

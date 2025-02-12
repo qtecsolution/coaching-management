@@ -84,3 +84,9 @@ legend {
     width: auto;
     padding: 0 10px;
 }
+
+.form-group span.select2.select2-container.select2-container--default {
+    margin-top: -24px;
+    margin-left: 0;
+    padding-left: 0;
+}

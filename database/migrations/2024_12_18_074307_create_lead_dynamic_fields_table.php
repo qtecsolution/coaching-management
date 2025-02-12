@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('lead_dynamic_fields', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Lead::class)->constrained()->cascadeOnDelete();
-            $table->string('key');
+            $table->string('name');
             $table->string('value');
             $table->timestamps();
         });

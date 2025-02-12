@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Add Student" subtitle="" pageTitle="Add Student" />
+        <x-page-title title="Add Student" :url="route('admin.students.index')" />
 
         <section class="section">
             <div class="card">
@@ -19,18 +19,17 @@
                                     <label for="batch" class="form-label">Batch<sup class="text-danger">*</sup></label>
                                     <select name="batch" class="form-control select2" id="batch" required>
                                         <option value="" selected disabled>Select a Batch</option>
-
                                         @foreach ($batches as $batch)
-                                            <option value="{{ $batch->id }}"
-                                                {{ old('batch') == $batch->id ? 'selected' : '' }}>{{ $batch->name }}
+                                            <option value="{{ $batch->id }}" {{ old('batch') == $batch->id ? 'selected' : '' }}>
+                                                {{ $batch->title }}
                                             </option>
                                         @endforeach
                                     </select>
-
+                                
                                     @error('batch')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
-                                </div>
+                                </div>                                
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -79,7 +78,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="qualification" class="form-label">Qualification</label>
+                                    <label for="qualification" class="form-label">
+                                        Qualification
+                                        <x-tooltips message="Enter student's educational qualification here." position="top" />
+                                    </label>
                                     <input type="text" name="qualification" id="qualification"
                                         placeholder="Qualification" class="form-control"
                                         value="{{ old('qualification') }}">
@@ -91,7 +93,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Occupation</label>
+                                    <label for="occupation" class="form-label">
+                                        Occupation
+                                        <x-tooltips message="Enter student's occupation here." position="top" />
+                                    </label>
                                     <input type="text" name="occupation" id="occupation" placeholder="Occupation"
                                         class="form-control" value="{{ old('occupation') }}">
 

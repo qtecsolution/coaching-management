@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Class Materials" subtitle="" pageTitle="Class Materials" />
+        <x-page-title title="Class Materials" />
 
         <!-- Basic Tables start -->
         <section class="section">
