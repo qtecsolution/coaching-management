@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\ClassMaterialController;
@@ -8,6 +7,7 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentBatchController;
 use App\Http\Controllers\Admin\StudentController;
@@ -20,9 +20,9 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
+// home page
 Route::get('/', function () {
-    // return view('welcome');
-    return redirect()->route('auth.login');
+    return to_route('auth.login');
 });
 
 // auth routes
@@ -104,6 +104,10 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // message routes
     Route::resource('messages', MessageController::class);
+
+    // payment routes
+    Route::resource('payments', PaymentController::class);
+    Route::post('/payments/get-info', [PaymentController::class, 'getInfo']);
 });
 
 // user routes

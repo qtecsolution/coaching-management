@@ -19,11 +19,14 @@
     <link rel="stylesheet" href="{{ asset('assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/flatpickr/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/extensions/toastr/toastr.min.css') }}">
 
-    @vite('public/assets/scss/pages/datatables.scss')
-    @vite('public/assets/scss/app.scss')
-    @vite('resources/css/app.css')
-    @vite('resources/js/app.js')
+    @vite([
+        'public/assets/scss/pages/datatables.scss', 
+        'public/assets/scss/app.scss', 
+        'resources/css/app.css', 
+        'resources/js/app.js'
+        ])
     
     @stack('css')
 </head>
@@ -58,6 +61,7 @@
     <script src="{{ asset('assets/extensions/toastify-js/src/toastify.js') }}"></script>
     <script src="{{ asset('assets/extensions/select2/select2.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/flatpickr/flatpickr.min.js') }}"></script>
+    <script src="{{ asset('assets/extensions/toastr/toastr.min.js') }}"></script>
     
     <script src="{{ asset('assets/static/js/pages/filepond.js') }}"></script>
     <script src="{{ asset('assets/static/js/pages/date-picker.js') }}"></script>

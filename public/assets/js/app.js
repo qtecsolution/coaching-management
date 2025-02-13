@@ -79,6 +79,7 @@ function photoPreview(event, id) {
     }
 }
 
+// sidebar toggle
 function sidebarToggle() {
     const sidebar = document.querySelector('.sidebar-wrapper'); // Sidebar element
     const toggleButtons = document.querySelectorAll('.sidebar-toggler'); // Toggle buttons
@@ -149,3 +150,9 @@ sidebarToggle();
 // Initialize tooltips
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+// Initialize toastr
+toastr.options = {
+    "closeButton": true,
+    "progressBar": true
+}

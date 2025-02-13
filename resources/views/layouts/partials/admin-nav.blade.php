@@ -78,6 +78,27 @@
     </li>
 @endcan
 
+@can('view_payments')
+    <li class="sidebar-item has-sub {{ Route::is('admin.payments.*') ? 'active' : '' }}">
+        <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
+            <i class="bi bi-cash-coin"></i>
+            <span>Payments</span>
+        </a>
+        <ul class="submenu {{ Route::is('admin.payments.*') ? 'submenu-open' : 'submenu-close' }}">
+            @can('view_payments')
+                <li class="submenu-item {{ Route::is('admin.payments.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.payments.index') }}">Payment List</a>
+                </li>
+            @endcan
+            @can('create_payment')
+                <li class="submenu-item {{ Route::is('admin.payments.create') ? 'active' : '' }}">
+                    <a href="{{ route('admin.payments.create') }}">Add Payment</a>
+                </li>
+            @endcan
+        </ul>
+    </li>
+@endcan
+
 {{-- @can('view_attendance')
     <li class="sidebar-item {{ Route::is('admin.attendance.index') ? 'active' : '' }}">
         <a href="{{ route('admin.attendance.index') }}" class="sidebar-link">

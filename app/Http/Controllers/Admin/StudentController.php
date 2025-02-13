@@ -7,6 +7,7 @@ use App\Models\Batch;
 use App\Models\Student;
 use App\Models\StudentBatch;
 use App\Models\StudentDynamicField;
+use App\Models\StudentPayment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -148,9 +149,19 @@ class StudentController extends Controller
                 StudentDynamicField::create($field);
             }
 
-            StudentBatch::create([
+            $studentBatch = StudentBatch::create([
                 'student_id' => $student->id,
                 'batch_id' => $request->batch
+            ]);
+
+            $batch = $studentBatch?->batch;
+            StudentPayment::create([
+                'student_id' => $student->id,
+                'batch_id' => $batch->id,
+                'amount' => $batch->price,
+                'discount_type' => $batch->discount_type,
+                'discount' => $batch->discount,
+                'total_due' => $batch->price - ($batch->discount_type == 'percentage' ? ($batch->discount / 100) * $batch->price : $batch->discount)
             ]);
 
             if ($request->has('batch')) $this->countBatchStudents($request->batch);
@@ -263,13 +274,36 @@ class StudentController extends Controller
                 }
             }
 
-            $currentBatch = $student?->currentBatch;
+            $currentBatch = $student->currentBatch;
             if ($currentBatch && $currentBatch?->batch?->status == 1) {
                 $currentBatch->update(['batch_id' => $request->batch]);
+
+                $newBatch = Batch::findOrFail($request->batch);
+                StudentPayment::where('student_id', $student->id)
+                    ->where('batch_id', $currentBatch->batch->id)
+                    ->update([
+                        'batch_id' => $request->batch,
+                        'amount' => $newBatch->price,
+                        'discount_type' => $newBatch->discount_type,
+                        'discount' => $newBatch->discount,
+                        'total_due' => $newBatch->price - ($newBatch->discount_type == 'percentage' ? ($newBatch->discount / 100) * $newBatch->price : $newBatch->discount)
+                    ]);
             } else {
                 StudentBatch::create([
                     'student_id' => $student->id,
                     'batch_id' => $request->batch
+                ]);
+
+                $batch = Batch::findOrFail($request->batch);
+                $batch->increment('total_students', 1);
+
+                StudentPayment::create([
+                    'student_id' => $student->id,
+                    'batch_id' => $batch->id,
+                    'amount' => $batch->price,
+                    'discount_type' => $batch->discount_type,
+                    'discount' => $batch->discount,
+                    'total_due' => $batch->price - ($batch->discount_type == 'percentage' ? ($batch->discount / 100) * $batch->price : $batch->discount)
                 ]);
             }
 
@@ -297,9 +331,9 @@ class StudentController extends Controller
 
             $student = Student::find($id);
 
-            if ($student->batch_id) {
-                $batch = Batch::findOrFail($student->batch_id);
-                $batch->decrement('total_students', 1);
+            if ($student?->currentBatch?->batch_id) {
+                $batch = Batch::findOrFail($student->currentBatch->batch_id);
+                $batch->decrement('total_students');
             }
 
             $student->user->delete();
