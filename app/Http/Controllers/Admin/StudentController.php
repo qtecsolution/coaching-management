@@ -297,7 +297,10 @@ class StudentController extends Controller
 
             $student = Student::find($id);
 
-            if ($student->batch_id) $this->countBatchStudents($student->batch_id);
+            if ($student->batch_id) {
+                $batch = Batch::findOrFail($student->batch_id);
+                $batch->decrement('total_students', 1);
+            }
 
             $student->user->delete();
 

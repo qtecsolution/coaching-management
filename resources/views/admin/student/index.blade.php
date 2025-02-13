@@ -19,9 +19,6 @@
                                     <th>Batch</th>
                                     <th>Name</th>
                                     <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>Qualification</th>
-                                    <th>Occupation</th>
                                     <th>Emergency Contact</th>
                                     <th>Address</th>
                                     <th>Status</th>
@@ -60,18 +57,6 @@
                 {
                     data: 'phone',
                     name: 'phone'
-                },
-                {
-                    data: 'email',
-                    name: 'email'
-                },
-                {
-                    data: 'qualification',
-                    name: 'qualification'
-                },
-                {
-                    data: 'occupation',
-                    name: 'occupation'
                 },
                 {
                     data: 'emergency_contact',
