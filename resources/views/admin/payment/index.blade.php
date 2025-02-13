@@ -16,9 +16,10 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Student</th>
                                     <th>Batch</th>
-                                    <th>Title</th>
-                                    <th>URL</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -38,22 +39,26 @@
             responsive: true,
             serverSide: true,
             processing: true,
-            ajax: "{{ route('admin.class-materials.index') }}",
+            ajax: "{{ route('admin.payments.index') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
                 {
-                    data: 'batch',
-                    name: 'batch'
+                    data: 'student_name',
+                    name: 'student_name'
                 },
                 {
-                    data: 'title',
-                    name: 'title'
+                    data: 'batch_name',
+                    name: 'batch_name'
                 },
                 {
-                    data: 'url',
-                    name: 'url'
+                    data: 'date',
+                    name: 'date'
+                },
+                {
+                    data: 'amount',
+                    name: 'amount'
                 },
                 {
                     data: 'action',

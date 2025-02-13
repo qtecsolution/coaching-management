@@ -16,31 +16,37 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="student" class="form-label">Students<sup
+                                    <label for="student_id" class="form-label">Student<sup
                                             class="text-danger">*</sup></label>
-                                    <select name="student" id="student" class="form-control select2" required>
+                                    <select name="student_id" id="student" class="form-control select2" required>
                                         <option value="" selected disabled>Select Student</option>
                                         @foreach ($students as $student)
-                                            <option value="{{ $student->id }}">{{ $student->name }}</option>
+                                            <option value="{{ $student->id }}"
+                                                {{ old('student_id') == $student->id ? 'selected' : '' }}>
+                                                {{ $student->name }}
+                                            </option>
                                         @endforeach
                                     </select>
 
-                                    @error('student')
+                                    @error('student_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="batch" class="form-label">Batch<sup class="text-danger">*</sup></label>
-                                    <select name="batch" id="batch" class="form-control select2" required>
+                                    <label for="batch_id" class="form-label">Batch<sup class="text-danger">*</sup></label>
+                                    <select name="batch_id" id="batch" class="form-control select2" required>
                                         <option value="" selected disabled>Select Batch</option>
                                         @foreach ($batches as $batch)
-                                            <option value="{{ $batch->id }}">{{ $batch->title }}</option>
+                                            <option value="{{ $batch->id }}"
+                                                {{ old('batch_id') == $batch->id ? 'selected' : '' }}>
+                                                {{ $batch->title }}
+                                            </option>
                                         @endforeach
                                     </select>
 
-                                    @error('batch')
+                                    @error('batch_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -75,7 +81,8 @@
                                 <div class="form-group">
                                     <label for="amount" class="form-label">Amount<sup class="text-danger">*</sup></label>
                                     <input type="number" name="amount" id="amount" placeholder="Amount"
-                                        class="form-control" value="{{ old('amount') }}" required>
+                                        class="form-control" value="{{ old('amount') }}" required min="0">
+                                    <small class="text-muted">Maximum allowed: <span id="max_amount">0</span></small>
 
                                     @error('amount')
                                         <small class="text-danger">{{ $message }}</small>
@@ -88,7 +95,17 @@
                                     <input type="date" name="date" id="date" placeholder="Date"
                                         class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
 
-                                    @error('amount')
+                                    @error('date')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="note" class="form-label">Note</label>
+                                    <textarea name="note" id="note" class="form-control" rows="3" placeholder="Payment note">{{ old('note') }}</textarea>
+
+                                    @error('note')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -107,12 +124,11 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            // Initialize Select2
             $('.select2').select2();
 
             $('#student').on('change', function() {
                 var studentId = $(this).val();
-
+                $('#payment_form').addClass('d-none');
                 if (!studentId) {
                     toastr.error('Please select a student first.');
                     $('#batch').val('').trigger('change');
@@ -125,7 +141,7 @@
 
                 if (!studentId) {
                     toastr.error("Please select a student first.");
-                    // $(this).val('').trigger('change');
+                    $(this).val('').trigger('change');
                     return;
                 }
 
@@ -133,15 +149,22 @@
                     getPaymentInfo(studentId, batchId);
                 }
             });
+
+            // Validate amount input
+            $('#amount').on('input', function() {
+                const maxAmount = parseFloat($('#max_amount').text());
+                const amount = parseFloat($(this).val());
+
+                if (amount > maxAmount) {
+                    toastr.error('Amount cannot exceed due amount');
+                    $(this).val(maxAmount);
+                }
+            });
         });
 
         function getPaymentInfo(studentId, batchId) {
-            console.log("Fetching payment info for Batch ID:", batchId, "Student ID:", studentId);
-
             const paymentForm = $('#payment_form');
-            paymentForm.removeClass('d-none');
 
-            // Perform AJAX request
             $.ajax({
                 url: `${window.location.origin}/admin/payments/get-info`,
                 method: "POST",
@@ -151,12 +174,20 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
-                    console.log("Payment Info:", response.info);
-
-                    
+                    if (response.success && response.info) {
+                        const info = response.info;
+                        $('#paid').val(info.total_paid || 0);
+                        $('#due').val(info.total_due || 0);
+                        $('#max_amount').text(info.total_due || 0);
+                        paymentForm.removeClass('d-none');
+                    } else {
+                        toastr.error('No payment information found.');
+                        paymentForm.addClass('d-none');
+                    }
                 },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching payment info:", error);
+                error: function(xhr) {
+                    toastr.error(xhr.responseJSON?.message || 'Failed to fetch payment information');
+                    paymentForm.addClass('d-none');
                 }
             });
         }

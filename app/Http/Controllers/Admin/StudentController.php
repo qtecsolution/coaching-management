@@ -155,13 +155,16 @@ class StudentController extends Controller
             ]);
 
             $batch = $studentBatch?->batch;
+            $totalDue = $batch->price - ($batch->discount_type == 'percentage'? ($batch->discount / 100) * $batch->price : $batch->discount);
+
             StudentPayment::create([
                 'student_id' => $student->id,
                 'batch_id' => $batch->id,
                 'amount' => $batch->price,
                 'discount_type' => $batch->discount_type,
                 'discount' => $batch->discount,
-                'total_due' => $batch->price - ($batch->discount_type == 'percentage' ? ($batch->discount / 100) * $batch->price : $batch->discount)
+                'total_due' => $totalDue,
+                'final_amount' => $totalDue
             ]);
 
             if ($request->has('batch')) $this->countBatchStudents($request->batch);
@@ -297,13 +300,16 @@ class StudentController extends Controller
                 $batch = Batch::findOrFail($request->batch);
                 $batch->increment('total_students', 1);
 
+                $totalDue = $batch->price - ($batch->discount_type == 'percentage'? ($batch->discount / 100) * $batch->price : $batch->discount);
+
                 StudentPayment::create([
                     'student_id' => $student->id,
                     'batch_id' => $batch->id,
                     'amount' => $batch->price,
                     'discount_type' => $batch->discount_type,
                     'discount' => $batch->discount,
-                    'total_due' => $batch->price - ($batch->discount_type == 'percentage' ? ($batch->discount / 100) * $batch->price : $batch->discount)
+                    'total_due' => $totalDue,
+                    'final_amount' => $totalDue
                 ]);
             }
 
@@ -351,7 +357,7 @@ class StudentController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * This method updates the status of a student based on the given request
      * data. It assumes the request contains a valid student ID and the new status.
      * After updating, it provides a success toast message and redirects back.

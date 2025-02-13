@@ -20,6 +20,7 @@ return new class extends Migration
             $table->double('amount')->default(0);
             $table->enum('discount_type', ['flat', 'percentage'])->default('flat');
             $table->double('discount')->default(0);
+            $table->double('final_amount')->default(0);
             $table->double('total_paid')->default(0);
             $table->double('total_due')->default(0);
             $table->timestamps();

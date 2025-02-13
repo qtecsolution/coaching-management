@@ -9,6 +9,9 @@ use App\Models\Student;
 use App\Models\StudentPayment;
 use Illuminate\Http\Request;
 use App\Traits\ExceptionHandler;
+use Illuminate\Support\Facades\Log;
+use Throwable;
+use Yajra\DataTables\Facades\DataTables;
 
 class PaymentController extends Controller
 {
@@ -21,6 +24,39 @@ class PaymentController extends Controller
     {
         if (!auth()->user()->can('view_payments')) {
             abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            return DataTables::of(Payment::query())
+                ->addIndexColumn()
+                ->addColumn('DT_RowIndex', '')
+                ->addColumn('action', function ($row) {
+                    return view('admin.payment.action', compact('row'));
+                })
+                ->editColumn('date', function ($row) {
+                    return date('d F, Y', strtotime($row->date));
+                })
+                ->editColumn('amount', function ($row) {
+                    return number_format($row->amount, 2);
+                })
+                ->addColumn('student_name', function ($row) {
+                    return $row->student->name;
+                })
+                ->addColumn('batch_name', function ($row) {
+                    return $row->batch->title;
+                })
+                ->filterColumn('student_name', function ($query, $keyword) {
+                    $query->whereHas('student.user', function ($query) use ($keyword) {
+                        $query->where('name', 'like', '%' . $keyword . '%');
+                    });
+                })
+                ->filterColumn('batch_name', function ($query, $keyword) {
+                    $query->whereHas('batch', function ($query) use ($keyword) {
+                        $query->where('title', 'like', '%' . $keyword . '%');
+                    });
+                })
+                ->rawColumns(['action', 'student_name', 'batch_name'])
+                ->make(true);
         }
 
         return view('admin.payment.index');
@@ -51,19 +87,26 @@ class PaymentController extends Controller
         }
 
         $request->validate([
-            'student_id' => 'required',
-            'batch_id' => 'required',
-            'amount' => 'required',
+            'student_id' => 'required|exists:students,id',
+            'batch_id' => 'required|exists:batches,id',
+            'amount' => 'required|numeric|min:0',
             'date' => 'required|date',
+            'note' => 'nullable|string|max:255'
         ]);
 
-        $studentPayment = StudentPayment::where('student_id', $request->student_id)
-            ->where('batch_id', $request->batch_id)
-            ->first();
 
-        if ($studentPayment && $studentPayment->due_amount <= $request->amount) {
+        try {
+            $studentPayment = StudentPayment::where('student_id', $request->student_id)
+                ->where('batch_id', $request->batch_id)
+                ->firstOrFail();
+
+            if ($request->amount > $studentPayment->total_due) {
+                return redirect()->back()->withInput();
+            }
+
             $studentPayment->update([
-                'due_amount' => $studentPayment->due_amount - $request->amount,
+                'total_due' => $studentPayment->total_due - $request->amount,
+                'total_paid' => $studentPayment->total_paid + $request->amount,
             ]);
 
             Payment::create([
@@ -72,13 +115,15 @@ class PaymentController extends Controller
                 'amount' => $request->amount,
                 'date' => $request->date,
                 'note' => $request->note,
+                'method' => $request->method ?? 'cash',
             ]);
-        } else {
-            return redirect()->back()->with('error', 'Invalid amount');
-        }
 
-        $this->getAlert('success', 'Payment added successfully.');
-        return redirect()->route('admin.payments.index');
+            $this->getAlert('success', 'Payment added successfully.');
+            return redirect()->route('admin.payments.index');
+        } catch (\Throwable $th) {
+            $this->logException($th);
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -115,35 +160,52 @@ class PaymentController extends Controller
         }
 
         $request->validate([
-            'student_id' => 'required',
-            'batch_id' => 'required',
-            'amount' => 'required',
+            'student_id' => 'required|exists:students,id',
+            'batch_id' => 'required|exists:batches,id',
+            'amount' => 'required|numeric|min:0',
             'date' => 'required|date',
+            'note' => 'nullable|string|max:255'
         ]);
 
-        $studentPayment = StudentPayment::where('student_id', $request->student_id)
-            ->where('batch_id', $request->batch_id)
-            ->first();
+        try {
+            $payment = Payment::findOrFail($id);
+            $studentPayment = StudentPayment::where('student_id', $request->student_id)
+                ->where('batch_id', $request->batch_id)
+                ->firstOrFail();
 
-        if ($studentPayment && $studentPayment->due_amount <= $request->amount) {
-            $studentPayment->update([
-                'due_amount' => $studentPayment->due_amount - $request->amount,
+            // Calculate the adjusted total_due by adding back the old payment amount
+            $adjustedTotalDue = $studentPayment->total_due + $payment->amount;
+
+            // Check if new payment amount exceeds the adjusted total due
+            if ($request->amount > $adjustedTotalDue) {
+                return redirect()->back()->withInput();
+            }
+
+            $payment->update([
+                'student_id' => $request->student_id,
+                'batch_id' => $request->batch_id,
+                'amount' => $request->amount,
+                'date' => $request->date,
+                'note' => $request->note,
             ]);
-        } else {
-            return redirect()->back()->with('error', 'Invalid amount');
+
+            // Recalculate total paid amount
+            $totalPaid = Payment::where('student_id', $request->student_id)
+                ->where('batch_id', $request->batch_id)
+                ->sum('amount');
+
+            // Update student payment record
+            $studentPayment->update([
+                'total_paid' => $totalPaid,
+                'total_due' => $studentPayment->final_amount - $totalPaid
+            ]);
+
+            $this->getAlert('success', 'Payment updated successfully.');
+            return redirect()->route('admin.payments.index');
+        } catch (\Exception $e) {
+            $this->logException($e);
+            return redirect()->back()->withInput();
         }
-
-        $payment = Payment::findOrFail($id);
-        $payment->update([
-            'student_id' => $request->student_id,
-            'batch_id' => $request->batch_id,
-            'amount' => $request->amount,
-            'date' => $request->date,
-            'note' => $request->note,
-        ]);
-
-        $this->getAlert('success', 'Payment updated successfully.');
-        return redirect()->route('admin.payments.index');
     }
 
     /**
@@ -154,16 +216,51 @@ class PaymentController extends Controller
         if (!auth()->user()->can('delete_payment')) {
             abort(403, 'Unauthorized action.');
         }
+
+        try {
+            $payment = Payment::findOrFail($id);
+
+            // Restore the due amount in student payment
+            $studentPayment = StudentPayment::where('student_id', $payment->student_id)
+                ->where('batch_id', $payment->batch_id)
+                ->firstOrFail();
+
+            $studentPayment->update([
+                'total_due' => $studentPayment->total_due + $payment->amount,
+                'total_paid' => $studentPayment->total_paid - $payment->amount,
+            ]);
+
+            $payment->delete();
+
+            return true;
+        } catch (\Exception $e) {
+            $this->logException($e);
+            return false;
+        }
     }
 
     public function getInfo(Request $request)
     {
-        $info = StudentPayment::where('student_id', $request->student_id)
-            ->where('batch_id', $request->batch_id)
-            ->first();
+        try {
+            $request->validate([
+                'student_id' => 'required|exists:students,id',
+                'batch_id' => 'required|exists:batches,id',
+            ]);
 
-        return response()->json([
-            'info' => $info
-        ]);
+            $info = StudentPayment::where('student_id', $request->student_id)
+                ->where('batch_id', $request->batch_id)
+                ->firstOrFail();
+
+            return response()->json([
+                'success' => true,
+                'info' => $info
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch payment information.',
+                'error' => $e->getMessage()
+            ], 422);
+        }
     }
 }

@@ -28,9 +28,9 @@ class BatchSeeder extends Seeder
                 'title' => 'Batch ' . $course->id,
                 'course_id' => $course->id,
                 'status' => fake()->numberBetween(0, 2),
-                'price' => fake()->randomFloat(2, 0, 8000),
+                'price' => fake()->randomFloat(0, 1000, 8000),
                 'discount_type' => fake()->randomElement(['flat', 'percentage']),
-                'discount' => fake()->randomFloat(2, 0, 60),
+                'discount' => fake()->randomFloat(0, 0, 60),
             ]);
         }
 
