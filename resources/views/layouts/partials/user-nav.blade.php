@@ -11,3 +11,10 @@
         <span>Class Materials</span>
     </a>
 </li>
+
+<li class="sidebar-item {{ Route::is('user.payments.index') ? 'active' : '' }}">
+    <a href="{{ route('user.payments.index') }}" class="sidebar-link">
+        <i class="bi bi-cash-coin"></i>
+        <span>Payments</span>
+    </a>
+</li>
