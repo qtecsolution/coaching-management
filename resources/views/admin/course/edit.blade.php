@@ -4,11 +4,10 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Add Course" subtitle="" pageTitle="Add Course" />
+        <x-page-title title="Add Course" />
 
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <form action="{{ route('admin.courses.update', $course->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf

@@ -4,11 +4,10 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit User" subtitle="" pageTitle="Edit User" />
+        <x-page-title title="Edit User" />
 
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
                         @csrf

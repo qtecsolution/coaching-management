@@ -4,12 +4,12 @@
 
 @section('content')
 <div class="page-heading">
-    <x-page-title title="Attendance List" subtitle="" pageTitle="Attendance List" />
+    <x-page-title title="Attendance List" />
 
     <!-- Basic Tables start -->
     <section class="section">
         <div class="card">
-            {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
+
             <div class="card-body">
                 <div class="row my-4">
                     <div class="col-md-3">

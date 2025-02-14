@@ -13,7 +13,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Attendance" subtitle="" pageTitle="Attendance" />
+        <x-page-title title="Attendance" />
 
         <!-- Basic Tables start -->
         <section class="section">

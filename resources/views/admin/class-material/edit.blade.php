@@ -4,11 +4,10 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit Resource" />
+        <x-page-title title="Edit Resource" :url="route('admin.class-materials.index')" />
 
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <form action="{{ route('admin.class-materials.update', $classMaterial->id) }}" method="POST"
                         enctype="multipart/form-data">

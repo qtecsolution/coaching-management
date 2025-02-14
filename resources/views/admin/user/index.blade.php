@@ -1,15 +1,14 @@
 @extends('layouts.master')
 
-@section('title', 'Users')
+@section('title', 'User List')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Users" subtitle="" pageTitle="Users" />
+        <x-page-title title="User List" />
 
         <!-- Basic Tables start -->
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <div class="my-4">
                         <button class="btn btn-secondary bg-primary" id="admin-btn" onclick="showUsers(event, 'admin')">Admin Users</button>

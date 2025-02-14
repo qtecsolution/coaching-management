@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit {{ $title }}" subtitle="" pageTitle="Edit Settings" />
+        <x-page-title title="Edit {{ $title }}" />
 
         <section class="section">
             <div class="card">

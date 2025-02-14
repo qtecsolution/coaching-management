@@ -1,15 +1,14 @@
 @extends('layouts.master')
 
-@section('title', 'Class Materials')
+@section('title', 'Resource List')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Class Materials" />
+        <x-page-title title="Resource List" />
 
         <!-- Basic Tables start -->
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table" id="table">

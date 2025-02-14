@@ -4,12 +4,11 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="{{ $role->name }} Permissions" subtitle="" pageTitle="{{ $role->name }} Permissions" />
+        <x-page-title title="{{ $role->name }} Permissions" :url="route('admin.users.roles.index')" />
 
         <!-- Basic Tables start -->
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <form action="{{ route('admin.users.roles.updatePermissions', $role->id) }}" method="POST" class="row">
                         @csrf

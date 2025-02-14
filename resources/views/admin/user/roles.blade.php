@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Users')
+@section('title', 'Roles')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Roles" subtitle="" pageTitle="Roles" />
+        <x-page-title title="Roles" />
 
         <section class="section">
             <div class="card">

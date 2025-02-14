@@ -44,7 +44,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Profile" subtitle="" pageTitle="Profile" />
+        <x-page-title title="Profile" />
 
         <section class="section">
             <div class="row">

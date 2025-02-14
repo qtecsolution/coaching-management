@@ -4,12 +4,11 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Student List" subtitle="" pageTitle="Student List" />
+        <x-page-title title="Student List" />
 
         <!-- Basic Tables start -->
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table" id="table">

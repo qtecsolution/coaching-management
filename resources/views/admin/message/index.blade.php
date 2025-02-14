@@ -4,12 +4,11 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Messages" subtitle="" pageTitle="Messages" />
+        <x-page-title title="Messages" />
 
         <!-- Basic Tables start -->
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <div class="col-12 mb-4 text-end">
                         <a href="{{ route('admin.messages.create') }}" class="btn btn-primary">

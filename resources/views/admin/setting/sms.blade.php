@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit {{ $title }}" subtitle="" pageTitle="Edit Settings" />
+        <x-page-title title="Edit {{ $title }}" />
 
         <section class="section">
             <div class="card">
@@ -31,16 +31,16 @@
                                 @enderror
                             </div>
                         </div>
-                        
+
                         <div class="row" id="provider-data"></div>
-                        
+
                         <div class="col-12 text-end my-2">
                             <button type="button" class="btn btn-warning" onclick="testProvider()">Test</button>
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
 
                         <div class="col-12" id="test-response">
-                            
+
                         </div>
                     </form>
                 </div>
@@ -71,13 +71,13 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="${item}" class="form-label">${capitalizedItem}</label>
-                                    <input 
-                                        type="text" 
-                                        name="${item}" 
-                                        value="${value}" 
-                                        id="${item}" 
-                                        placeholder="${capitalizedItem}" 
-                                        class="form-control" 
+                                    <input
+                                        type="text"
+                                        name="${item}"
+                                        value="${value}"
+                                        id="${item}"
+                                        placeholder="${capitalizedItem}"
+                                        class="form-control"
                                         required
                                     >
                                 </div>
@@ -94,7 +94,7 @@
         function testProvider() {
             const provider = $('#provider').val();
             // console.log(provider);
-            
+
             $.ajax({
                 url: "/admin/settings/sms/providers/test/" + provider,
                 type: "GET",

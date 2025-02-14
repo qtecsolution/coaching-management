@@ -4,11 +4,10 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Send Message" subtitle="" pageTitle="Send Message" />
+        <x-page-title title="Send Message" :url="route('admin.messages.index')" />
 
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <form action="{{ route('admin.messages.store') }}" method="POST">
                         @csrf

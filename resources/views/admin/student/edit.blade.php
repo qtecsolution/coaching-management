@@ -8,7 +8,6 @@
 
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <form action="{{ route('admin.students.update', $student->id) }}" method="POST">
                         @csrf
@@ -331,7 +330,7 @@
                     //     alert('You cannot remove more fields.');
                     //     return;
                     // }
-                    
+
                     const fieldGroup = e.target.closest('.row');
                     fieldsContainer.removeChild(fieldGroup);
                 }

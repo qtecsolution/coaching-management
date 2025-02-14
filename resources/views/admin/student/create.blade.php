@@ -8,7 +8,6 @@
 
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <form action="{{ route('admin.students.store') }}" method="POST">
                         @csrf
@@ -25,11 +24,11 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                
+
                                     @error('batch')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
-                                </div>                                
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">

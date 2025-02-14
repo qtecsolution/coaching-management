@@ -1,15 +1,14 @@
 @extends('layouts.master')
 
-@section('title', 'Courses')
+@section('title', 'Course List')
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Courses" subtitle="" pageTitle="Courses" />
+        <x-page-title title="Course List" />
 
         <!-- Basic Tables start -->
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header"><h5 class="card-title"></h5></div> --}}
                 <div class="card-body">
                     <div class="col-12 mb-4 text-end">
                         <a href="{{ route('admin.courses.create') }}" class="btn btn-primary">
