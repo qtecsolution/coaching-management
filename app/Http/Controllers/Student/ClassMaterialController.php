@@ -15,17 +15,16 @@ class ClassMaterialController extends Controller
      */
     public function index(Request $request)
     {
-        
+
         if ($request->ajax()) {
             $user = User::with(['student.currentbatch'])->find(auth()->id());
-            $batchDayIds = $user?->student?->currentbatch?->batch?->batch_days->pluck('id') ?? [];
-            $query = ClassMaterial::whereIn('batch_day_id', $batchDayIds)->latest();
+            $query = ClassMaterial::where('batch_id', $user?->student?->currentBatch->batch_id);
 
             return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('DT_RowIndex', '')
                 ->addColumn('batch', function ($row) {
-                    return $row->batch_day->batch->name;
+                    return $row->batch->title;
                 })
                 ->editColumn('url', function ($row) {
                     return '<a href="' . absolutePath($row->url) . '" target="_blank"><i class="bi bi-eye"></i> View</a>';
