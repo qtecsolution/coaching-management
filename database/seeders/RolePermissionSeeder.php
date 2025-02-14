@@ -46,9 +46,7 @@ class RolePermissionSeeder extends Seeder
         ];
 
         $teacherPermissions = [
-            'view_students', 'create_student', 'update_student', 'delete_student',
-            'view_courses', 'create_course', 'update_course', 'delete_course',
-            'view_batches', 'create_batch', 'update_batch', 'delete_batch',
+            'view_students', 'view_batches',
             'view_attendance', 'create_attendance', 'update_attendance', 'delete_attendance',
             'view_messages', 'create_message', 'update_message', 'delete_message',
         ];
@@ -59,10 +57,10 @@ class RolePermissionSeeder extends Seeder
 
         // forget cached permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
-        
+
         // create permissions
         Permission::insert($permissions->toArray());
-        
+
         // sync permissions
         $adminRole->syncPermissions(Permission::all());
         $teacherRole->syncPermissions($teacherPermissions);
