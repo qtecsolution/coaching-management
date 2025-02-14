@@ -2,12 +2,6 @@
 
 @section('title', 'Dashboard')
 
-@php
-    $schedules = $user?->student?->currentbatch->batch?->batch_days ?? [];
-    $daysOfWeek = \App\Models\BatchDay::$daysOfWeek;
-    $currentDayIndex = Carbon\Carbon::now()->dayOfWeek;
-@endphp
-
 @push('css')
     <style>
         tr.highlighted-row {
@@ -29,10 +23,10 @@
             <div class="card">
                 <div class="card-body">
                     <div class="col-12">
-                        <h3>Hello, {{ $user->name }}.</h3>
+                        <h3>Hello, {{ auth()->user()->name }}.</h3>
                         <p>
-                            @if (isset($user?->student?->currentBatch?->batch?->name))
-                                You're enrolled to the <b>{{ $user->student->currentBatch?->batch?->name }}</b>. See the
+                            @if (isset(auth()->user()?->student?->currentBatch?->batch?->title))
+                                You're enrolled to the <b>{{ auth()->user()->student->currentBatch?->batch?->title }}</b>. See the
                                 following
                                 table to check your class schedules.
                             @else
@@ -51,15 +45,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($schedules) > 0)
-                                        @foreach ($schedules as $schedule)
+                                    @if (count($classSchedules) > 0)
+                                        @foreach ($classSchedules as $schedule)
                                             <tr>
-                                                <td>{{ $schedule->day_name }}</td>
+                                                <td>{{ Carbon\Carbon::parse($schedule->date)->format('d F, Y') }} ({{ $schedule->day_name }})</td>
                                                 <td>
                                                     {{ Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -
                                                     {{ Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
                                                 </td>
-                                                <td>{{ $schedule->teacher_name }}</td>
+                                                <td>{{ $schedule->batchDay->teacher_name }}</td>
                                             </tr>
                                         @endforeach
                                     @else
