@@ -13,8 +13,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = User::find(auth()->id());
-        // return $user?->student?->currentBatch?->batch?->batch_days;
-        $dayIds = $user?->student?->currentBatch?->batch?->batch_days?->pluck('id');
+        $dayIds = $user?->student?->currentBatch?->batch?->batch_days?->pluck('id') ?? [];
         $classSchedules = BatchDayDate::whereIn('batch_day_id', $dayIds)
             ->orderBy('date', 'asc')
             ->get();

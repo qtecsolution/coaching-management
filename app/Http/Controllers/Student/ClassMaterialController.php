@@ -18,7 +18,7 @@ class ClassMaterialController extends Controller
 
         if ($request->ajax()) {
             $user = User::with(['student.currentbatch'])->find(auth()->id());
-            $query = ClassMaterial::where('batch_id', $user?->student?->currentBatch->batch_id);
+            $query = ClassMaterial::where('batch_id', $user?->student?->currentBatch?->batch_id);
 
             return DataTables::of($query)
                 ->addIndexColumn()
