@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SmsController;
 use App\Models\Batch;
+use App\Models\BatchDay;
 use App\Models\Message;
 use App\Models\Student;
+use App\Models\StudentBatch;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -58,8 +60,16 @@ class MessageController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $students = Student::active()->get();
-        $batches = Batch::active()->get();
+        if (auth()->user()->user_type == 'teacher') {
+            $batchDayIds = BatchDay::where('user_id', auth()->id())->pluck('batch_id');
+            $batches = Batch::active()->whereIn('id', $batchDayIds)->get();
+
+            $studentIds = StudentBatch::whereIn('batch_id', $batchDayIds)->pluck('student_id');
+            $students = Student::active()->whereIn('id', $studentIds)->get();
+        } else {
+            $students = Student::active()->get();
+            $batches = Batch::active()->get();
+        }
 
         return view('admin.message.create', compact('students', 'batches'));
     }

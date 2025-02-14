@@ -46,7 +46,7 @@
                                         @foreach ($batches as $batch)
                                             <option value="{{ $batch->id }}"
                                                 {{ old('batch') == $batch->id ? 'selected' : '' }}>
-                                                {{ $batch->name }}</option>
+                                                {{ $batch->title }}</option>
                                         @endforeach
                                     </select>
 

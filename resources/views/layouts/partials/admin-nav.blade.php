@@ -23,7 +23,8 @@
                 </li>
             @endcan
             @can('view_roles')
-                <li class="submenu-item {{ Route::is('admin.users.roles.index') || Route::is('admin.users.roles.show') ? 'active' : '' }}">
+                <li
+                    class="submenu-item {{ Route::is('admin.users.roles.index') || Route::is('admin.users.roles.show') ? 'active' : '' }}">
                     <a href="{{ route('admin.users.roles.index') }}">Role & Permission</a>
                 </li>
             @endcan
@@ -31,18 +32,16 @@
     </li>
 @endcan
 
-@can('view_students')
+@if(auth()->user()->user_type !== 'teacher' && auth()->user()->can('view_students'))
     <li class="sidebar-item has-sub {{ Route::is('admin.students.*') ? 'active' : '' }}">
         <a href="javascript:void(0)" class="sidebar-link toggle-submenu">
             <i class="bi bi-person-plus"></i>
             <span>Students</span>
         </a>
         <ul class="submenu {{ Route::is('admin.students.*') ? 'submenu-open' : 'submenu-close' }}">
-            @can('view_students')
-                <li class="submenu-item {{ Route::is('admin.students.index') ? 'active' : '' }}">
-                    <a href="{{ route('admin.students.index') }}">Student List</a>
-                </li>
-            @endcan
+            <li class="submenu-item {{ Route::is('admin.students.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.students.index') }}">Student List</a>
+            </li>
             @can('create_student')
                 <li class="submenu-item {{ Route::is('admin.students.create') ? 'active' : '' }}">
                     <a href="{{ route('admin.students.create') }}">Add Student</a>
@@ -50,7 +49,7 @@
             @endcan
         </ul>
     </li>
-@endcan
+@endif
 
 @can('view_batches')
     <li class="sidebar-item has-sub {{ Route::is('admin.batches.*') || Route::is('admin.levels.*') ? 'active' : '' }}">
@@ -58,7 +57,8 @@
             <i class="bi bi-easel"></i>
             <span>Batches</span>
         </a>
-        <ul class="submenu {{ Route::is('admin.batches.*') || Route::is('admin.courses.*') ? 'submenu-open' : 'submenu-close' }}">
+        <ul
+            class="submenu {{ Route::is('admin.batches.*') || Route::is('admin.courses.*') ? 'submenu-open' : 'submenu-close' }}">
             @can('view_courses')
                 <li class="submenu-item {{ Route::is('admin.courses.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.courses.index') }}">Course List</a>
@@ -109,7 +109,8 @@
 @endcan --}}
 
 @can('view_messages')
-    <li class="sidebar-item {{ in_array(Route::currentRouteName(), ['admin.messages.index', 'admin.messages.create']) ? 'active' : '' }}">
+    <li
+        class="sidebar-item {{ in_array(Route::currentRouteName(), ['admin.messages.index', 'admin.messages.create']) ? 'active' : '' }}">
         <a href="{{ route('admin.messages.index') }}" class="sidebar-link">
             <i class="bi bi-chat-left-text"></i>
             <span>Messages</span>
