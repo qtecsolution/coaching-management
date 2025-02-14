@@ -113,6 +113,24 @@
                     >
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="status" class="form-label">Status<sup class="text-danger">*</sup></label>
+                    <select
+                        v-model="status"
+                        id="status"
+                        class="form-control form-select"
+                    >
+                        <option v-for="item in statusList" :key="item.id" :value="item.id">
+                            {{ item.name }}
+                        </option>
+                    </select>
+                    <small
+                        class="text-danger"
+                        v-if="errors && errors.status"
+                    >{{ errors.status[0] }}</small>
+                </div>
+            </div>
         </div>
 
         <hr />
@@ -273,7 +291,7 @@ if (props?.batch?.batch_days?.length > 0) {
     props.batch.batch_days.forEach((day) => {
         const selectedDay = dayNames.value.find((item) => item.id == day.day);
         const selectedTeacher = props.teachers.find((item) => item.id == day.user_id);
-        
+
         days.value.push({
             day: selectedDay,
             start_time: day.start_time,
