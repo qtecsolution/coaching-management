@@ -2,27 +2,6 @@
 
 @section('title', 'Dashboard')
 
-@php
-    $schedules = $batchDays ?? [];
-    $daysOfWeek = \App\Models\BatchDay::$daysOfWeek;
-    $currentDayIndex = Carbon\Carbon::now()->dayOfWeek;
-
-    // // Find the next class day
-    // $nextClassDay = null;
-    // foreach ($schedules as $schedule) {
-    //     $scheduleDayIndex = array_search($schedule->day_name, $daysOfWeek);
-    //     if ($scheduleDayIndex > $currentDayIndex) {
-    //         $nextClassDay = $schedule->day_name;
-    //         break;
-    //     }
-    // }
-
-    // // If no next day is found, assume the first day of the next week
-    // if (!$nextClassDay) {
-    //     $nextClassDay = $schedules->first()?->day_name;
-    // }
-@endphp
-
 @push('css')
     <style>
         tr.highlighted-row {
@@ -59,28 +38,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($schedules) > 0)
-                                        @foreach ($schedules as $schedule)
+                                    @if (count($classSchedules) > 0)
+                                        @foreach ($classSchedules as $schedule)
                                             <tr>
-                                                <td>{{ $schedule?->batch->name }}</td>
-                                                <td>{{ $schedule->day_name }}</td>
+                                                <td>{{ $schedule?->batchDay?->batch->title }}</td>
+                                                <td>{{ Carbon\Carbon::parse($schedule->date)->format('d F, Y') }} ({{ $schedule->day_name }})</td>
                                                 <td>
-                                                    {{ Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -
-                                                    {{ Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
+                                                    {{ Carbon\Carbon::parse($schedule?->batchDay?->start_time)->format('h:i A') }} -
+                                                    {{ Carbon\Carbon::parse($schedule?->batchDay?->end_time)->format('h:i A') }}
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="{{ route('admin.batches.students', $schedule->batch_id) }}" class="btn btn-sm btn-light" title="Student List">
+                                                        <a href="{{ route('admin.batches.students', $schedule?->batchDay?->batch_id) }}" class="btn btn-sm btn-light" title="Student List">
                                                             <i class="bi bi-list-task"></i>
                                                         </a>
                                                         {{-- <a href="{{ route('admin.attendance.list', $schedule->id) }}" class="btn btn-sm btn-light" title="Attendence">
                                                             <i class="bi bi-calendar3"></i>
-                                                        </a> --}}
-                                                        {{-- <a href="#" class="btn btn-sm btn-light" title="Grades">
-                                                            <i class="bi bi-bookmark-fill"></i>
-                                                        </a> --}}
-                                                        {{-- <a href="#" class="btn btn-sm btn-light" title="Online Class">
-                                                            <i class="bi bi-person-video"></i>
                                                         </a> --}}
                                                     </div>
                                                 </td>

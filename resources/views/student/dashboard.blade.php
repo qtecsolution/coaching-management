@@ -50,8 +50,8 @@
                                             <tr>
                                                 <td>{{ Carbon\Carbon::parse($schedule->date)->format('d F, Y') }} ({{ $schedule->day_name }})</td>
                                                 <td>
-                                                    {{ Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} -
-                                                    {{ Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
+                                                    {{ Carbon\Carbon::parse($schedule?->batchDay?->start_time)->format('h:i A') }} -
+                                                    {{ Carbon\Carbon::parse($schedule?->batchDay?->end_time)->format('h:i A') }}
                                                 </td>
                                                 <td>{{ $schedule->batchDay->teacher_name }}</td>
                                             </tr>
