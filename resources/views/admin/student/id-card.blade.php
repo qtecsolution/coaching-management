@@ -204,8 +204,8 @@
     @php
         $logo = asset('assets/static/images/logo/logo.svg');
 
-        if (auth()->user()->avatar) {
-            $avatar = asset('storage/' . auth()->user()->avatar);
+        if ($student->user->avatar) {
+            $avatar = asset('storage/' . $student->user->avatar);
         } else {
             $avatar = asset('assets/static/images/faces/2.jpg');
         }
@@ -245,7 +245,7 @@
                 </div>
                 <div class="detail-row">
                     <span class="label">Valid Until:</span>
-                    <span class="value">{{ $student->created_at->addYear()->format('d M Y') }}</span>
+                    <span class="value">{{ now()->addMonths(6)->format('d M Y') }}</span>
                 </div>
             </div>
         </div>
