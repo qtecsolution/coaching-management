@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function deleteResource(url) {
     Swal.fire({
         title: "Are you sure?",
-        text: "This resource will be deleted permanently.",
+        text: "This resource and all associated data will be permanently deleted and cannot be restored.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",
