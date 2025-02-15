@@ -87,7 +87,7 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // student routes
     Route::resource('students', StudentController::class);
-    Route::get('/students/{id}', [StudentController::class, 'idCard'])->name('students.id');
+    Route::get('/students/{id}/card', [StudentController::class, 'idCard'])->name('students.id');
 
     // course routes
     Route::resource('courses', CourseController::class);

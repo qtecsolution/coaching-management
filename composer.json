@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.9",
         "muhaiminshihab/ctaroutes": "^1.0",
         "realrashid/sweet-alert": "^7.2",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.9",
         "xenon/laravelbdsms": "^1.0",
         "yajra/laravel-datatables": "^11.0"
