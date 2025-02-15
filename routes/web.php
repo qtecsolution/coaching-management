@@ -68,9 +68,6 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
         // Additional route for updating permissions within roles
         Route::post('/roles/{role}/update-permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
-
-        // Permission resource routes
-        Route::resource('permissions', PermissionController::class);
     });
 
     // setting routes

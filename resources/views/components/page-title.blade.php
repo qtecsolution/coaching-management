@@ -6,7 +6,7 @@
         </div>
         <div class="col-12 col-md-6 order-md-2 order-first text-end">
             @if (isset($url))
-                <a href="{{ url()->previous() ?? url(auth()->user()->getRedirectUrl()) }}" class="btn btn-primary">
+                <a href="{{ $url }}" class="btn btn-primary">
                     <i class="bi bi-arrow-left-circle"></i> Back
                 </a>
             @endif
