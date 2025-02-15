@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\ClassMaterialController;
@@ -106,6 +107,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     // payment routes
     Route::resource('payments', PaymentController::class);
     Route::post('/payments/get-info', [PaymentController::class, 'getInfo']);
+
+    // attendance routes
+    Route::resource('attendance', AttendanceController::class);
 });
 
 // user routes
