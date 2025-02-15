@@ -137,13 +137,15 @@
                                         }
                                     @endphp
 
-                                    <img src="{{ $avatar }}"
-                                        alt="{{ auth()->user()->name }}" id="profile-photo">
+                                    <div class="avatar-photo">
+                                        <img src="{{ $avatar }}" alt="{{ auth()->user()->name }}"
+                                            id="profile-photo">
+                                    </div>
 
                                     <div class="avatar-upload-icon">
                                         <i class="bi bi-image"></i>
-                                        <input type="file" name="avatar"
-                                            onchange="photoPreview(event, 'profile-photo')" id="avatar-input">
+                                        <input type="file" name="avatar" onchange="photoPreview(event, 'profile-photo')"
+                                            id="avatar-input">
                                     </div>
                                     <button type="submit" class="avatar-save-icon d-none">
                                         <i class="bi bi-check"></i>
