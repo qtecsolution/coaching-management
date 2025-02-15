@@ -103,9 +103,7 @@ class UserController extends Controller
                     'emergency_contact' => json_encode([
                         'name' => $request->contact_name,
                         'phone' => $request->contact_phone
-                    ]),
-                    'created_by' => auth()->id(),
-                    'updated_by' => auth()->id()
+                    ])
                 ]);
             }
 
@@ -179,8 +177,7 @@ class UserController extends Controller
                         'emergency_contact' => json_encode([
                             'name' => $request->contact_name,
                             'phone' => $request->contact_phone
-                        ]),
-                        'updated_by' => auth()->id()
+                        ])
                     ]);
                 } else {
                     Teacher::create([
@@ -192,9 +189,7 @@ class UserController extends Controller
                         'emergency_contact' => json_encode([
                             'name' => $request->contact_name,
                             'phone' => $request->contact_phone
-                        ]),
-                        'created_by' => auth()->id(),
-                        'updated_by' => auth()->id()
+                        ])
                     ]);
                 }
             } else {

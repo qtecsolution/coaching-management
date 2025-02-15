@@ -33,9 +33,7 @@ class StudentFactory extends Factory
                     'name' => fake()->name(),
                     'phone' => fake()->phoneNumber()
                 ]
-            ),
-            'created_by' => 1,
-            'updated_by' => 1
+            )
         ];
     }
 }

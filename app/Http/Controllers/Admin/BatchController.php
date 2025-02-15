@@ -99,8 +99,6 @@ class BatchController extends Controller
             $batch = Batch::create([
                 'title' => $request->title,
                 'course_id' => $request->course,
-                'created_by' => auth()->id(),
-                'updated_by' => auth()->id(),
                 'price' => $request->price,
                 'discount_type' => $request->discount_type,
                 'discount' => $request->discount
@@ -191,7 +189,6 @@ class BatchController extends Controller
                 'title' => $request->title,
                 'course_id' => $request->course,
                 'status' => $request->status ?? $batch->status,
-                'updated_by' => auth()->id(),
                 'price' => $request->price,
                 'discount_type' => $request->discount_type,
                 'discount' => $request->discount
