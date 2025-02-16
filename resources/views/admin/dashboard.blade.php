@@ -4,7 +4,17 @@
 
 @section('content')
     <div class="page-heading">
-        <h3>Dashboard</h3>
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Dashboard</h3>
+
+            <form action="" method="GET" class="d-flex gap-2">
+                <div class="input-group">
+                    <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+                    <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+                    <button class="btn btn-primary" type="submit">Filter</button>
+                </div>
+            </form>
+        </div>
     </div>
     <div class="page-content">
         <section class="row">
@@ -104,11 +114,66 @@
                 </div>
             </div>
         </section>
+
+        <section class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Payment Statistics</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="payment-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 @endsection
 
 @push('js')
-    <!-- Need: Apexcharts -->
     <script src="{{ asset('assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/static/js/pages/dashboard.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentData = @json($paymentData);
+
+            if (paymentData && paymentData.length > 0) {
+                const options = {
+                    series: [{
+                        name: 'Total Amount',
+                        data: paymentData.map(item => item.total_amount)
+                    }],
+                    chart: {
+                        height: 350,
+                        type: 'area'
+                    },
+                    stroke: {
+                        curve: 'smooth',
+                        width: 2
+                    },
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shadeIntensity: 1,
+                            opacityFrom: 0.7,
+                            opacityTo: 0.3
+                        }
+                    },
+                    title: {
+                        text: 'Payment Statistics'
+                    },
+                    xaxis: {
+                        categories: paymentData.map(item => item.date)
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'Amount (BDT)',
+                        }
+                    }
+                };
+
+                const chart = new ApexCharts(document.querySelector("#payment-chart"), options);
+                chart.render();
+            }
+        });
+    </script>
 @endpush

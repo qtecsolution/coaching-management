@@ -9,10 +9,10 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentBatchController;
 use App\Http\Controllers\Admin\StudentController;
-use App\Http\Controllers\Admin\User\PermissionController;
 use App\Http\Controllers\Admin\User\RoleController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\SmsController;
@@ -110,6 +110,11 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     // attendance routes
     Route::resource('attendance', AttendanceController::class);
+
+    // report routes
+    Route::prefix('reports')->as('reports.')->controller(ReportController::class)->group(function () {
+        Route::get('/payments', 'payments')->name('payments');
+    });
 });
 
 // user routes

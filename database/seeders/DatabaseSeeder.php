@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             BatchSeeder::class,
             StudentBatchSeeder::class,
             SettingSeeder::class,
+            PaymentSeeder::class
         ]);
     }
 }
