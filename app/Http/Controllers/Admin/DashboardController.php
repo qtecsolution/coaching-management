@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\BatchDay;
 use App\Models\BatchDayDate;
-use App\Models\Student;
 use App\Models\Teacher;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {

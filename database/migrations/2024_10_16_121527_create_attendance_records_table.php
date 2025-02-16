@@ -18,8 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(BatchDayDate::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Student::class)->constrained()->cascadeOnDelete();
-            $table->integer('status')->default(1)->comment('0 = Absent, 1 = Present, 2 = Late', '3 = Leave');
-            $table->text('note')->nullable();
+            $table->integer('status')->default(0)->comment('0 = Absent, 1 = Present, 2 = Late', '3 = Leave');
             $table->timestamps();
         });
     }

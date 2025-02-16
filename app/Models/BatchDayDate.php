@@ -36,4 +36,9 @@ class BatchDayDate extends Model
     {
         return $this->belongsTo(BatchDay::class);
     }
+
+    public function attendance()
+    {
+        return $this->hasMany(AttendanceRecord::class);
+    }
 }

@@ -52,7 +52,7 @@
                                                         <a href="{{ route('admin.batches.students', $schedule?->batchDay?->batch_id) }}" class="btn btn-sm btn-light" title="Student List">
                                                             <i class="bi bi-list-task"></i>
                                                         </a>
-                                                        <a href="{{ route('admin.attendance.index', $schedule->id) }}" class="btn btn-sm btn-light" title="Attendence">
+                                                        <a href="{{ route('admin.attendance.edit', $schedule->id) }}" class="btn btn-sm btn-light" title="Attendence">
                                                             <i class="bi bi-calendar3"></i>
                                                         </a>
                                                     </div>
