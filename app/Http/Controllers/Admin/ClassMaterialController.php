@@ -26,8 +26,8 @@ class ClassMaterialController extends Controller
 
         if ($request->ajax()) {
             if (auth()->user()->user_type == 'teacher') {
-                $batchDayIds = BatchDay::where('user_id', auth()->id())->pluck('id');
-                $query = ClassMaterial::whereIn('batch_day_id', $batchDayIds);
+                $batchDayIds = BatchDay::where('user_id', auth()->id())->pluck('batch_id');
+                $query = ClassMaterial::whereIn('batch_id', $batchDayIds);
             } else {
                 $query = ClassMaterial::query();
             }
