@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Batch;
 use App\Services\AdaReachService;
 use Illuminate\Http\Request;
 use Xenon\LaravelBDSms\Provider\Mobireach;

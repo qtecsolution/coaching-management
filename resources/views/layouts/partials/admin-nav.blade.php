@@ -99,14 +99,14 @@
     </li>
 @endcan
 
-{{-- @can('view_attendance')
+@can('view_attendance')
     <li class="sidebar-item {{ Route::is('admin.attendance.index') ? 'active' : '' }}">
         <a href="{{ route('admin.attendance.index') }}" class="sidebar-link">
             <i class="bi bi-calendar3"></i>
             <span>Attendance</span>
         </a>
     </li>
-@endcan --}}
+@endcan
 
 @can('view_messages')
     <li

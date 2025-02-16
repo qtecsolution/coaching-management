@@ -2,15 +2,6 @@
 
 @section('title', 'Attendance')
 
-@push('css')
-    <style>
-        .btn-hover:hover {
-            background-color: #435EBE !important;
-            color: #FFFFFF !important;
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <x-page-title title="Attendance" />
@@ -27,11 +18,10 @@
                                     <th>Name</th>
                                     <th>History</th>
                                     <th>Attendance</th>
-                                    {{-- <th>Comment</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($attendance->records as $record)
+                                @forelse ($records->attendance as $record)
                                     <tr>
                                         <td>{{ $record?->student->reg_id }}</td>
                                         <td>{{ $record?->student->name }}</td>
@@ -47,11 +37,6 @@
                                                 <button class="btn btn-white border btn-sm btn-hover {{ $record->status == 2 ? 'bg-primary text-white' : '' }}">Late</button>
                                             </div>
                                         </td>
-                                        {{-- <td>
-                                            <a href="" class="btn btn-sm btn-light">
-                                                <i class="bi bi-chat-left-text"></i>
-                                            </a>
-                                        </td> --}}
                                     </tr>
                                 @empty
                                     <tr>
