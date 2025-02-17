@@ -11,7 +11,7 @@
             <div id="auth-left">
                 <div class="auth-logo">
                     @php
-                        $logo = asset('assets/static/images/logo/logo.svg');
+                        $logo = asset('assets/static/images/logo/logo.png');
                         $logoSetting = \App\Models\Setting::where('key', 'app_logo')->value('value');
 
                         if ($logoSetting) {

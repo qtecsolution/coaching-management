@@ -21,7 +21,7 @@
                                     <label for="APP_LOGO" class="form-label">App Logo</label>
                                     <input type="file" name="APP_LOGO" id="app_logo" class="basic-filepond"
                                         accept="image/*"
-                                        data-source="{{ @$settings->where('key', 'APP_LOGO')->first()?->value ? asset('storage/' . @$settings->where('key', 'APP_LOGO')->first()->value) : asset('assets/static/images/logo/logo.svg') }}">
+                                        data-source="{{ @$settings->where('key', 'APP_LOGO')->first()?->value ? asset('storage/' . @$settings->where('key', 'APP_LOGO')->first()->value) : asset('assets/static/images/logo/logo.png') }}">
 
                                     @error('APP_LOGO')
                                         <small class="text-danger">{{ $message }}</small>

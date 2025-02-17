@@ -12,7 +12,7 @@
         <div class="col-lg-7 col-12">
             <div id="auth-left">
                 <div class="auth-logo">
-                    <a href="index.html"><img src="{{ asset('assets/static/images/logo/logo.svg') }}" alt="Logo"></a>
+                    <a href="index.html"><img src="{{ asset('assets/static/images/logo/logo.png') }}" alt="Logo"></a>
                 </div>
                 <h1 class="auth-title">Sign up</h1>
                 <p class="auth-subtitle mb-5">Input your data to sign up to our panel.</p>

@@ -202,7 +202,7 @@
 
 <body>
     @php
-        $logo = asset('assets/static/images/logo/logo.svg');
+        $logo = asset('assets/static/images/logo/logo.png');
 
         if ($student->user->avatar) {
             $avatar = asset('storage/' . $student->user->avatar);
