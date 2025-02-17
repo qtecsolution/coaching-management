@@ -16,7 +16,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="batch" class="form-label">Batch</label>
+                                    <label for="batch" class="form-label">Batch<sup class="text-danger">*</sup></label>
                                     <select name="batch" class="form-control select2" id="batch" required>
                                         <option value="" selected disabled>Select a Batch</option>
                                         @foreach ($batches as $batch)
