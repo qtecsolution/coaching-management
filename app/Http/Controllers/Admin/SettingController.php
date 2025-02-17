@@ -6,9 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use App\Traits\ExceptionHandler;
 
 class SettingController extends Controller
 {
+    use ExceptionHandler;
+
     public function edit($type)
     {
         if (!auth()->user()->can('update_settings')) {
@@ -49,12 +53,19 @@ class SettingController extends Controller
         }
 
         $requests = $request->except('_token');
+
+        if (isset($requests['type']) && $requests['type'] === 'email') {
+            $this->updateEmailCredentials($requests);
+        }
+
         foreach ($requests as $key => $value) {
             $data = $value;
 
             if ($request->hasFile($key)) {
-                if (Setting::where('key', $key)->exists()) {
-                    fileRemove(Setting::where('key', $key)->first()->value);
+                $existingSetting = Setting::where('key', $key)->first();
+
+                if ($existingSetting) {
+                    fileRemove($existingSetting->value);
                 }
 
                 $request->validate([
@@ -67,8 +78,55 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => $key], ['value' => $data]);
         }
 
-        alert('Success!', 'Settings updated successfully.', 'success');
+        $this->getAlert('success', 'Settings updated successfully.');
         return back();
+    }
+
+    /**
+     * Update email configuration dynamically.
+     */
+    private function updateEmailCredentials(array $requests)
+    {
+        $mailConfig = [
+            'transport'  => 'smtp',
+            'host'       => $requests['MAIL_HOST'] ?? env('MAIL_HOST', ''),
+            'port'       => $requests['MAIL_PORT'] ?? env('MAIL_PORT', ''),
+            'encryption' => $requests['MAIL_ENCRYPTION'] ?? env('MAIL_ENCRYPTION', 'tls'),
+            'username'   => $requests['MAIL_USERNAME'] ?? env('MAIL_USERNAME', ''),
+            'password'   => $requests['MAIL_PASSWORD'] ?? env('MAIL_PASSWORD', ''),
+            'timeout'    => null,
+            'local_domain' => $requests['MAIL_EHLO_DOMAIN'] ?? env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+        ];
+
+        $mailFrom = [
+            'address' => $requests['MAIL_FROM_ADDRESS'] ?? env('MAIL_FROM_ADDRESS', ''),
+            'name'    => $requests['MAIL_FROM_NAME'] ?? env('MAIL_FROM_NAME', ''),
+        ];
+
+        config([
+            'mail.mailers.smtp' => $mailConfig,
+            'mail.from'         => $mailFrom,
+        ]);
+
+        $configPath = config_path('mail.php');
+
+        if (file_exists($configPath) && is_writable($configPath)) {
+            try {
+                $currentConfig = require $configPath;
+                $currentConfig['mailers']['smtp'] = $mailConfig;
+                $currentConfig['from'] = $mailFrom;
+
+                $newConfig = "<?php\n\nreturn " . var_export($currentConfig, true) . ";\n";
+                $newConfig = preg_replace('/=>(\s+)array\s\(/', '=> [', $newConfig);
+                $newConfig = str_replace(['array (', ')'], ['[', ']'], $newConfig);
+
+                file_put_contents($configPath, $newConfig);
+            } catch (\Exception $e) {
+                $this->logException($e);
+            }
+        }
+
+        app('mail.manager')->forgetMailers();
     }
 
     private function updateSmsCredentials($activeProvider, $smsProviders)

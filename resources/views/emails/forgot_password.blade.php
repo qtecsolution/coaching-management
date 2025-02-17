@@ -1,15 +1,12 @@
 <x-mail::message>
 # Introduction
 
-Hi {{ $user->name }},
-
-We received a request to reset your password. Click the button below to reset it:
+Hi <strong>{{ $user->name }}</strong>,
+You are receiving this email because we received a password reset request for your account. If you did not request, no further action is required. If you did request a password reset, you may reset your password using the following link:
 
 <x-mail::button :url="$url">
-    {{ $token }}
+    Reset Password
 </x-mail::button>
-
-If you did not request a password reset, please ignore this email.
 
 Thanks,<br>
 {{ config('app.name') }}

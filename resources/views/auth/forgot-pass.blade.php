@@ -23,19 +23,29 @@
                 <h1 class="auth-title">Forgot Password</h1>
                 <p class="auth-subtitle mb-5">Input your email and we will send you reset password link.</p>
 
+                @foreach ($errors->all() as $error)
+                    <div class="alert alert-danger mb-2">{{ $error }}</div>
+                @endforeach
+
                 <form action="{{ route('auth.forgot-password') }}" method="post">
                     @csrf
 
-                    <div class="form-group position-relative has-icon-left mb-4">
-                        <input type="email" class="form-control form-control-xl" name="email" placeholder="Enter your email">
-                        <div class="form-control-icon">
+                    <div class="form-group position-relative mb-4">
+                        <label for="data" class="form-label">Phone or Email<sup class="text-danger">*</sup></label>
+                        <input type="text" class="form-control form-control-xl" name="data"
+                            placeholder="Enter your phone or email" required>
+                        {{-- <div class="form-control-icon">
                             <i class="bi bi-envelope"></i>
-                        </div>
+                        </div> --}}
+                        @error('data')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
                     </div>
                     <button class="btn btn-primary btn-block btn-lg shadow-lg">Send</button>
                 </form>
                 <div class="text-center mt-3 text-lg fs-4">
-                    <p class='text-gray-600'>Remember your account? <a href="{{ route('auth.login.show') }}" class="font-bold">Log in</a>.
+                    <p class='text-gray-600'>Remember your account? <a href="{{ route('auth.login.show') }}"
+                            class="font-bold">Log in</a>.
                     </p>
                 </div>
             </div>

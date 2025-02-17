@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class PasswordResetToken extends Model
 {
-    //
+    protected $fillable = [
+        'data',
+        'token'
+    ];
+
+    public $timestamps = false;
 }
