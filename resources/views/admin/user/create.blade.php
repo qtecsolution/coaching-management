@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Add User" />
+        <x-page-title title="Add User" :url="route('admin.users.index')" />
 
         <section class="section">
             <div class="card">
