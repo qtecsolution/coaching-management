@@ -6,12 +6,14 @@ use App\Mail\ForgotPasswordMail;
 use App\Models\PasswordResetToken;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Traits\ExceptionHandler;
 
 class AuthController extends Controller
 {
+    use ExceptionHandler;
+
     // function to show login page
     public function loginView()
     {
@@ -29,9 +31,14 @@ class AuthController extends Controller
         $remember = $request->has('remember_me') ? true : false;
 
         if (auth()->attempt(['phone' => $request->phone, 'password' => $request->password], $remember)) {
-            return redirect()->route(
-                auth()->user()->user_type ? 'admin.dashboard' : 'user.dashboard'
-            );
+            if (auth()->user()->status) {
+                return redirect()->route(
+                    auth()->user()->user_type ? 'admin.dashboard' : 'user.dashboard'
+                );
+            }
+
+            auth()->logout();
+            return back()->withErrors(['login' => 'Your account is suspended.']);
         }
 
         return back()->withErrors(['login' => 'Invalid credentials']);
@@ -44,43 +51,11 @@ class AuthController extends Controller
         return redirect()->route('auth.login');
     }
 
-    // function to show signup page
-    public function signupView()
-    {
-        return abort(403, 'Unauthorized action.');
-
-        return view('auth.signup');
-    }
-
-    // function to signup user
-    public function signup(Request $request)
-    {
-        return abort(403, 'Unauthorized action.');
-
-        $request->validate([
-            'name' => 'required',
-            'phone' => 'required|unique:users,phone',
-            'password' => 'required|confirmed',
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'password' => bcrypt($request->password),
-        ]);
-
-        auth()->login($user);
-
-        return redirect(
-            auth()->user()->getRedirectUrl()
-        );
-    }
-
     // function to show profile page
     public function profileView()
     {
         if (!auth()->check()) {
-            return redirect()->route('auth.login');
+            return to_route('auth.login');
         }
 
         return view('auth.profile');
@@ -90,7 +65,7 @@ class AuthController extends Controller
     public function updateProfile(Request $request)
     {
         if (!auth()->check()) {
-            return redirect()->route('auth.login');
+            return to_route('auth.login');
         }
 
         $request->validate([
@@ -105,18 +80,19 @@ class AuthController extends Controller
             $user->name = $request->name;
             $user->phone = $request->phone;
             $user->email = $request->email;
-            if ($request->password) {
+
+            if ($request->has('password')) {
                 $user->password = bcrypt($request->password);
             }
 
             $user->save();
 
-            alert('Success!', 'Profile updated successfully.', 'success');
+            $this->getAlert('success', 'Profile updated successfully.');
             return back();
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            $this->logException($th);
+            $this->getAlert('error', 'Something went wrong. Try again.');
 
-            alert('Oops!', 'Something went wrong.', 'error');
             return back();
         }
     }
@@ -124,7 +100,7 @@ class AuthController extends Controller
     public function updateAvatar(Request $request)
     {
         if (!auth()->check()) {
-            return redirect()->route('auth.login');
+            return to_route('auth.login');
         }
 
         $request->validate([
@@ -147,12 +123,12 @@ class AuthController extends Controller
                 ]);
             }
 
-            alert('Success!', 'Avatar updated successfully.', 'success');
+            $this->getAlert('success', 'Avatar updated successfully.');
             return back();
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . ' on line ' . $th->getLine() . ' in file ' . $th->getFile());
+            $this->logException($th);
+            $this->getAlert('error', 'Something went wrong. Try again.');
 
-            alert('Oops!', 'Something went wrong.', 'error');
             return back();
         }
     }
@@ -181,15 +157,17 @@ class AuthController extends Controller
                 ->first();
 
             if (!$user) {
-                alert('Oops!', 'User not found.', 'error');
+                $this->getAlert('error', 'User not found.');
                 return back();
             }
 
-            // Ensure only one token exists at a time
-            PasswordResetToken::where('data', $user->phone)->delete();
+            $existingToken = PasswordResetToken::where('data', $user->phone);
+            if ($existingToken->exists()) {
+                $existingToken->delete();
+            }
 
             $token = PasswordResetToken::create([
-                'data' => $user->phone,
+                'data' => $request->data,
                 'token' => Str::random(6),
             ]);
 
@@ -203,18 +181,18 @@ class AuthController extends Controller
                 $smsController = new SmsController();
                 $smsController->sendSms($provider, $config, $user->phone, $message);
 
-                alert('Success!', 'Password reset token sent to your phone.', 'success');
+                $this->getAlert('info', 'Password reset token sent to your phone.');
             } else {
                 // Send Email
                 Mail::to($user->email)->send(new ForgotPasswordMail($user, $token->token));
-                alert('Success!', 'Password reset token sent to your email.', 'success');
+                $this->getAlert('info', 'Password reset token sent to your email.');
             }
 
             return back();
         } catch (\Throwable $th) {
-            Log::error("Error: {$th->getMessage()} at line {$th->getLine()} in {$th->getFile()}");
+            $this->logException($th);
+            $this->getAlert('error', 'Something went wrong. Try again.');
 
-            alert('Oops!', 'Something went wrong. Please try again later.', 'error');
             return back();
         }
     }
@@ -227,22 +205,31 @@ class AuthController extends Controller
 
     public function resetPassword(Request $request)
     {
-        $token = PasswordResetToken::where('token', $request->token)->firstOrFail();
-        $user = User::where('phone', $token->data)
-            ->orWhere('email', $token->data)
-            ->firstOrFail();
+        try {
+            $token = PasswordResetToken::where('token', $request->token)->firstOrFail();
 
-        $request->validate([
-            'password' => 'required|confirmed',
-        ]);
+            $user = User::where('phone', $token->data)
+                ->orWhere('email', $token->data)
+                ->firstOrFail();
 
-        $user->update([
-            'password' => bcrypt($request->password),
-        ]);
+            $request->validate([
+                'password' => 'required|confirmed',
+            ]);
 
-        PasswordResetToken::where('data', $user->phone)->delete();
+            $user->update([
+                'password' => bcrypt($request->password),
+            ]);
 
-        alert('Success!', 'Password reset successfully.', 'success');
-        return redirect()->route('auth.login');
+            $existingToken = PasswordResetToken::where('data', $token->data);
+            if ($existingToken->exists()) {
+                $existingToken->delete();
+            }
+
+            $this->getAlert('success', 'Password reset successfully.');
+            return to_route('auth.login');
+        } catch (\Throwable $th) {
+            $this->logException($th);
+            return back()->withErrors(['reset' => 'Something went wrong. Try again.']);
+        }
     }
 }
