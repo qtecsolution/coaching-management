@@ -40,7 +40,7 @@
         }
 
         .logo {
-            width: 80px;
+            width: 70%;
             margin: 0 auto 5px;
         }
 
@@ -237,7 +237,7 @@
                 </div>
                 <div class="detail-row">
                     <span class="label">Batch:</span>
-                    <span class="value">{{ $student->currentBatch->batch->title }}</span>
+                    <span class="value">{{ $student?->currentBatch?->batch?->title ?? 'N/A' }}</span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Contact:</span>
