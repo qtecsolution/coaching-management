@@ -65,6 +65,9 @@ class FreshSeeder extends Seeder
         }
 
         // Execute RolePermissionSeeder seeder
-        $this->call(RolePermissionSeeder::class);
+        $this->call([
+            RolePermissionSeeder::class,
+            SettingSeeder::class
+        ]);
     }
 }
