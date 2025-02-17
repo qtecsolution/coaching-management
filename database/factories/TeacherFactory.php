@@ -17,10 +17,13 @@ class TeacherFactory extends Factory
      */
     public function definition(): array
     {
+        $deegrees = ['DIPLOMA', 'BSC', 'MSC', 'Honours', 'PhD'];
+
         return [
             'teacher_id' => Str::random(8) . rand(1, 9),
             'nid_number' => fake()->numberBetween(10000000, 99999999),
             'address' => fake()->address(),
+            'qualification' => fake()->randomElement($deegrees),
             'emergency_contact' => json_encode(
                 [
                     'name' => fake()->name(),
