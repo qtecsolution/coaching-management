@@ -14,7 +14,7 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            'APP_NAME' => 'Coaching App',
+            'APP_NAME' => 'CoachingMS',
             'APP_URL' => 'http://localhost:8000',
             'CONTACT_NUMBER' => '1234567890',
             'CONTACT_EMAIL' => 'contact@example.com',
