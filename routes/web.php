@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\StudentBatchController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\User\RoleController;
 use App\Http\Controllers\Admin\User\UserController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\SmsController;
 use App\Http\Controllers\Student\ClassMaterialController as StudentClassMaterialController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
@@ -39,12 +40,12 @@ Route::prefix('auth')->as('auth.')->group(function () {
         Route::post('/sign-up', [AuthController::class, 'signup'])->name('signup');
 
         // forgot password
-        Route::get('/forgot-password', [AuthController::class, 'forgotPasswordView'])->name('forgot-password.show');
-        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+        Route::get('/forgot-password', [PasswordResetController::class, 'forgotPasswordView'])->name('forgot-password.show');
+        Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword'])->name('forgot-password');
 
         // reset password
-        Route::get('/reset-password/{token}', [AuthController::class, 'resetPasswordView'])->name('reset-password.show');
-        Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
+        Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetPasswordView'])->name('reset-password.show');
+        Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('reset-password');
     });
 
     // profile

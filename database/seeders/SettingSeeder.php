@@ -29,7 +29,7 @@ class SettingSeeder extends Seeder
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
-        // copy SmsCredentials-example.php to config/SmsCredentials.php
-        copy(base_path('SmsCredentials-example.php'), base_path('config/SmsCredentials.php'));
+        // copy SmsCredentials.example to config/SmsCredentials.php
+        copy(base_path('SmsCredentials.example'), base_path('config/SmsCredentials.php'));
     }
 }

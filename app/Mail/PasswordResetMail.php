@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ForgotPasswordMail extends Mailable
+class PasswordResetMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -43,7 +43,7 @@ class ForgotPasswordMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.forgot_password',
+            markdown: 'emails.password_reset',
             with: [
                 'user' => $this->user,
                 'token' => $this->token,
