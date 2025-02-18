@@ -260,20 +260,27 @@ class StudentController extends Controller
             // Fetch existing fields
             $existingFields = $student->dynamicFields;
 
-            // Update or create new fields
-            foreach ($request->field_name as $index => $name) {
-                $field = $existingFields[$index] ?? new StudentDynamicField();
-                $field->student_id = $student->id;
-                $field->name = $name;
-                $field->value = $request->field_value[$index];
-                $field->save();
-            }
+            if ($request->field_name != null) {
+                // Update or create new fields
+                foreach ($request->field_name as $index => $name) {
+                    $field = $existingFields[$index] ?? new StudentDynamicField();
+                    $field->student_id = $student->id;
+                    $field->name = $name;
+                    $field->value = $request->field_value[$index];
+                    $field->save();
+                }
 
-            // Remove extra fields (if any)
-            if (count($request->field_name) < $existingFields->count()) {
-                $extraFields = $existingFields->slice(count($request->field_name));
-                foreach ($extraFields as $extraField) {
-                    $extraField->delete();
+                // Remove extra fields (if any)
+                if (count($request->field_name) < $existingFields->count()) {
+                    $extraFields = $existingFields->slice(count($request->field_name));
+                    foreach ($extraFields as $extraField) {
+                        $extraField->delete();
+                    }
+                }
+            } else {
+                // Remove all fields
+                foreach ($existingFields as $field) {
+                    $field->delete();
                 }
             }
 
