@@ -4,6 +4,76 @@
 
 Welcome to the setup guide for the **Coaching Management System**. This document provides comprehensive steps to install, configure, and run the project in your local environment, using both Docker and a native setup. Follow these instructions to ensure proper configuration.
 
+## Features
+
+### User Management
+- Dynamic role and permission management system
+- Permission-based access control
+- Two types of users:
+  - Admin
+  - Teacher
+
+### Student Management
+- Batch assignment system
+- Dynamic custom fields for student data
+- Student ID card generation (Admin only)
+
+### Batch Management
+- Course management and batch assignment
+- Batch schedule management including:
+  - Day Name
+  - Teacher Name
+  - Start Time
+  - End Time
+
+### Payment Management
+- Batch-wise fee collection
+- Milestone-based payment options
+- Payment tracking system
+
+### Attendance Management
+- Automated weekly class schedule generation
+- Dashboard display for students and teachers
+- Teacher attendance marking system
+- Admin monitoring capabilities
+
+### Send Messages
+- SMS notification system
+- Individual student messaging
+- Batch-wise bulk messaging
+
+### Class Materials Management
+- Resource management for batches
+- Student access to batch-specific materials
+- Centralized resource repository
+
+### Lead Management
+- Lead tracking system
+- Dynamic custom fields for lead data
+- Lead status management
+
+### Settings Management
+System configuration options including:
+- System Information
+  - Name
+  - Logo
+  - Contact Details
+  - Social Media Links
+- SMTP Configuration
+  - SMS credentials
+  - Email credentials
+
+### Profile Management
+Users can manage:
+- Personal Information
+  - Name
+  - Phone
+  - Email
+- Security
+  - Password
+- Appearance
+  - Avatar
+  - 
 ## Prerequisites
 
 Please ensure you have the following installed on your system:
