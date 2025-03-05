@@ -73,7 +73,7 @@ Users can manage:
   - Password
 - Appearance
   - Avatar
-  - 
+
 ## Prerequisites
 
 Please ensure you have the following installed on your system:
@@ -263,3 +263,35 @@ Your application will be available at [http://127.0.0.1:8000](http://127.0.0.1:8
 - **Seeding**: The database seeder is configured to populate initial data. Run `php artisan migrate --seed` to use it.
 - **Environment Variables**: Ensure all necessary environment variables are set in the `.env` file.
 - **Database Configuration**: The application is configured for MySQL by default. Update the `.env` file as needed for other database connections.
+
+## 🤝 Contributing
+
+This is an open source project and contributions are welcome. If you are interested in contributing, please fork the repository and submit a pull request with your changes. The project maintainers will review and merge your changes accordingly.
+
+## 📝 License
+
+The 1commerce-saas project is open source and available under the MIT License. You are free to use, modify, and distribute this codebase in accordance with the terms of the license.
+
+Please refer to the LICENSE file for more details.
+
+## Support
+
+If you encounter any issues or have questions, feel free to reach out through the following channels:
+
+-   Open an issue on the [GitHub repository](https://github.com/qtecsolution/AI-Content-Image-Generator-SaaS).
+-   **Call for Queries**: +8801313522828 (WhatsApp)
+-   **Contact Form**: [Qtec Solution Contact Page](https://qtecsolution.com/contact-us)
+-   **Email**: [info@qtecsolution.com](mailto:info@qtecsolution.com)
+
+## Follow Us on Social Media
+
+Stay updated with the latest news, updates, and releases:
+
+![Qtec Solution Limited.](https://raw.githubusercontent.com/qtecsolution/qtecsolution/refs/heads/main/QTEC-Solution-Limited.png) <br>
+[![View Portfolio](https://img.shields.io/badge/View%20Portfolio-%230077B5?style=for-the-badge&logo=portfolio&logoColor=white)](https://qtecsolution.com/Qtec-Solution-Limited-Portfolio.pdf)
+[![Facebook](https://img.shields.io/badge/Facebook-4267B2?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/QtecSolution/)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/qtecsolution/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/qtec-solution)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://twitter.com/qtec_solution)
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@qtecsolutionlimited)
+[![Website](https://img.shields.io/badge/Website-000000?style=for-the-badge&logo=google-chrome&logoColor=white)](https://qtecsolution.com/)
