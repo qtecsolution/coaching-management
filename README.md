@@ -107,61 +107,8 @@ This application requires a server with the following specifications:
 ## Setup Options
 
 This guide covers two setup methods:
-1. **Using Docker**
-2. **Setting Up Locally (Without Docker)**
-
----
-
-### Setup with Docker
-
-#### 1. Clone the Repository
-
-```bash
-git clone https://github.com/qtecsolution/coaching-management.git
-cd coaching-management
-```
-
-#### 2. Initialize the Project
-
-```bash
-sudo make setup
-```
-
-#### Additional Docker Commands
-
-- **Install Dependencies**
-
-    ```bash
-    sudo make composer-install
-    sudo make composer-update
-    sudo make npm-install-build
-    ```
-
-- **Set File Permissions**
-
-    ```bash
-    sudo make set-permissions
-    ```
-
-- **Generate Application Key**
-
-    ```bash
-    sudo make generate-key
-    ```
-
-- **Run Migrations and Seed the Database**
-
-    ```bash
-    sudo make migrate-fresh-seed
-    ```
-
-- **Setup Environment File**
-
-    ```bash
-    sudo make setup-env
-    ```
-
-The application should now be accessible at [http://localhost](http://localhost).
+1. **Setting Up Locally (Without Docker)**
+2. **Using Docker**
 
 ---
 
@@ -258,6 +205,59 @@ Your application will be available at [http://127.0.0.1:8000](http://127.0.0.1:8
 
 ---
 
+### Setup with Docker
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/qtecsolution/coaching-management.git
+cd coaching-management
+```
+
+#### 2. Initialize the Project
+
+```bash
+sudo make setup
+```
+
+#### Additional Docker Commands
+
+- **Install Dependencies**
+
+    ```bash
+    sudo make composer-install
+    sudo make composer-update
+    sudo make npm-install-build
+    ```
+
+- **Set File Permissions**
+
+    ```bash
+    sudo make set-permissions
+    ```
+
+- **Generate Application Key**
+
+    ```bash
+    sudo make generate-key
+    ```
+
+- **Run Migrations and Seed the Database**
+
+    ```bash
+    sudo make migrate-fresh-seed
+    ```
+
+- **Setup Environment File**
+
+    ```bash
+    sudo make setup-env
+    ```
+
+The application should now be accessible at [http://localhost](http://localhost).
+
+---
+
 ## Additional Information
 
 - **Seeding**: The database seeder is configured to populate initial data. Run `php artisan migrate --seed` to use it.
@@ -270,7 +270,7 @@ This is an open source project and contributions are welcome. If you are interes
 
 ## 📝 License
 
-The 1commerce-saas project is open source and available under the MIT License. You are free to use, modify, and distribute this codebase in accordance with the terms of the license.
+The coaching-management project is open source and available under the MIT License. You are free to use, modify, and distribute this codebase in accordance with the terms of the license.
 
 Please refer to the LICENSE file for more details.
 
