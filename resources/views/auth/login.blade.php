@@ -61,6 +61,68 @@
                             up</a>.</p> --}}
                     <p><a class="font-bold" href="{{ route('auth.forgot-password.show') }}">Forgot password?</a></p>
                 </div>
+
+                <button id="demo-credentials-btn" class="btn text-primary">Show Demo Credentials</button>
+                <div id="demo-credentials-popup" style="width: 350px"
+                    class="d-none position-fixed top-50 start-50 translate-middle bg-white p-4 shadow-lg rounded">
+                    <button id="close-popup" class="btn-close position-absolute top-0 end-0 m-2"></button>
+                    <h5 class="text-center">Demo Credentials:</h5>
+                    <div class="card-body">
+                        <div class="mb-0 d-flex justify-content-between">
+                            <div>
+                                <strong>Admin:</strong><br>
+                                Phone: <code id="admin-phone">1234567890</code><br>
+                                Password: <code id="admin-password">password</code>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-primary ms-2"
+                                    onclick="copyToInput('admin-phone', 'admin-password')">Copy</button>
+                            </div>
+                        </div>
+                        <div class="mb-0 d-flex justify-content-between">
+                            <div>
+                                <strong>Student:</strong><br>
+                                Phone: <code id="student-phone">1234567891</code><br>
+                                Password: <code id="student-password">password</code>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-primary ms-2"
+                                    onclick="copyToInput('student-phone', 'student-password')">Copy</button>
+                            </div>
+                        </div>
+                        <div class="mb-0 d-flex justify-content-between">
+                            <div>
+                                <strong>Teacher:</strong><br>
+                                Phone: <code id="teacher-phone">1234567892</code><br>
+                                Password: <code id="teacher-password">password</code>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-primary ms-2"
+                                    onclick="copyToInput('teacher-phone', 'teacher-password')">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    document.getElementById('demo-credentials-btn').addEventListener('click', function() {
+                        document.getElementById('demo-credentials-popup').classList.remove('d-none');
+                    });
+
+                    document.getElementById('close-popup').addEventListener('click', function() {
+                        document.getElementById('demo-credentials-popup').classList.add('d-none');
+                    });
+
+                    function copyToInput(phoneId, passwordId) {
+                        const phone = document.getElementById(phoneId).textContent;
+                        const password = document.getElementById(passwordId).textContent;
+
+                        document.querySelector('input[name="phone"]').value = phone;
+                        document.querySelector('input[name="password"]').value = password;
+
+                        document.getElementById('demo-credentials-popup').classList.add('d-none');
+                    }
+                </script>
             </div>
         </div>
     </div>
