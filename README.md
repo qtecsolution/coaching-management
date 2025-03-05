@@ -1,8 +1,8 @@
-# Coaching Management System - Project Setup Guide
+# Coaching MS - Empowering Education with Seamless Management
 
 ## Overview
 
-Welcome to the setup guide for the **Coaching Management System**. This document provides comprehensive steps to install, configure, and run the project in your local environment, using both Docker and a native setup. Follow these instructions to ensure proper configuration.
+Welcome to the setup guide for the **Coaching MS**. This document provides comprehensive steps to install, configure, and run the project in your local environment, using both Docker and a native setup. Follow these instructions to ensure proper configuration.
 
 ## Features
 
