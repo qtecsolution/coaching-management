@@ -4,24 +4,24 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "public/assets/js/bootstrap.min.js": {
-    "file": "assets/bootstrap.min-CPdIl5nF.js",
+    "file": "assets/bootstrap.min-CyHrqEWg.js",
     "name": "bootstrap.min",
     "src": "public/assets/js/bootstrap.min.js",
     "isEntry": true
   },
   "public/assets/js/popper.min.js": {
-    "file": "assets/popper.min-B84oCLUh.js",
+    "file": "assets/popper.min-Bg_yxEZD.js",
     "name": "popper.min",
     "src": "public/assets/js/popper.min.js",
     "isEntry": true
   },
   "public/assets/scss/app.scss": {
-    "file": "assets/app-B-GCgvHe.css",
+    "file": "assets/app-B-iObSe3.css",
     "src": "public/assets/scss/app.scss",
     "isEntry": true
   },
   "public/assets/scss/pages/auth.scss": {
-    "file": "assets/auth-CXwJiVso.css",
+    "file": "assets/auth-46yX_0eR.css",
     "src": "public/assets/scss/pages/auth.scss",
     "isEntry": true
   },
@@ -81,7 +81,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-BkE686A6.js",
+    "file": "assets/app-KqKkGiEd.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
