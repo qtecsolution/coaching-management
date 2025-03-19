@@ -73,6 +73,12 @@ Users can manage:
   - Password
 - Appearance
   - Avatar
+ 
+## 🎥 Demo
+
+You can browse the live demo at the following link:
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-%230077B5?style=for-the-badge&logo=google-chrome&logoColor=white)](https://coaching-ms.qtecsolution.com/)
 
 ## Prerequisites
 
