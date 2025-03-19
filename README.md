@@ -80,6 +80,61 @@ You can browse the live demo at the following link:
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-%230077B5?style=for-the-badge&logo=google-chrome&logoColor=white)](https://coaching-ms.qtecsolution.com/)
 
+
+### Dashboard:
+<img src="./public/ss/dashboard.png" width="915px" />
+
+### User List:
+<img src="./public/ss/user_list.png" width="915px" />
+
+### Role Permission:
+<img src="./public/ss/role_permission.png" width="915px" />
+
+### Student Add:
+<img src="./public/ss/student_add.png" width="915px" />
+
+### Student List:
+<img src="./public/ss/student_list.png" width="915px" />
+
+### Batch Add:
+<img src="./public/ss/batch_add.png" width="915px" />
+
+### Batch List:
+<img src="./public/ss/batch_list.png" width="915px" />
+
+### Course Manage:
+<img src="./public/ss/course_list.png" width="915px" />
+
+### Payment List:
+<img src="./public/ss/payment_list.png" width="915px" />
+
+### Payment Add:
+<img src="./public/ss/payment_add.png" width="915px" />
+
+### Resource Add:
+<img src="./public/ss/reasource_add.png" width="915px" />
+
+### Resource List:
+<img src="./public/ss/resource_list.png" width="915px" />
+
+### Lead Add:
+<img src="./public/ss/lead_add.png" width="915px" />
+
+### Lead List:
+<img src="./public/ss/lead_list.png" width="915px" />
+
+### Settings - Email:
+<img src="./public/ss/settings_email.png" width="915px" />
+
+### Settings - General:
+<img src="./public/ss/settings_general.png" width="915px" />
+
+### Settings - SMS:
+<img src="./public/ss/settings_sms.png" width="915px" />
+
+### Profile:
+<img src="./public/ss/profile.png" width="915px" />
+
 ## Prerequisites
 
 Please ensure you have the following installed on your system:
@@ -266,7 +321,9 @@ The application should now be accessible at [http://localhost](http://localhost)
 
 ## Additional Information
 
-- **Seeding**: The database seeder is configured to populate initial data. Run `php artisan migrate --seed` to use it.
+- **Seeding**: The database seeder is configured to populate initial data. Run `php artisan migrate --seed` to use it. To login use following credentials
+  - **User**: 1234567890
+  - **Password**: password
 - **Environment Variables**: Ensure all necessary environment variables are set in the `.env` file.
 - **Database Configuration**: The application is configured for MySQL by default. Update the `.env` file as needed for other database connections.
 
@@ -284,7 +341,7 @@ Please refer to the LICENSE file for more details.
 
 If you encounter any issues or have questions, feel free to reach out through the following channels:
 
--   Open an issue on the [GitHub repository](https://github.com/qtecsolution/AI-Content-Image-Generator-SaaS).
+-   Open an issue on the [GitHub repository](https://github.com/qtecsolution/coaching-management).
 -   **Call for Queries**: +8801313522828 (WhatsApp)
 -   **Contact Form**: [Qtec Solution Contact Page](https://qtecsolution.com/contact-us)
 -   **Email**: [info@qtecsolution.com](mailto:info@qtecsolution.com)
