@@ -2,10 +2,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite --config vite.config.js",
-        "dev:docker": "vite --config vite.docker.js",
-        "build": "vite build --config vite.config.js",
-        "build:docker": "vite build --config vite.docker.js"
+        "dev": "vite",
+        "build": "vite build"
     },
     "devDependencies": {
         "@sweetalert2/theme-dark": "^5.0.15",
