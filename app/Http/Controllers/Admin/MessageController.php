@@ -39,7 +39,7 @@ class MessageController extends Controller
                     return $row?->user->name;
                 })
                 ->addColumn('batch', function ($row) {
-                    return $row?->user?->student?->currentBatch?->batch->name;
+                    return $row?->user?->student?->currentBatch?->batch->title;
                 })
                 ->addColumn('date_time', function ($row) {
                     return Carbon::parse($row->created_at)->format('F d, Y | h:i A');
@@ -91,7 +91,12 @@ class MessageController extends Controller
 
         // Get SMS provider configuration
         $provider = config('SmsCredentials.active_provider');
-        $config = config('SmsCredentials.providers')[$provider];
+        $config = config('SmsCredentials.providers')[$provider] ?? null;
+
+        if (!$provider || !$config) {
+            alert('Error!', 'SMS provider not configured.', 'error');
+            return back();
+        }
 
         $smsController = new SmsController();
 

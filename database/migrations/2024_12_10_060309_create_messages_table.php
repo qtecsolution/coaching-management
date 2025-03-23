@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->string('sender')->nullable();
-            $table->json('receiver');
+            $table->text('receiver');
             $table->text('message');
             $table->tinyInteger('status')->default(0);
             $table->json('smtp_log')->nullable();
