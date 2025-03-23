@@ -56,6 +56,8 @@ function deleteResource(url) {
                         title: "Oops!",
                         text: "Something is wrong, try again.",
                         icon: "error",
+                    }).then((result) => {
+                        window.location.href = window.location.href;
                     });
                 },
             });

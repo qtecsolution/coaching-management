@@ -11,8 +11,10 @@
             <div class="card">
                 <div class="card-body">
                     <div class="my-4">
-                        <button class="btn btn-secondary bg-primary" id="admin-btn" onclick="showUsers(event, 'admin')">Admin Users</button>
-                        <button class="btn btn-secondary" id="teacher-btn" onclick="showUsers(event, 'teacher')">Teachers</button>
+                        <button class="btn btn-secondary text-white" id="admin-btn"
+                            onclick="showUsers(event, 'admin')">Admin Users</button>
+                        <button class="btn btn-secondary text-white" id="teacher-btn"
+                            onclick="showUsers(event, 'teacher')">Teachers</button>
                     </div>
 
                     <div class="table-responsive">
@@ -39,11 +41,14 @@
 
 @push('js')
     <script>
-        let datatable = $("#table").DataTable({
+        var activeUserType = 'admin';
+        var currentFragment = window.location.hash.slice(1) || activeUserType;
+
+        var datatable = $("#table").DataTable({
             responsive: true,
             serverSide: true,
             processing: true,
-            ajax: "{{ route('admin.users.index') }}?user_type=admin",
+            ajax: `{{ route('admin.users.index') }}?user_type=${currentFragment}`,
             columns: [{
                     data: 'name',
                     name: 'name'
@@ -67,20 +72,22 @@
                 {
                     data: 'action',
                     name: 'action'
-                },
-            ],
+                }
+            ]
         });
+
+        $(`#${currentFragment}-btn`).removeClass("btn-secondary").addClass("bg-primary");
 
         function showUsers(event, userType) {
             event.preventDefault();
 
-            // Update the DataTable URL with the selected user type
-            $("#table").DataTable().ajax.url('{{ route('admin.users.index') }}?user_type=' + userType).load();
+            activeUserType = userType;
+            window.location.hash = userType;
 
-            // Update the button text
-            $("#admin-btn").removeClass("bg-primary");
-            $("#teacher-btn").removeClass("bg-primary");
-            $("#" + userType + "-btn").addClass("bg-primary");
+            datatable.ajax.url(`{{ route('admin.users.index') }}?user_type=${userType}`).load();
+
+            $("#admin-btn, #teacher-btn").removeClass("bg-primary").addClass("btn-secondary");
+            $(`#${userType}-btn`).removeClass("btn-secondary").addClass("bg-primary");
         }
     </script>
 @endpush
