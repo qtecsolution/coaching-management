@@ -115,20 +115,38 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="status" class="form-label">Status<sup class="text-danger">*</sup></label>
+                    <label for="price" class="form-label">Total Price</label>
+                    <input
+                        type="number"
+                        id="total_price"
+                        placeholder="Total Price"
+                        class="form-control bg-light"
+                        v-model="total_price"
+                        readonly
+                    />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="status" class="form-label"
+                        >Status<sup class="text-danger">*</sup></label
+                    >
                     <select
                         v-model="status"
                         id="status"
                         class="form-control form-select"
                     >
-                        <option v-for="item in statusList" :key="item.id" :value="item.id">
+                        <option
+                            v-for="item in statusList"
+                            :key="item.id"
+                            :value="item.id"
+                        >
                             {{ item.name }}
                         </option>
                     </select>
-                    <small
-                        class="text-danger"
-                        v-if="errors && errors.status"
-                    >{{ errors.status[0] }}</small>
+                    <small class="text-danger" v-if="errors && errors.status">{{
+                        errors.status[0]
+                    }}</small>
                 </div>
             </div>
         </div>
@@ -146,117 +164,127 @@
                 </button>
             </div>
 
-            <div
-                class="row align-items-end my-4"
+            <fieldset
+                class="border rounded p-3 my-3"
                 v-for="(day, index) in days"
                 :key="index"
             >
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="day" class="form-label"
-                            >Day<sup class="text-danger">*</sup></label
-                        >
-                        <multiselect
-                            v-model="day.day"
-                            :options="dayNames"
-                            :multiple="false"
-                            :close-on-select="true"
-                            :clear-on-select="false"
-                            :preserve-search="false"
-                            placeholder="Select Day"
-                            label="label"
-                            track-by="id"
-                            :preselect-first="false"
-                        >
-                            <template #selection="{ values, search, isOpen }">
-                                <span
-                                    class="multiselect__single"
-                                    v-if="values.length"
-                                    v-show="!isOpen"
-                                >
-                                    {{ values.length }} options selected
-                                </span>
-                            </template>
-                        </multiselect>
-                        <small
-                            class="text-danger"
-                            v-if="errors && errors.days"
-                            >{{ errors.days[0] }}</small
-                        >
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="teacher" class="form-label">Teacher</label>
-                        <multiselect
-                            v-model="day.teacher"
-                            :options="teachers"
-                            :multiple="false"
-                            :close-on-select="true"
-                            :clear-on-select="false"
-                            :preserve-search="false"
-                            placeholder="Select "
-                            label="label"
-                            track-by="id"
-                            :preselect-first="false"
-                        >
-                            <template #selection="{ values, search, isOpen }">
-                                <span
-                                    class="multiselect__single"
-                                    v-if="values.length"
-                                    v-show="!isOpen"
-                                >
-                                    {{ values.length }} options selected
-                                </span>
-                            </template>
-                        </multiselect>
-                        <small
-                            class="text-danger"
-                            v-if="errors && errors.teacher"
-                            >{{ errors.teacher[0] }}</small
-                        >
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="start_time" class="form-label"
-                            >Start Time<sup class="text-danger">*</sup></label
-                        >
-                        <input
-                            type="time"
-                            class="form-control"
-                            id="start_time"
-                            v-model="day.start_time"
-                        />
-                    </div>
-                    <small class="text-danger"></small>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="end_time" class="form-label"
-                            >End Time<sup class="text-danger">*</sup></label
-                        >
-                        <input
-                            type="time"
-                            class="form-control"
-                            id="end_time"
-                            v-model="day.end_time"
-                        />
-                    </div>
-                    <small class="text-danger"></small>
-                </div>
-                <div class="col-md-2">
+                <legend>
                     <div class="form-group">
                         <button
                             type="button"
                             class="btn btn-sm btn-danger"
                             @click="removeDay(index)"
                         >
-                            <i class="bi bi-dash"></i>
+                            <i class="bi bi-trash3"></i>
                         </button>
                     </div>
+                </legend>
+                <div class="row align-items-end">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="day" class="form-label"
+                                >Day<sup class="text-danger">*</sup></label
+                            >
+                            <multiselect
+                                v-model="day.day"
+                                :options="dayNames"
+                                :multiple="false"
+                                :close-on-select="true"
+                                :clear-on-select="false"
+                                :preserve-search="false"
+                                placeholder="Select Day"
+                                label="label"
+                                track-by="id"
+                                :preselect-first="false"
+                            >
+                                <template
+                                    #selection="{ values, search, isOpen }"
+                                >
+                                    <span
+                                        class="multiselect__single"
+                                        v-if="values.length"
+                                        v-show="!isOpen"
+                                    >
+                                        {{ values.length }} options selected
+                                    </span>
+                                </template>
+                            </multiselect>
+                            <small
+                                class="text-danger"
+                                v-if="errors && errors.days"
+                                >{{ errors.days[0] }}</small
+                            >
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="teacher" class="form-label"
+                                >Teacher</label
+                            >
+                            <multiselect
+                                v-model="day.teacher"
+                                :options="teachers"
+                                :multiple="false"
+                                :close-on-select="true"
+                                :clear-on-select="false"
+                                :preserve-search="false"
+                                placeholder="Select "
+                                label="label"
+                                track-by="id"
+                                :preselect-first="false"
+                            >
+                                <template
+                                    #selection="{ values, search, isOpen }"
+                                >
+                                    <span
+                                        class="multiselect__single"
+                                        v-if="values.length"
+                                        v-show="!isOpen"
+                                    >
+                                        {{ values.length }} options selected
+                                    </span>
+                                </template>
+                            </multiselect>
+                            <small
+                                class="text-danger"
+                                v-if="errors && errors.teacher"
+                                >{{ errors.teacher[0] }}</small
+                            >
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="start_time" class="form-label"
+                                >Start Time<sup class="text-danger"
+                                    >*</sup
+                                ></label
+                            >
+                            <input
+                                type="time"
+                                class="form-control"
+                                id="start_time"
+                                v-model="day.start_time"
+                            />
+                        </div>
+                        <small class="text-danger"></small>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="end_time" class="form-label"
+                                >End Time<sup class="text-danger">*</sup></label
+                            >
+                            <input
+                                type="time"
+                                class="form-control"
+                                id="end_time"
+                                v-model="day.end_time"
+                            />
+                        </div>
+                        <small class="text-danger"></small>
+                    </div>
                 </div>
-            </div>
+            </fieldset>
 
             <div class="col-12 text-end mt-2">
                 <button type="button" class="btn btn-primary" @click="save">
@@ -284,13 +312,16 @@ const status = ref(props?.batch?.status || 0);
 const price = ref(props?.batch?.price);
 const discount_type = ref(props?.batch?.discount_type || "flat");
 const discount = ref(String(props?.batch?.discount));
+const total_price = ref(props?.batch?.total_price);
 const errors = ref("");
 
 const days = ref([]);
 if (props?.batch?.batch_days?.length > 0) {
     props.batch.batch_days.forEach((day) => {
         const selectedDay = dayNames.value.find((item) => item.id == day.day);
-        const selectedTeacher = props.teachers.find((item) => item.id == day.user_id);
+        const selectedTeacher = props.teachers.find(
+            (item) => item.id == day.user_id,
+        );
 
         days.value.push({
             day: selectedDay,
@@ -372,6 +403,17 @@ watch(
     { deep: true }, // Deep watch because `days` is an array of objects
 );
 
+watch(
+    [price, discount_type, discount],
+    ([newPrice, newDiscountType, newDiscount]) => {
+        if (newDiscountType === "percentage") {
+            total_price.value = newPrice - (newPrice * newDiscount) / 100;
+        } else {
+            total_price.value = newPrice - newDiscount;
+        }
+    },
+);
+
 const save = async () => {
     if (
         !title.value ||
@@ -393,6 +435,7 @@ const save = async () => {
     form.append("discount_type", discount_type.value);
     form.append("discount", discount.value);
     form.append("status", status.value);
+    form.append("total_price", total_price.value);
 
     if (
         days.value.length > 1 ||
@@ -438,5 +481,11 @@ const save = async () => {
     padding-top: 6px;
     min-height: auto !important;
     max-height: 38px !important;
+}
+
+legend {
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
 }
 </style>

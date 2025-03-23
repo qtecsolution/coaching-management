@@ -24,13 +24,18 @@ class BatchSeeder extends Seeder
 
         // Create batches
         foreach ($courses as $course) {
+            $price = fake()->randomFloat(0, 1000, 8000);
+            $discountType = fake()->randomElement(['flat', 'percentage']);
+            $discount = fake()->randomFloat(0, 0, 60);
+
             Batch::create([
                 'title' => 'Batch ' . $course->id,
                 'course_id' => $course->id,
                 'status' => fake()->numberBetween(0, 2),
-                'price' => fake()->randomFloat(0, 1000, 8000),
-                'discount_type' => fake()->randomElement(['flat', 'percentage']),
-                'discount' => fake()->randomFloat(0, 0, 60),
+                'price' => $price,
+                'discount_type' => $discountType,
+                'discount' => $discount,
+                'total_price' => $this->calculateTotalPrice($price, $discountType, $discount),
             ]);
         }
 
@@ -60,6 +65,15 @@ class BatchSeeder extends Seeder
                 'start_time' => '15:00',
                 'end_time' => '18:00',
             ]);
+        }
+    }
+
+    public function calculateTotalPrice($price, $discountType, $discount)
+    {
+        if ($discountType == 'flat') {
+            return $price - $discount;
+        } elseif ($discountType == 'percentage') {
+            return $price - ($price * ($discount / 100));
         }
     }
 }

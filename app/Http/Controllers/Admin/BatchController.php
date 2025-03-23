@@ -50,6 +50,9 @@ class BatchController extends Controller
                 ->addColumn('course', function ($row) {
                     return $row->course->title;
                 })
+                ->editColumn('total_price', function ($row) {
+                    return number_format($row->total_price, 2);
+                })
                 ->rawColumns(['action', 'weekly_classes', 'status', 'course'])
                 ->make(true);
         }
@@ -93,6 +96,7 @@ class BatchController extends Controller
             'price' => 'required|numeric|min:0',
             'discount_type' => 'required|in:flat,percentage',
             'discount' => 'required|numeric|min:0',
+            'total_price' => 'required|numeric|min:0'
         ]);
 
         try {
@@ -101,7 +105,8 @@ class BatchController extends Controller
                 'course_id' => $request->course,
                 'price' => $request->price,
                 'discount_type' => $request->discount_type,
-                'discount' => $request->discount
+                'discount' => $request->discount,
+                'total_price' => $request->total_price
             ]);
 
             $days = json_decode($request->days);
@@ -179,7 +184,8 @@ class BatchController extends Controller
             'status' => 'nullable|in:0,1,2',
             'price' => 'required|numeric|min:0',
             'discount_type' => 'required|in:flat,percentage',
-            'discount' => 'required|numeric|min:0'
+            'discount' => 'required|numeric|min:0',
+            'total_price' => 'required|numeric|min:0'
         ]);
 
         try {
@@ -191,7 +197,8 @@ class BatchController extends Controller
                 'status' => $request->status ?? $batch->status,
                 'price' => $request->price,
                 'discount_type' => $request->discount_type,
-                'discount' => $request->discount
+                'discount' => $request->discount,
+                'total_price' => $request->total_price
             ]);
 
             $days = json_decode($request->days, true) ?? [];

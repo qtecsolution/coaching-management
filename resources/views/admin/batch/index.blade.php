@@ -18,6 +18,7 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Course</th>
+                                <th>Price</th>
                                 <th>Weekly Classes</th>
                                 <th>Total Students</th>
                                 <th>Status</th>
@@ -52,6 +53,10 @@
             {
                 data: 'course',
                 name: 'course'
+            },
+            {
+                data: 'total_price',
+                name: 'total_price'
             },
             {
                 data: 'weekly_classes',
