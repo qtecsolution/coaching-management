@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="page-heading">
-        <x-page-title title="Edit User" :url="route('admin.users.index')" />
+        <x-page-title :title="'Edit ' . ucfirst($user->user_type) . ' User'" :url="route('admin.users.index') . '#' . $user->user_type" />
 
         <section class="section">
             <div class="card">
