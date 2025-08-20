@@ -130,7 +130,7 @@
                 $('#payment_form').addClass('d-none');
                 if (!studentId) {
                     toastr.error('Please select a student first.');
-                    $('#batch').val('').trigger('change');
+                    $('#batch').val(null).trigger('change.select2');
                 }
             });
 
@@ -140,7 +140,7 @@
 
                 if (!studentId) {
                     toastr.error("Please select a student first.");
-                    $(this).val('').trigger('change');
+                    $(this).val(null).trigger('change.select2');
                     return;
                 }
 
