@@ -1,8 +1,9 @@
 <?php
 
 use App\Models\Batch;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('fileUpload')) {
     function fileUpload($file, $directory, $disk = 'public', $fileName = null)
@@ -100,5 +101,18 @@ if (!function_exists('formatSlug')) {
     function formatSlug($slug)
     {
         return ucwords(str_replace('_', ' ', $slug));
+    }
+}
+
+if (!function_exists('isDemoAccount')) {
+    function isDemoAccount($phone = null)
+    {
+        if (is_null($phone)) {
+            $phone = Auth::user()->phone;
+        }
+        if ($phone == env('DEMO_ADMIN') || $phone == env('DEMO_STUDENT') || $phone == env('DEMO_TEACHER')) {
+            return true;
+        }
+        return false;
     }
 }

@@ -159,6 +159,10 @@ class UserController extends Controller
         ]);
 
         try {
+            if ($request->filled('password') && isDemoAccount($user->phone)) {
+                $this->getAlert('error', 'You cannot change password for demo account.');
+                return back();
+            }
             $user->update([
                 'name' => $request->name,
                 'phone' => $request->phone,

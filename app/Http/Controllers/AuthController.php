@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -60,24 +61,28 @@ class AuthController extends Controller
     //  function to update profile
     public function updateProfile(Request $request)
     {
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return to_route('auth.login');
         }
 
         $request->validate([
             'name' => 'required',
-            'phone' => 'required|unique:users,phone,' . auth()->user()->id,
-            'email' => 'nullable|email|unique:users,email,' . auth()->user()->id,
+            'phone' => 'required|unique:users,phone,' . Auth::user()->id,
+            'email' => 'nullable|email|unique:users,email,' . Auth::user()->id,
             'password' => 'nullable|confirmed',
         ]);
 
         try {
-            $user = User::find(auth()->user()->id);
+            $user = User::find(Auth::id());
             $user->name = $request->name;
             $user->phone = $request->phone;
             $user->email = $request->email;
 
             if ($request->has('password')) {
+                if (isDemoAccount($user->phone)) {
+                    $this->getAlert('error', 'You cannot change password for demo account.');
+                    return back();
+                }
                 $user->password = bcrypt($request->password);
             }
 

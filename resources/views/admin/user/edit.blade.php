@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="password" class="form-label">Password<sup class="text-danger">*</sup></label>
+                                    <label for="password" class="form-label">Password</label>
                                     <input type="password" name="password" id="password" placeholder="Password"
                                         class="form-control" value="{{ old('password') }}">
 

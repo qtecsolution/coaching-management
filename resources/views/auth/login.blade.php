@@ -71,34 +71,34 @@
                         <div class="mb-0 d-flex justify-content-between">
                             <div>
                                 <strong>Admin:</strong><br>
-                                Phone: <code id="admin-phone">1234567890</code><br>
-                                Password: <code id="admin-password">password</code>
+                                Phone: <code>{{ env('DEMO_ADMIN') }}</code><br>
+                                Password: <code>{{ env('DEMO_PASSWORD') }}</code>
                             </div>
                             <div>
                                 <button class="btn btn-sm btn-primary ms-2"
-                                    onclick="copyToInput('admin-phone', 'admin-password')">Copy</button>
+                                    onclick="copyToInput('{{ env('DEMO_ADMIN') }}', '{{ env('DEMO_PASSWORD') }}')">Copy</button>
                             </div>
                         </div>
                         <div class="mb-0 d-flex justify-content-between">
                             <div>
                                 <strong>Student:</strong><br>
-                                Phone: <code id="student-phone">1234567891</code><br>
-                                Password: <code id="student-password">password</code>
+                                Phone: <code>{{ env('DEMO_STUDENT') }}</code><br>
+                                Password: <code>{{ env('DEMO_PASSWORD') }}</code>
                             </div>
                             <div>
                                 <button class="btn btn-sm btn-primary ms-2"
-                                    onclick="copyToInput('student-phone', 'student-password')">Copy</button>
+                                    onclick="copyToInput('{{ env('DEMO_STUDENT') }}', '{{ env('DEMO_PASSWORD') }}')">Copy</button>
                             </div>
                         </div>
                         <div class="mb-0 d-flex justify-content-between">
                             <div>
                                 <strong>Teacher:</strong><br>
-                                Phone: <code id="teacher-phone">1234567892</code><br>
-                                Password: <code id="teacher-password">password</code>
+                                Phone: <code>{{ env('DEMO_TEACHER') }}</code><br>
+                                Password: <code>{{ env('DEMO_PASSWORD') }}</code>
                             </div>
                             <div>
                                 <button class="btn btn-sm btn-primary ms-2"
-                                    onclick="copyToInput('teacher-phone', 'teacher-password')">Copy</button>
+                                    onclick="copyToInput('{{ env('DEMO_TEACHER') }}', '{{ env('DEMO_PASSWORD') }}')">Copy</button>
                             </div>
                         </div>
                     </div>
@@ -113,10 +113,7 @@
                         document.getElementById('demo-credentials-popup').classList.add('d-none');
                     });
 
-                    function copyToInput(phoneId, passwordId) {
-                        const phone = document.getElementById(phoneId).textContent;
-                        const password = document.getElementById(passwordId).textContent;
-
+                    function copyToInput(phone, password) {
                         document.querySelector('input[name="phone"]').value = phone;
                         document.querySelector('input[name="password"]').value = password;
 

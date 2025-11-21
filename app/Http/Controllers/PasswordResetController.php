@@ -94,6 +94,11 @@ class PasswordResetController extends Controller
             $token = PasswordResetToken::where('token', $request->token)->firstOrFail();
             $user = User::where('phone', $token->data)->orWhere('email', $token->data)->firstOrFail();
 
+            if (isDemoAccount($user->phone)) {
+                $this->getAlert('error', 'You cannot reset password for demo account.');
+                return back();
+            }
+
             $user->update([
                 'password' => Hash::make($request->password),
             ]);

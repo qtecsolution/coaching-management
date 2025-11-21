@@ -32,29 +32,29 @@ Route::get('/', function () {
 Route::prefix('auth')->as('auth.')->group(function () {
     Route::middleware('auth')->group(function () {
         // login
-        Route::get('/login', [AuthController::class, 'loginView'])->name('login.show');
-        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::get('login', [AuthController::class, 'loginView'])->name('login.show');
+        Route::post('login', [AuthController::class, 'login'])->name('login');
 
         // registration
-        Route::get('/sign-up', [AuthController::class, 'signupView'])->name('signup.show');
-        Route::post('/sign-up', [AuthController::class, 'signup'])->name('signup');
+        Route::get('sign-up', [AuthController::class, 'signupView'])->name('signup.show');
+        Route::post('sign-up', [AuthController::class, 'signup'])->name('signup');
 
         // forgot password
-        Route::get('/forgot-password', [PasswordResetController::class, 'forgotPasswordView'])->name('forgot-password.show');
-        Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword'])->name('forgot-password');
+        Route::get('forgot-password', [PasswordResetController::class, 'forgotPasswordView'])->name('forgot-password.show');
+        Route::post('forgot-password', [PasswordResetController::class, 'forgotPassword'])->name('forgot-password');
 
         // reset password
-        Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetPasswordView'])->name('reset-password.show');
-        Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('reset-password');
+        Route::get('reset-password/{token}', [PasswordResetController::class, 'resetPasswordView'])->name('reset-password.show');
+        Route::post('reset-password', [PasswordResetController::class, 'resetPassword'])->name('reset-password');
     });
 
     // profile
-    Route::get('/profile', [AuthController::class, 'profileView'])->name('profile');
-    Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
-    Route::post('/profile/avatar', [AuthController::class, 'updateAvatar'])->name('avatar.update');
+    Route::get('profile', [AuthController::class, 'profileView'])->name('profile');
+    Route::post('profile', [AuthController::class, 'updateProfile'])->name('profile.update');
+    Route::post('profile/avatar', [AuthController::class, 'updateAvatar'])->name('avatar.update');
 
     // logout
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 // admin routes
@@ -69,52 +69,52 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
         Route::resource('roles', RoleController::class);
 
         // Additional route for updating permissions within roles
-        Route::post('/roles/{role}/update-permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
+        Route::post('roles/{role}/update-permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
     });
 
     // setting routes
-    Route::prefix('/settings')->as('settings.')->controller(SettingController::class)->group(function () {
-        Route::get('/{type}/edit', 'edit')->name('edit');
-        Route::post('/update', 'update')->name('update');
+    Route::prefix('settings')->as('settings.')->controller(SettingController::class)->group(function () {
+        Route::get('{type}/edit', 'edit')->name('edit');
+        Route::post('update', 'update')->name('update');
 
-        Route::prefix('/sms/providers')->as('sms.')->group(function () {
-            Route::get('/{name}', 'smsProvider');
-            Route::post('/update', 'updateSmsProviders')->name('providers.update');
-            Route::get('/test/{provider}', [SmsController::class, 'testSms']);
+        Route::prefix('sms/providers')->as('sms.')->group(function () {
+            Route::get('{name}', 'smsProvider');
+            Route::post('update', 'updateSmsProviders')->name('providers.update');
+            Route::get('test/{provider}', [SmsController::class, 'testSms']);
         });
     });
 
     // student routes
     Route::resource('students', StudentController::class);
-    Route::get('/students/{id}/card', [StudentController::class, 'idCard'])->name('students.id');
+    Route::get('students/{id}/card', [StudentController::class, 'idCard'])->name('students.id');
 
     // course routes
     Route::resource('courses', CourseController::class);
 
     // batch routes
     Route::resource('batches', BatchController::class);
-    Route::get('/batch/{id}/students', [StudentBatchController::class, 'index'])->name('batches.students');
+    Route::get('batch/{id}/students', [StudentBatchController::class, 'index'])->name('batches.students');
 
     // lead routes
     Route::resource('leads', LeadController::class);
 
     // class material routes
     Route::resource('class-materials', ClassMaterialController::class);
-    Route::post('/class-materials/get-days', [ClassMaterialController::class, 'getDays'])->name('class-materials.get-days');
+    Route::post('class-materials/get-days', [ClassMaterialController::class, 'getDays'])->name('class-materials.get-days');
 
     // message routes
     Route::resource('messages', MessageController::class);
 
     // payment routes
     Route::resource('payments', PaymentController::class);
-    Route::post('/payments/get-info', [PaymentController::class, 'getInfo']);
+    Route::post('payments/get-info', [PaymentController::class, 'getInfo']);
 
     // attendance routes
     Route::resource('attendance', AttendanceController::class);
 
     // report routes
     Route::prefix('reports')->as('reports.')->controller(ReportController::class)->group(function () {
-        Route::get('/payments', 'payments')->name('payments');
+        Route::get('payments', 'payments')->name('payments');
     });
 });
 
@@ -131,4 +131,4 @@ Route::prefix('user')->as('user.')->middleware('isStudent')->group(function () {
 });
 
 // test routes
-Route::get('/test', [TestController::class, 'index']);
+Route::get('test', [TestController::class, 'index']);
